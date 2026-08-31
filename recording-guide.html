@@ -1,0 +1,446 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video Recording & Production Guide | Core Prompting Principles</title>
+    <!-- Highlight.js for Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #0b1120;
+            --surface-bg: #131d33;
+            --card-bg: #1e293b;
+            --card-hover: #24344d;
+            --accent-blue: #38bdf8;
+            --accent-green: #4ade80;
+            --accent-purple: #c084fc;
+            --accent-amber: #fbbf24;
+            --accent-rose: #f87171;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --code-bg: #090e1a;
+            --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 4rem;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+
+        /* Top Navigation Bar */
+        .top-navbar {
+            background-color: rgba(19, 29, 51, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0.75rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .nav-brand span.logo-badge {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: #0b1120;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 800;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            list-style: none;
+        }
+
+        .nav-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            text-decoration: none;
+            padding: 0.45rem 0.85rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid transparent;
+        }
+
+        .nav-link-btn:hover {
+            color: var(--text-main);
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        .nav-link-btn.active {
+            color: var(--accent-blue);
+            background: rgba(56, 189, 248, 0.12);
+            border-color: rgba(56, 189, 248, 0.3);
+        }
+
+        /* Admin Dropdown Menu */
+        .admin-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .admin-btn {
+            background: rgba(192, 132, 252, 0.12);
+            border: 1px solid rgba(192, 132, 252, 0.35);
+            color: var(--accent-purple);
+            cursor: pointer;
+        }
+
+        .admin-btn:hover {
+            background: rgba(192, 132, 252, 0.2);
+            color: #fff;
+            border-color: var(--accent-purple);
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: calc(100% + 0.5rem);
+            background: #131d33;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            min-width: 210px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            z-index: 200;
+            padding: 0.5rem 0;
+        }
+
+        .admin-dropdown:hover .dropdown-menu,
+        .admin-dropdown:focus-within .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.6rem 1rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 600;
+            transition: all 0.15s;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255,255,255,0.06);
+            color: var(--text-main);
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 0.4rem 0;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem 2rem 0;
+        }
+
+        /* Hero */
+        .hero {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f8fafc 0%, #38bdf8 50%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.3rem;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            max-width: 850px;
+        }
+
+        /* Recording Steps Grid */
+        .guide-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 1.75rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .guide-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            position: relative;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+            transition: all 0.2s;
+        }
+
+        .guide-card:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(56, 189, 248, 0.15);
+        }
+
+        .card-icon-badge {
+            font-size: 1.5rem;
+            margin-bottom: 0.75rem;
+            display: inline-block;
+        }
+
+        .guide-card h3 {
+            font-size: 1.2rem;
+            font-weight: 800;
+            margin-bottom: 0.75rem;
+            color: var(--text-main);
+        }
+
+        .guide-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            font-size: 0.92rem;
+            color: #cbd5e1;
+        }
+
+        .guide-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.5rem;
+        }
+
+        .guide-list li::before {
+            content: "✓";
+            color: var(--accent-green);
+            font-weight: 800;
+        }
+
+        /* Teleprompter Quick Link Box */
+        .action-banner {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(192, 132, 252, 0.12));
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 12px;
+            padding: 1.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .btn-launch {
+            background: linear-gradient(135deg, var(--accent-blue), #0284c7);
+            color: #0b1120;
+            font-weight: 800;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+        }
+
+        .btn-launch:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.35);
+        }
+    </style>
+</head>
+<body>
+
+<!-- TOP SHARED NAVBAR WITH MAIN TRAINING & ADMIN SUB-PAGES -->
+<nav class="top-navbar">
+    <div class="navbar-container">
+        <a href="index.html" class="nav-brand">
+            <span class="logo-badge">PROMPT ARCH</span>
+            <span>Core Prompting Principles</span>
+        </a>
+        <ul class="nav-links">
+            <!-- Training / Course Pages -->
+            <li><a href="index.html" class="nav-link-btn">🏛️ Workbench & Guide</a></li>
+            <li><a href="comparison.html" class="nav-link-btn">⚖️ Good vs Bad Prompts</a></li>
+            <li><a href="constraints.html" class="nav-link-btn">🔒 Constraints</a></li>
+            <li><a href="exercise.html" class="nav-link-btn">🧩 Refactor Game</a></li>
+
+            <!-- Admin & Production Sub-Menu -->
+            <li class="admin-dropdown">
+                <button class="nav-link-btn admin-btn active">
+                    <span>⚙️ Admin & Production</span>
+                    <span style="font-size: 0.7rem;">▼</span>
+                </button>
+                <div class="dropdown-menu">
+                    <a href="recording-guide.html" class="dropdown-item">📹 Recording Guide</a>
+                    <a href="shotlist.html" class="dropdown-item">🎬 Video 1.1 Shot List</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="https://github.com/rifaterdemsahin/CorePromptingPrinciplesStructuredInputFormats" target="_blank" class="dropdown-item">🐙 GitHub Repo ↗</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <header class="hero">
+        <div>
+            <div style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.25rem 0.75rem; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 9999px; color: var(--accent-blue); font-size: 0.8rem; font-weight: 700; margin-bottom: 0.5rem;">
+                <span>📹</span> Production Operations Manual &bull; Course Creator
+            </div>
+            <h1>Instructor Video Recording Guide</h1>
+            <p class="subtitle">
+                Standard Operating Procedures (SOP) for recording crisp, broadcast-grade educational videos for the AOU Certified AI Associate curriculum.
+            </p>
+        </div>
+
+        <a href="shotlist.html" class="btn-launch">
+            <span>🎬</span> Launch Teleprompter & Shot List &rarr;
+        </a>
+    </header>
+
+    <!-- Quick Action Banner -->
+    <div class="action-banner">
+        <div>
+            <h3 style="color: var(--text-main); font-size: 1.25rem; font-weight: 800; margin-bottom: 0.3rem;">
+                🚀 Ready to Shoot Video 1.1?
+            </h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0;">
+                All 4 capture scenes (Architecture, Comparison, Guided Build, Exercise Game) are mapped to exact second marks with synchronized voiceover scripts.
+            </p>
+        </div>
+        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <a href="shotlist.html" class="btn-launch">Open Shot List</a>
+            <a href="index.html" class="nav-link-btn" style="background: rgba(255,255,255,0.06); color: #fff;">Open Main Workbench</a>
+        </div>
+    </div>
+
+    <!-- 6 Pillar Production Grid -->
+    <div class="guide-grid">
+        <!-- 1. Screen Capture Setup -->
+        <div class="guide-card">
+            <span class="card-icon-badge">🖥️</span>
+            <h3>1. Screen Capture & Display</h3>
+            <ul class="guide-list">
+                <li>Resolution: Native 1920x1080 (1080p 16:9).</li>
+                <li>Browser: Google Chrome in Fullscreen Mode (<code>F11</code> or <code>Cmd+Ctrl+F</code>).</li>
+                <li>Chrome Zoom: 100% or 110% (text optimized for high-DPI stream legibility).</li>
+                <li>Hide bookmarks bar and extensions during capture.</li>
+            </ul>
+        </div>
+
+        <!-- 2. Audio & Vocal Delivery -->
+        <div class="guide-card">
+            <span class="card-icon-badge">🎙️</span>
+            <h3>2. Audio Engineering & Voice</h3>
+            <ul class="guide-list">
+                <li>Microphone: Cardioid dynamic or condenser 4–6 inches from mouth.</li>
+                <li>Audio Levels: Target peaks between <strong>-12 dB and -6 dB</strong>.</li>
+                <li>Noise Floor: Ensure room noise is under -50 dB (apply noise gate & subtle compressor).</li>
+                <li>Pacing: Aim for ~130–145 words per minute for clear instructional cadence.</li>
+            </ul>
+        </div>
+
+        <!-- 3. Mouse & Visual Dynamics -->
+        <div class="guide-card">
+            <span class="card-icon-badge">🖱️</span>
+            <h3>3. Cursor & Screen Actions</h3>
+            <ul class="guide-list">
+                <li>Enable <em>"Capture Cursor"</em> in OBS window source.</li>
+                <li>Move mouse smoothly with deliberate pauses over key terms (e.g. <code>### ROLE</code>, XML tags).</li>
+                <li>Avoid rapid erratic cursor circling or shaking.</li>
+                <li>Allow 1.5s visual hold after clicking buttons before transitioning scenes.</li>
+            </ul>
+        </div>
+
+        <!-- 4. OBS Recording Configuration -->
+        <div class="guide-card">
+            <span class="card-icon-badge">⚙️</span>
+            <h3>4. OBS Studio Encoding</h3>
+            <ul class="guide-list">
+                <li>Encoder: Apple VT H.264 / NVIDIA NVENC / QuickSync.</li>
+                <li>Rate Control: Constant Bitrate (CBR) at <strong>6,000 - 8,000 Kbps</strong>.</li>
+                <li>Framerate: 60.00 FPS (Smooth cursor tracking & animations).</li>
+                <li>Audio Sample Rate: 48 kHz (Stereo 320 Kbps AAC).</li>
+            </ul>
+        </div>
+
+        <!-- 5. Scene Flow & Transitions -->
+        <div class="guide-card">
+            <span class="card-icon-badge">🎞️</span>
+            <h3>5. Video Scene Sequencing</h3>
+            <ul class="guide-list">
+                <li><strong>Scene 1 (0:00-0:24)</strong>: Architecture Guide on <code>index.html</code>.</li>
+                <li><strong>Scene 2 (0:24-0:49)</strong>: Competitive Analysis on <code>comparison.html</code>.</li>
+                <li><strong>Scene 3 (0:49-1:12)</strong>: Workshop Builder DO on <code>index.html</code>.</li>
+                <li><strong>Scene 4 (1:12-1:35)</strong>: Exercise 1.1 Game on <code>exercise.html</code>.</li>
+            </ul>
+        </div>
+
+        <!-- 6. Post-Production & Delivery -->
+        <div class="guide-card">
+            <span class="card-icon-badge">📦</span>
+            <h3>6. Post-Production & QC</h3>
+            <ul class="guide-list">
+                <li>Trim start/end dead air (leave 0.5s lead-in and lead-out).</li>
+                <li>Add Chapter Markers at 0:00, 0:24, 0:49, and 1:12.</li>
+                <li>Verify audio sync against cursor clicks.</li>
+                <li>Export MP4 with H.264 video and AAC audio for LMS embedding.</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+</body>
+</html>

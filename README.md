@@ -47,10 +47,11 @@ Return ONLY a valid JSON object matching this schema:
 
 ---
 
-## 🌐 Multi-Page Interactive Suite
+## 🌐 Multi-Page Interactive Architecture
 
-This repository features five interconnected interactive web applications with a shared top navigation bar:
+The platform separates **Student-Facing Training Modules** from **Instructor/Production Sub-Pages** via a clean top navigation bar with an **Admin & Production** dropdown:
 
+### 🎓 Student Training Modules
 1. **🏛️ Module 1.1 Workshop & Context Guide ([`index.html`](index.html))**:
    - **LLM Context Architecture**: Visual pipeline for prompt ingestion, attention mechanisms, and structured parsing.
    - **Markdown & JSON Deep Dives**: How Markdown and JSON are utilized as inputs and outputs.
@@ -59,26 +60,27 @@ This repository features five interconnected interactive web applications with a
 
 2. **⚖️ Good vs Bad Prompts: Side-by-Side Showcase ([`comparison.html`](comparison.html))**:
    - **Unstructured vs Structured Split View**: Direct side-by-side contrast of chaotic prompts vs production-grade structured prompts.
-   - **Real Model Outputs**: Displays the flawed conversational output on the left versus deterministic typed JSON output on the right.
+   - **Real Model Outputs**: Displays flawed conversational text vs deterministic typed JSON.
    - **5 Interactive Scenarios**: Competitive Analysis, Meeting Action Items, Security Code Vulnerability, Candidate Resume Screening, and Financial Earnings Parsing.
-   - **Failure & Success Root-Cause Analysis**: Identifies exact failure reasons and success factors.
 
 3. **🔒 Input & Output Constraints Showcase ([`constraints.html`](constraints.html))**:
    - **Constraints Set vs. Unset Comparison**: Side-by-side contrast of prompts and outputs with input and output constraints activated vs. unconstrained.
    - **4 Production Domains**: E-Commerce Order Parsing, Medical Health Metric Parser, PII & GDPR Masking Filter, and SQL Safe Query Generator.
-   - **Constraint Breakdown**: Details input boundary delimiters (`<data>`), role scope, JSON Schemas, missing-data `null` fallbacks, enum whitelists, and anti-preamble constraints.
 
 4. **🧩 Prompt Refactor Game & Puzzle ([`exercise.html`](exercise.html))**:
-   - **Role, Context, Task & Constraint (RCTC) Framework**: Visual LEGO-style block puzzle to construct production prompts following the 5-layer framework (`### ROLE`, `### CONTEXT`, `### TASK`, `<xml_boundary>`, `### CONSTRAINTS`).
-   - **XML Boundary Isolation**: Hands-on assembly requiring dynamic inputs to be enclosed in explicit XML tags (`<customer_review>`, `<meeting_notes>`, `<code_snippet>`) to prevent injection.
-   - **Before & Target Goal Rubrics**: Compares the flawed prompt to the required blueprint.
-   - **3 Progressive Levels**: Customer Sentiment Refactor (Level 1), Meeting Action Items Assembly (Level 2), and Security Vulnerability Parser (Level 3).
-   - **Real-Time Validation & Celebration**: Validates slot sequencing, filters distractor blocks, scores points, and triggers confetti on completion.
+   - **Role, Context, Task & Constraint (RCTC) Framework**: Visual LEGO-style block puzzle following the 5-layer framework (`### ROLE`, `### CONTEXT`, `### TASK`, `<xml_boundary>`, `### CONSTRAINTS`).
+   - **XML Boundary Isolation**: Isolates dynamic inputs inside `<customer_review>`, `<meeting_notes>`, `<code_snippet>` tags.
+   - **3 Progressive Levels**: Real-time validation, score tracking, and confetti completion celebration.
 
-5. **🎬 Video 1.1 Production Shot List ([`shotlist.html`](shotlist.html))**:
-   - **Production Timing & Directives**: 4 capture scenes with exact timing breakdowns and synchronized spoken voiceover script.
-   - **Screen Action Directives**: Step-by-step cursor, click, scroll, and type directives for each shot.
-   - **Continuous Teleprompter View**: High-contrast reading mode for streamlined video recording.
+---
+
+### ⚙️ Admin & Production Sub-Pages (Instructor Menu)
+5. **📹 Video Recording Guide ([`recording-guide.html`](recording-guide.html))**:
+   - **6-Pillar SOP**: Standard operating procedures for screen capture, audio engineering, cursor movements, OBS settings, scene flow, and post-production.
+
+6. **🎬 Video 1.1 Production Shot List ([`shotlist.html`](shotlist.html))**:
+   - **Scene-by-Scene Timetable**: 4 recording shots with synchronized voiceover script and screen cursor directives.
+   - **Teleprompter Mode**: Oversized, high-contrast presenter mode for recording.
 
 ---
 
@@ -90,6 +92,7 @@ open -a "Google Chrome" index.html
 open -a "Google Chrome" comparison.html
 open -a "Google Chrome" constraints.html
 open -a "Google Chrome" exercise.html
+open -a "Google Chrome" recording-guide.html
 open -a "Google Chrome" shotlist.html
 ```
 
@@ -98,7 +101,8 @@ open -a "Google Chrome" shotlist.html
 - **Good vs Bad Comparison**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/comparison.html](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/comparison.html)
 - **Input & Output Constraints**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/constraints.html](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/constraints.html)
 - **Prompt Refactor Game**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/exercise.html](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/exercise.html)
-- **Video 1.1 Shot List**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/shotlist.html](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/shotlist.html)
+- **Recording Guide (Admin)**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/recording-guide.html](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/recording-guide.html)
+- **Video 1.1 Shot List (Admin)**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/shotlist.html](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/shotlist.html)
 
 
 
