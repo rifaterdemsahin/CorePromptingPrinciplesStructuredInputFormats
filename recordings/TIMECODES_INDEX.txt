@@ -1,0 +1,18 @@
+============================================================
+AOU CERTIFIED AI ASSOCIATE — VIDEO 1.1 PRODUCTION TIMECODES
+============================================================
+
+1. Shot 1 [00:00 - 00:24] (24s): Video1.1_Shot1_00-00_to_00-24_Architecture-and-Components.webm
+   Target: index.html (Architecture Flow & Concepts)
+
+2. Shot 2 [00:24 - 00:49] (25s): Video1.1_Shot2_00-24_to_00-49_Competitive-Analysis-Left-vs-Right.webm
+   Target: comparison.html (Scenario 1 Competitive Analysis)
+
+3. Shot 3 [00:49 - 01:12] (23s): Video1.1_Shot3_00-49_to_01-12_Guided-Builder-Meeting-Notes-and-Null.webm
+   Target: index.html (Hands-On Workshop DO tab)
+
+4. Shot 4 [01:12 - 01:35] (23s): Video1.1_Shot4_01-12_to_01-35_Exercise-Prompt-Refactor-Game.webm
+   Target: exercise.html (Prompt Refactor Game Level 1)
+
+Total Master Duration: 1 minute 35 seconds (95 seconds)
+Generated: 2026-08-31T19:39:48.563Z

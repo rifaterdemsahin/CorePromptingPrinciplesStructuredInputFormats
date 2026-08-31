@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/rifaterdemsahin/CorePromptingPrinciplesStructuredInputFormats#readme",
   "dependencies": {
+    "jszip": "^3.10.1",
     "playwright": "^1.62.1"
   }
 }

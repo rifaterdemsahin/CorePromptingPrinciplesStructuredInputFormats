@@ -1,6 +1,7 @@
 /**
  * Automated Shotlist Screen Recorder with Visible Animated Cursor & Click Waves
  * Core Prompting Principles & Structured Input Formats — Video 1.1
+ * Filenames mapped with exact timecodes
  */
 
 const { chromium } = require('playwright');
@@ -42,8 +43,8 @@ async function injectVisualCursor(page) {
         style.textContent = `
             .rec-click-ripple {
                 position: fixed;
-                width: 24px;
-                height: 24px;
+                width: 26px;
+                height: 26px;
                 border-radius: 50%;
                 background: rgba(251, 191, 36, 0.5);
                 border: 2.5px solid #38bdf8;
@@ -80,7 +81,6 @@ async function smoothMove(page, startX, startY, targetX, targetY, durationMs = 6
     const steps = Math.max(12, Math.floor(durationMs / 18));
     for (let i = 0; i <= steps; i++) {
         const t = i / steps;
-        // EaseInOutCubic
         const ease = t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
         const curX = Math.round(startX + (targetX - startX) * ease);
         const curY = Math.round(startY + (targetY - startY) * ease);
@@ -130,10 +130,10 @@ async function moveToElementAndHover(page, selector, currentPos = { x: 500, y: 5
 }
 
 // ----------------------------------------------------
-// SHOT 1: Architecture & 4 Core Components (24s)
+// SHOT 1: Architecture & 4 Core Components (0:00 - 0:24)
 // ----------------------------------------------------
 async function recordShot1(browser) {
-    console.log('\n🎬 Recording Shot 1: Architecture & 4 Core Components (~24s)...');
+    console.log('\n🎬 Recording Shot 1: Architecture & 4 Core Components [00:00 - 00:24] (24s)...');
     const context = await browser.newContext({
         viewport: { width: 1920, height: 1080 },
         recordVideo: { dir: RECORDINGS_DIR, size: { width: 1920, height: 1080 } }
@@ -179,17 +179,22 @@ async function recordShot1(browser) {
     const video = await page.video();
     await context.close();
 
-    const targetFile = path.join(RECORDINGS_DIR, 'video-1.1-shot1-architecture.webm');
+    const timecodedName = 'Video1.1_Shot1_00-00_to_00-24_Architecture-and-Components.webm';
+    const targetFile = path.join(RECORDINGS_DIR, timecodedName);
     fs.renameSync(await video.path(), targetFile);
+
+    // Also link/copy legacy name for compatibility
+    fs.copyFileSync(targetFile, path.join(RECORDINGS_DIR, 'video-1.1-shot1-architecture.webm'));
+
     console.log(`✅ Shot 1 saved to: ${targetFile}`);
-    return targetFile;
+    return { path: targetFile, filename: timecodedName, timecode: "00:00 - 00:24", durationSec: 24 };
 }
 
 // ----------------------------------------------------
-// SHOT 2: Competitive Analysis (Left vs Right) (25s)
+// SHOT 2: Competitive Analysis (0:24 - 0:49)
 // ----------------------------------------------------
 async function recordShot2(browser) {
-    console.log('\n🎬 Recording Shot 2: Competitive Analysis — Left vs. Right (~25s)...');
+    console.log('\n🎬 Recording Shot 2: Competitive Analysis — Left vs. Right [00:24 - 00:49] (25s)...');
     const context = await browser.newContext({
         viewport: { width: 1920, height: 1080 },
         recordVideo: { dir: RECORDINGS_DIR, size: { width: 1920, height: 1080 } }
@@ -232,17 +237,22 @@ async function recordShot2(browser) {
     const video = await page.video();
     await context.close();
 
-    const targetFile = path.join(RECORDINGS_DIR, 'video-1.1-shot2-comparison.webm');
+    const timecodedName = 'Video1.1_Shot2_00-24_to_00-49_Competitive-Analysis-Left-vs-Right.webm';
+    const targetFile = path.join(RECORDINGS_DIR, timecodedName);
     fs.renameSync(await video.path(), targetFile);
+
+    // Also copy legacy name
+    fs.copyFileSync(targetFile, path.join(RECORDINGS_DIR, 'video-1.1-shot2-comparison.webm'));
+
     console.log(`✅ Shot 2 saved to: ${targetFile}`);
-    return targetFile;
+    return { path: targetFile, filename: timecodedName, timecode: "00:24 - 00:49", durationSec: 25 };
 }
 
 // ----------------------------------------------------
-// SHOT 3: Guided Builder — Meeting Notes & Null (23s)
+// SHOT 3: Guided Builder (0:49 - 1:12)
 // ----------------------------------------------------
 async function recordShot3(browser) {
-    console.log('\n🎬 Recording Shot 3: Guided Builder — Meeting Notes & Null Constraints (~23s)...');
+    console.log('\n🎬 Recording Shot 3: Guided Builder — Meeting Notes & Null [00:49 - 01:12] (23s)...');
     const context = await browser.newContext({
         viewport: { width: 1920, height: 1080 },
         recordVideo: { dir: RECORDINGS_DIR, size: { width: 1920, height: 1080 } }
@@ -288,17 +298,22 @@ async function recordShot3(browser) {
     const video = await page.video();
     await context.close();
 
-    const targetFile = path.join(RECORDINGS_DIR, 'video-1.1-shot3-guided-builder.webm');
+    const timecodedName = 'Video1.1_Shot3_00-49_to_01-12_Guided-Builder-Meeting-Notes-and-Null.webm';
+    const targetFile = path.join(RECORDINGS_DIR, timecodedName);
     fs.renameSync(await video.path(), targetFile);
+
+    // Also copy legacy name
+    fs.copyFileSync(targetFile, path.join(RECORDINGS_DIR, 'video-1.1-shot3-guided-builder.webm'));
+
     console.log(`✅ Shot 3 saved to: ${targetFile}`);
-    return targetFile;
+    return { path: targetFile, filename: timecodedName, timecode: "00:49 - 01:12", durationSec: 23 };
 }
 
 // ----------------------------------------------------
-// SHOT 4: Exercise 1.1 — Prompt Refactor Game (23s)
+// SHOT 4: Exercise 1.1 — Prompt Refactor (1:12 - 1:35)
 // ----------------------------------------------------
 async function recordShot4(browser) {
-    console.log('\n🎬 Recording Shot 4: Exercise 1.1 — Prompt Refactor Game (~23s)...');
+    console.log('\n🎬 Recording Shot 4: Exercise 1.1 — Prompt Refactor Game [01:12 - 01:35] (23s)...');
     const context = await browser.newContext({
         viewport: { width: 1920, height: 1080 },
         recordVideo: { dir: RECORDINGS_DIR, size: { width: 1920, height: 1080 } }
@@ -322,23 +337,28 @@ async function recordShot4(browser) {
 
     // Click Check & Test Prompt button
     pos = await moveToElementAndClick(page, '.btn-check', pos, 900);
-    await page.waitForTimeout(4000); // allow celebration and score animation
+    await page.waitForTimeout(4000);
 
     await page.close();
     const video = await page.video();
     await context.close();
 
-    const targetFile = path.join(RECORDINGS_DIR, 'video-1.1-shot4-exercise.webm');
+    const timecodedName = 'Video1.1_Shot4_01-12_to_01-35_Exercise-Prompt-Refactor-Game.webm';
+    const targetFile = path.join(RECORDINGS_DIR, timecodedName);
     fs.renameSync(await video.path(), targetFile);
+
+    // Also copy legacy name
+    fs.copyFileSync(targetFile, path.join(RECORDINGS_DIR, 'video-1.1-shot4-exercise.webm'));
+
     console.log(`✅ Shot 4 saved to: ${targetFile}`);
-    return targetFile;
+    return { path: targetFile, filename: timecodedName, timecode: "01:12 - 01:35", durationSec: 23 };
 }
 
 // ----------------------------------------------------
-// MAIN RUNNER
+// MAIN RUNNER & MANIFEST GENERATOR
 // ----------------------------------------------------
 async function main() {
-    console.log('🚀 Launching Chromium Screen Recorder with Visible Virtual Cursor & Clicks...');
+    console.log('🚀 Launching Chromium Screen Recorder with Visible Virtual Cursor & Timecode Mapping...');
     const browser = await chromium.launch({
         headless: true,
         args: ['--enable-usermedia-screen-capturing', '--allow-http-screen-capture', '--no-sandbox']
@@ -350,58 +370,89 @@ async function main() {
         const shot3 = await recordShot3(browser);
         const shot4 = await recordShot4(browser);
 
-        // Generate Takes Manifest JSON
+        const shotObjects = [shot1, shot2, shot3, shot4];
+
+        // Generate Timecode Mapped Manifest JSON
         const manifest = {
             project: "Core Prompting Principles & Structured Input Formats",
             module: "Video 1.1 Production",
             generatedAt: new Date().toISOString(),
             resolution: "1920x1080 (1080p)",
             framerate: "60fps",
+            bulkDownloadZip: "Video1.1_Complete_Takes_Timecoded_Package.zip",
             shots: [
                 {
                     shotId: 1,
                     title: "Shot 1: Architecture & The 4 Core Components",
                     targetPage: "index.html",
+                    timecode: shot1.timecode,
                     duration: "24s",
-                    file: path.basename(shot1),
-                    relativePath: `recordings/${path.basename(shot1)}`,
-                    sizeBytes: fs.statSync(shot1).size
+                    timecodedFilename: shot1.filename,
+                    relativePath: `recordings/${shot1.filename}`,
+                    sizeBytes: fs.statSync(shot1.path).size
                 },
                 {
                     shotId: 2,
                     title: "Shot 2: Competitive Analysis — Left vs. Right Contrast",
                     targetPage: "comparison.html",
+                    timecode: shot2.timecode,
                     duration: "25s",
-                    file: path.basename(shot2),
-                    relativePath: `recordings/${path.basename(shot2)}`,
-                    sizeBytes: fs.statSync(shot2).size
+                    timecodedFilename: shot2.filename,
+                    relativePath: `recordings/${shot2.filename}`,
+                    sizeBytes: fs.statSync(shot2.path).size
                 },
                 {
                     shotId: 3,
                     title: "Shot 3: Guided Builder — Meeting Notes & Null Constraints",
                     targetPage: "index.html#workshop",
+                    timecode: shot3.timecode,
                     duration: "23s",
-                    file: path.basename(shot3),
-                    relativePath: `recordings/${path.basename(shot3)}`,
-                    sizeBytes: fs.statSync(shot3).size
+                    timecodedFilename: shot3.filename,
+                    relativePath: `recordings/${shot3.filename}`,
+                    sizeBytes: fs.statSync(shot3.path).size
                 },
                 {
                     shotId: 4,
                     title: "Shot 4: Exercise 1.1 — The Interactive Prompt Refactor Game",
                     targetPage: "exercise.html",
+                    timecode: shot4.timecode,
                     duration: "23s",
-                    file: path.basename(shot4),
-                    relativePath: `recordings/${path.basename(shot4)}`,
-                    sizeBytes: fs.statSync(shot4).size
+                    timecodedFilename: shot4.filename,
+                    relativePath: `recordings/${shot4.filename}`,
+                    sizeBytes: fs.statSync(shot4.path).size
                 }
             ]
         };
 
         const manifestPath = path.join(RECORDINGS_DIR, 'takes-manifest.json');
         fs.writeFileSync(manifestPath, JSON.stringify(manifest, null, 2));
-        console.log(`\n📄 Takes Manifest generated: ${manifestPath}`);
 
-        console.log('\n🎉 ALL 4 SHOTS SUCCESSFULLY RECORDED & SAVED TO ./recordings/ !');
+        // Generate Timecodes text index
+        const txtIndex = [
+            "============================================================",
+            "AOU CERTIFIED AI ASSOCIATE — VIDEO 1.1 PRODUCTION TIMECODES",
+            "============================================================",
+            "",
+            "1. Shot 1 [00:00 - 00:24] (24s): Video1.1_Shot1_00-00_to_00-24_Architecture-and-Components.webm",
+            "   Target: index.html (Architecture Flow & Concepts)",
+            "",
+            "2. Shot 2 [00:24 - 00:49] (25s): Video1.1_Shot2_00-24_to_00-49_Competitive-Analysis-Left-vs-Right.webm",
+            "   Target: comparison.html (Scenario 1 Competitive Analysis)",
+            "",
+            "3. Shot 3 [00:49 - 01:12] (23s): Video1.1_Shot3_00-49_to_01-12_Guided-Builder-Meeting-Notes-and-Null.webm",
+            "   Target: index.html (Hands-On Workshop DO tab)",
+            "",
+            "4. Shot 4 [01:12 - 01:35] (23s): Video1.1_Shot4_01-12_to_01-35_Exercise-Prompt-Refactor-Game.webm",
+            "   Target: exercise.html (Prompt Refactor Game Level 1)",
+            "",
+            "Total Master Duration: 1 minute 35 seconds (95 seconds)",
+            "Generated: " + new Date().toISOString()
+        ].join('\n');
+        fs.writeFileSync(path.join(RECORDINGS_DIR, 'TIMECODES_INDEX.txt'), txtIndex);
+
+        console.log(`\n📄 Takes Manifest generated: ${manifestPath}`);
+        console.log(`📋 Timecodes Index generated: ${path.join(RECORDINGS_DIR, 'TIMECODES_INDEX.txt')}`);
+        console.log('\n🎉 ALL 4 SHOTS RECORDED WITH TIMECODED FILENAMES IN ./recordings/ !');
     } catch (err) {
         console.error('❌ Error recording shots:', err);
     } finally {
