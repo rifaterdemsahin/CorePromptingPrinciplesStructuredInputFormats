@@ -35,13 +35,29 @@
             padding: 0;
         }
 
+        html {
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             line-height: 1.6;
             padding-bottom: 4rem;
+            min-height: 100vh;
+            overflow-x: clip;
+            overflow-y: auto;
             user-select: none;
+        }
+
+        /* Focus & Scroll Visibility Verification for Automated Capture */
+        :target, :focus-visible, button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, [tabindex="0"]:focus-visible {
+            outline: 2px solid var(--accent-purple) !important;
+            outline-offset: 3px !important;
+            scroll-margin: 80px 20px;
         }
 
         /* Top Navigation Bar */
@@ -652,32 +668,32 @@
 <body>
 
 <!-- TOP SHARED NAVBAR WITH MAIN TRAINING & ADMIN SUB-PAGES -->
-<nav class="top-navbar">
+<nav class="top-navbar" role="navigation" aria-label="Main Application Navigation">
     <div class="navbar-container">
-        <a href="index.html" class="nav-brand">
+        <a href="index.html" class="nav-brand" data-testid="nav-brand">
             <span class="logo-badge">PROMPT ARCH</span>
             <span>Core Prompting Principles</span>
         </a>
         <ul class="nav-links">
             <!-- Training / Course Pages -->
-            <li><a href="index.html" class="nav-link-btn">🏛️ Workbench & Guide</a></li>
-            <li><a href="comparison.html" class="nav-link-btn">⚖️ Good vs Bad Prompts</a></li>
-            <li><a href="constraints.html" class="nav-link-btn">🔒 Constraints</a></li>
-            <li><a href="exercise.html" class="nav-link-btn active">🧩 Refactor Game</a></li>
+            <li><a href="index.html" class="nav-link-btn" data-testid="nav-link-workbench">🏛️ Workbench & Guide</a></li>
+            <li><a href="comparison.html" class="nav-link-btn" data-testid="nav-link-comparison">⚖️ Good vs Bad Prompts</a></li>
+            <li><a href="constraints.html" class="nav-link-btn" data-testid="nav-link-constraints">🔒 Constraints</a></li>
+            <li><a href="exercise.html" class="nav-link-btn active" data-testid="nav-link-exercise" aria-current="page">🧩 Refactor Game</a></li>
 
             <!-- Admin & Production Sub-Menu -->
             <li class="admin-dropdown">
-                <button class="nav-link-btn admin-btn">
+                <button class="nav-link-btn admin-btn" data-testid="admin-menu-button" aria-haspopup="true" aria-expanded="false" aria-label="Admin and Production Menu">
                     <span>⚙️ Admin & Production</span>
                     <span style="font-size: 0.7rem;">▼</span>
                 </button>
-                <div class="dropdown-menu">
-                    <a href="recording-guide.html" class="dropdown-item">📹 Recording Guide</a>
-                    <a href="shotlist.html" class="dropdown-item">🎬 Video 1.1 Shot List</a>
-                    <a href="recording-studio.html" class="dropdown-item">🎙️ Recording Studio</a>
-                    <a href="automation-guide.html" class="dropdown-item">🤖 Recording Automation & Docker</a>
+                <div class="dropdown-menu" role="menu">
+                    <a href="recording-guide.html" class="dropdown-item" data-testid="dropdown-recording-guide" role="menuitem">📹 Recording Guide</a>
+                    <a href="shotlist.html" class="dropdown-item" data-testid="dropdown-shotlist" role="menuitem">🎬 Video 1.1 Shot List</a>
+                    <a href="recording-studio.html" class="dropdown-item" data-testid="dropdown-recording-studio" role="menuitem">🎙️ Recording Studio</a>
+                    <a href="automation-guide.html" class="dropdown-item" data-testid="dropdown-automation-guide" role="menuitem">🤖 Recording Automation & Docker</a>
                     <div class="dropdown-divider"></div>
-                    <a href="https://github.com/rifaterdemsahin/CorePromptingPrinciplesStructuredInputFormats" target="_blank" class="dropdown-item">🐙 GitHub Repo ↗</a>
+                    <a href="https://github.com/rifaterdemsahin/CorePromptingPrinciplesStructuredInputFormats" target="_blank" rel="noopener" class="dropdown-item" data-testid="dropdown-github-repo" role="menuitem">🐙 GitHub Repo ↗</a>
                 </div>
             </li>
         </ul>
@@ -703,50 +719,50 @@
             </div>
         </div>
 
-        <div class="stats-badge">
+        <div class="stats-badge" data-testid="game-stats-badge">
             <div class="stat-item">
                 <div class="stat-label">Level</div>
-                <div id="stat-level" class="stat-val" style="color: var(--accent-purple);">1 / 3</div>
+                <div id="stat-level" data-testid="stat-level-text" class="stat-val" style="color: var(--accent-purple);">1 / 3</div>
             </div>
             <div class="stat-item">
                 <div class="stat-label">Score</div>
-                <div id="stat-score" class="stat-val" style="color: var(--accent-green);">0 pts</div>
+                <div id="stat-score" data-testid="stat-score-text" class="stat-val" style="color: var(--accent-green);">0 pts</div>
             </div>
             <div class="stat-item">
                 <div class="stat-label">Stars</div>
-                <div id="stat-stars" class="stat-val" style="color: var(--accent-amber);">⭐⭐⭐</div>
+                <div id="stat-stars" data-testid="stat-stars-text" class="stat-val" style="color: var(--accent-amber);">⭐⭐⭐</div>
             </div>
         </div>
     </header>
 
     <!-- Level Selector -->
-    <div class="level-selector">
-        <button class="level-btn active" onclick="switchLevel(0)">🟢 Level 1: Customer Sentiment & Churn Triage</button>
-        <button class="level-btn" onclick="switchLevel(1)">🟡 Level 2: Meeting Action Items & Deadline Extractor</button>
-        <button class="level-btn" onclick="switchLevel(2)">🔴 Level 3: AppSec Code Vulnerability Auditor</button>
+    <div class="level-selector" role="tablist" aria-label="Exercise Levels">
+        <button class="level-btn active" data-testid="level-btn-0" role="tab" aria-selected="true" tabindex="0" onclick="switchLevel(0)">🟢 Level 1: Customer Sentiment & Churn Triage</button>
+        <button class="level-btn" data-testid="level-btn-1" role="tab" aria-selected="false" tabindex="0" onclick="switchLevel(1)">🟡 Level 2: Meeting Action Items & Deadline Extractor</button>
+        <button class="level-btn" data-testid="level-btn-2" role="tab" aria-selected="false" tabindex="0" onclick="switchLevel(2)">🔴 Level 3: AppSec Code Vulnerability Auditor</button>
     </div>
 
     <!-- Scenario Target Banner: Before & Target -->
     <div class="scenario-banner">
-        <div class="banner-card bad">
+        <div class="banner-card bad" data-testid="card-bad-prompt-banner">
             <div class="banner-title">
                 <span>❌</span> 1. The Chaotic Previous Version (Unstructured)
             </div>
-            <div id="banner-bad-text" class="banner-code"></div>
+            <div id="banner-bad-text" data-testid="banner-bad-text" class="banner-code"></div>
         </div>
 
-        <div class="banner-card target">
+        <div class="banner-card target" data-testid="card-target-blueprint-banner">
             <div class="banner-title">
                 <span>🎯</span> 2. Expected Blueprint (Role + Context + Task + XML + Constraint)
             </div>
-            <div id="banner-target-text" class="banner-code"></div>
+            <div id="banner-target-text" data-testid="banner-target-text" class="banner-code"></div>
         </div>
     </div>
 
     <!-- Main Game Board -->
     <div class="game-board">
         <!-- Left: Puzzle Pieces Pool -->
-        <div class="pool-card">
+        <div class="pool-card" data-testid="card-pieces-pool">
             <div class="pool-header">
                 <div class="pool-title">
                     <span>🧩</span> Available Building Blocks
@@ -754,11 +770,11 @@
                 <span class="pool-hint">Drag or Click to Slot</span>
             </div>
 
-            <div id="pieces-pool" class="pieces-container"></div>
+            <div id="pieces-pool" data-testid="pieces-pool" class="pieces-container"></div>
         </div>
 
         <!-- Right: Drop Target Slots -->
-        <div class="drop-target-card">
+        <div class="drop-target-card" data-testid="card-target-slots">
             <div class="pool-header">
                 <div class="pool-title">
                     <span>🏗️</span> Production Prompt Assembly (5 Framework Slots)
@@ -772,7 +788,7 @@
                     <label style="font-size: 0.8rem; font-weight: 700; color: var(--accent-blue); margin-bottom: 0.2rem; display:block;">
                         SLOT 1: ### ROLE (Persona & Domain Authority)
                     </label>
-                    <div id="slot-0" class="drop-slot" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 0)" onclick="handleSlotClick(0)">
+                    <div id="slot-0" data-testid="slot-0" class="drop-slot" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 0)" onclick="handleSlotClick(0)">
                         <div class="slot-placeholder"><span>⬇️</span> Drop Role Block Here</div>
                     </div>
                 </div>
@@ -782,7 +798,7 @@
                     <label style="font-size: 0.8rem; font-weight: 700; color: var(--accent-purple); margin-bottom: 0.2rem; display:block;">
                         SLOT 2: ### CONTEXT (Audience, Setting & Background)
                     </label>
-                    <div id="slot-1" class="drop-slot" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 1)" onclick="handleSlotClick(1)">
+                    <div id="slot-1" data-testid="slot-1" class="drop-slot" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 1)" onclick="handleSlotClick(1)">
                         <div class="slot-placeholder"><span>⬇️</span> Drop Context Block Here</div>
                     </div>
                 </div>
@@ -792,7 +808,7 @@
                     <label style="font-size: 0.8rem; font-weight: 700; color: var(--accent-amber); margin-bottom: 0.2rem; display:block;">
                         SLOT 3: ### TASK (Actionable Objective & Steps)
                     </label>
-                    <div id="slot-2" class="drop-slot" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 2)" onclick="handleSlotClick(2)">
+                    <div id="slot-2" data-testid="slot-2" class="drop-slot" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 2)" onclick="handleSlotClick(2)">
                         <div class="slot-placeholder"><span>⬇️</span> Drop Task Block Here</div>
                     </div>
                 </div>
@@ -802,7 +818,7 @@
                     <label style="font-size: 0.8rem; font-weight: 700; color: var(--accent-blue); margin-bottom: 0.2rem; display:block;">
                         SLOT 4: ### INPUT DATA (&lt;xml_boundary&gt; Isolation)
                     </label>
-                    <div id="slot-3" class="drop-slot" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 3)" onclick="handleSlotClick(3)">
+                    <div id="slot-3" data-testid="slot-3" class="drop-slot" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 3)" onclick="handleSlotClick(3)">
                         <div class="slot-placeholder"><span>⬇️</span> Drop XML Data Enclosure Here</div>
                     </div>
                 </div>
@@ -812,7 +828,7 @@
                     <label style="font-size: 0.8rem; font-weight: 700; color: var(--accent-green); margin-bottom: 0.2rem; display:block;">
                         SLOT 5: ### CONSTRAINTS (JSON Schema & Negative Rules)
                     </label>
-                    <div id="slot-4" class="drop-slot" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 4)" onclick="handleSlotClick(4)">
+                    <div id="slot-4" data-testid="slot-4" class="drop-slot" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 4)" onclick="handleSlotClick(4)">
                         <div class="slot-placeholder"><span>⬇️</span> Drop JSON Schema Constraints Here</div>
                     </div>
                 </div>
@@ -820,16 +836,16 @@
 
             <!-- Game Action Buttons -->
             <div class="game-actions">
-                <button class="btn-check" onclick="checkSolution()">
+                <button class="btn-check" data-testid="btn-check-solution" onclick="checkSolution()">
                     <span>🚀</span> Check & Test Prompt
                 </button>
-                <button class="btn-reset" onclick="resetCurrentLevel()">
+                <button class="btn-reset" data-testid="btn-reset-level" onclick="resetCurrentLevel()">
                     <span>🔄</span> Reset Slots
                 </button>
             </div>
 
             <!-- Result Feedback -->
-            <div id="game-feedback" class="result-banner"></div>
+            <div id="game-feedback" data-testid="game-feedback" class="result-banner"></div>
         </div>
     </div>
 </div>
@@ -1040,10 +1056,13 @@
     function switchLevel(index) {
         currentLevelIndex = index;
         document.querySelectorAll('.level-btn').forEach((btn, idx) => {
-            btn.classList.toggle('active', idx === index);
+            const isActive = idx === index;
+            btn.classList.toggle('active', isActive);
+            btn.setAttribute('aria-selected', isActive ? 'true' : 'false');
         });
 
-        document.getElementById('stat-level').textContent = `${index + 1} / 3`;
+        const lvlElem = document.getElementById('stat-level');
+        if (lvlElem) lvlElem.textContent = `${index + 1} / 3`;
         resetCurrentLevel();
     }
 
@@ -1052,37 +1071,51 @@
         slotAssignments = [null, null, null, null, null];
         selectedPieceForClick = null;
 
-        document.getElementById('banner-bad-text').textContent = lvl.badPrompt;
-        document.getElementById('banner-target-text').textContent = lvl.targetDescription;
+        const badEl = document.getElementById('banner-bad-text');
+        if (badEl) badEl.textContent = lvl.badPrompt;
+        const targetEl = document.getElementById('banner-target-text');
+        if (targetEl) targetEl.textContent = lvl.targetDescription;
 
         // Reset Feedback
         const feedbackEl = document.getElementById('game-feedback');
-        feedbackEl.style.display = 'none';
+        if (feedbackEl) feedbackEl.style.display = 'none';
 
         // Render Pieces in Pool
         const poolEl = document.getElementById('pieces-pool');
-        poolEl.innerHTML = '';
+        if (poolEl) {
+            poolEl.innerHTML = '';
 
-        // Shuffle pieces
-        const shuffled = [...lvl.pieces].sort(() => Math.random() - 0.5);
+            // Shuffle pieces
+            const shuffled = [...lvl.pieces].sort(() => Math.random() - 0.5);
 
-        shuffled.forEach(piece => {
-            const pieceDiv = document.createElement('div');
-            pieceDiv.id = `piece-${piece.id}`;
-            pieceDiv.className = 'puzzle-piece';
-            pieceDiv.draggable = true;
-            pieceDiv.ondragstart = (e) => handleDragStart(e, piece.id);
-            pieceDiv.onclick = () => selectPieceForSlotting(piece.id);
+            shuffled.forEach(piece => {
+                const pieceDiv = document.createElement('div');
+                pieceDiv.id = `piece-${piece.id}`;
+                pieceDiv.setAttribute('data-testid', `piece-${piece.id}`);
+                pieceDiv.className = 'puzzle-piece';
+                pieceDiv.draggable = true;
+                pieceDiv.setAttribute('role', 'button');
+                pieceDiv.setAttribute('tabindex', '0');
+                pieceDiv.setAttribute('aria-label', `${piece.tag}: ${piece.label}`);
+                pieceDiv.ondragstart = (e) => handleDragStart(e, piece.id);
+                pieceDiv.onclick = () => selectPieceForSlotting(piece.id);
+                pieceDiv.onkeydown = (e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                        e.preventDefault();
+                        selectPieceForSlotting(piece.id);
+                    }
+                };
 
-            pieceDiv.innerHTML = `
-                <div style="display: flex; flex-direction: column; gap: 0.3rem; flex-grow: 1;">
-                    <span class="piece-category-tag ${piece.tagClass}">${piece.tag}</span>
-                    <span style="white-space: pre-wrap;">${escapeHtml(piece.label)}</span>
-                </div>
-                <div class="piece-handle">⋮⋮</div>
-            `;
-            poolEl.appendChild(pieceDiv);
-        });
+                pieceDiv.innerHTML = `
+                    <div style="display: flex; flex-direction: column; gap: 0.3rem; flex-grow: 1;">
+                        <span class="piece-category-tag ${piece.tagClass}">${piece.tag}</span>
+                        <span style="white-space: pre-wrap;">${escapeHtml(piece.label)}</span>
+                    </div>
+                    <div class="piece-handle">⋮⋮</div>
+                `;
+                poolEl.appendChild(pieceDiv);
+            });
+        }
 
         // Reset Slots
         const slotLabels = [
@@ -1094,8 +1127,10 @@
         ];
         for (let i = 0; i < 5; i++) {
             const slotEl = document.getElementById(`slot-${i}`);
-            slotEl.className = 'drop-slot';
-            slotEl.innerHTML = `<div class="slot-placeholder"><span>⬇️</span> Drop ${slotLabels[i]} Block Here</div>`;
+            if (slotEl) {
+                slotEl.className = 'drop-slot';
+                slotEl.innerHTML = `<div class="slot-placeholder"><span>⬇️</span> Drop ${slotLabels[i]} Block Here</div>`;
+            }
         }
     }
 
@@ -1150,8 +1185,10 @@
         if (prevSlotIdx !== -1) {
             slotAssignments[prevSlotIdx] = null;
             const prevSlotEl = document.getElementById(`slot-${prevSlotIdx}`);
-            prevSlotEl.className = 'drop-slot';
-            prevSlotEl.innerHTML = `<div class="slot-placeholder"><span>⬇️</span> Drop Slot ${prevSlotIdx + 1} Block Here</div>`;
+            if (prevSlotEl) {
+                prevSlotEl.className = 'drop-slot';
+                prevSlotEl.innerHTML = `<div class="slot-placeholder"><span>⬇️</span> Drop Slot ${prevSlotIdx + 1} Block Here</div>`;
+            }
         }
 
         const existingPieceId = slotAssignments[slotIndex];
@@ -1166,16 +1203,18 @@
         if (pieceEl) pieceEl.style.display = 'none';
 
         const slotEl = document.getElementById(`slot-${slotIndex}`);
-        slotEl.className = 'drop-slot filled';
-        slotEl.innerHTML = `
-            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap: 0.5rem;">
-                <div style="display:flex; flex-direction:column; gap:0.25rem;">
-                    <span class="piece-category-tag ${piece.tagClass}">${piece.tag}</span>
-                    <span style="font-family:var(--font-mono); font-size:0.85rem; white-space: pre-wrap;">${escapeHtml(piece.label)}</span>
+        if (slotEl) {
+            slotEl.className = 'drop-slot filled';
+            slotEl.innerHTML = `
+                <div style="display:flex; justify-content:space-between; align-items:flex-start; gap: 0.5rem;">
+                    <div style="display:flex; flex-direction:column; gap:0.25rem;">
+                        <span class="piece-category-tag ${piece.tagClass}">${piece.tag}</span>
+                        <span style="font-family:var(--font-mono); font-size:0.85rem; white-space: pre-wrap;">${escapeHtml(piece.label)}</span>
+                    </div>
+                    <button class="remove-piece-btn" data-testid="btn-remove-slot-${slotIndex}" onclick="removePieceFromSlot(event, ${slotIndex})">✕ Return</button>
                 </div>
-                <button class="remove-piece-btn" onclick="removePieceFromSlot(event, ${slotIndex})">✕ Return</button>
-            </div>
-        `;
+            `;
+        }
     }
 
     function removePieceFromSlot(e, slotIndex) {
@@ -1189,13 +1228,16 @@
         if (pieceEl) pieceEl.style.display = 'flex';
 
         const slotEl = document.getElementById(`slot-${slotIndex}`);
-        slotEl.className = 'drop-slot';
-        slotEl.innerHTML = `<div class="slot-placeholder"><span>⬇️</span> Drop Slot ${slotIndex + 1} Block Here</div>`;
+        if (slotEl) {
+            slotEl.className = 'drop-slot';
+            slotEl.innerHTML = `<div class="slot-placeholder"><span>⬇️</span> Drop Slot ${slotIndex + 1} Block Here</div>`;
+        }
     }
 
     function checkSolution() {
         const lvl = levels[currentLevelIndex];
         const feedbackEl = document.getElementById('game-feedback');
+        if (!feedbackEl) return;
         feedbackEl.style.display = 'block';
 
         if (slotAssignments.includes(null)) {
@@ -1214,14 +1256,18 @@
             const slotEl = document.getElementById(`slot-${i}`);
 
             if (piece && piece.correctSlot === i) {
-                slotEl.classList.remove('wrong-slot');
-                slotEl.classList.add('correct-slot');
+                if (slotEl) {
+                    slotEl.classList.remove('wrong-slot');
+                    slotEl.classList.add('correct-slot');
+                }
             } else {
                 allCorrect = false;
-                slotEl.classList.remove('correct-slot');
-                slotEl.classList.add('wrong-slot');
+                if (slotEl) {
+                    slotEl.classList.remove('correct-slot');
+                    slotEl.classList.add('wrong-slot');
+                }
 
-                if (piece.type === 'bad') {
+                if (piece && piece.type === 'bad') {
                     errors.push(`Slot ${i + 1} (${slotNames[i]}) contains a distractor block that lacks structural constraints or XML boundaries.`);
                 } else {
                     errors.push(`Slot ${i + 1} (${slotNames[i]}) has the wrong component placed (expected ${slotNames[i]}).`);
@@ -1231,7 +1277,8 @@
 
         if (allCorrect) {
             score += 100;
-            document.getElementById('stat-score').textContent = `${score} pts`;
+            const scoreElem = document.getElementById('stat-score');
+            if (scoreElem) scoreElem.textContent = `${score} pts`;
 
             feedbackEl.className = 'result-banner success';
             feedbackEl.innerHTML = `

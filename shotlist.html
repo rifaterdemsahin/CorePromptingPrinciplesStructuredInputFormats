@@ -31,12 +31,28 @@
             padding: 0;
         }
 
+        html {
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             line-height: 1.6;
             padding-bottom: 4rem;
+            min-height: 100vh;
+            overflow-x: clip;
+            overflow-y: auto;
+        }
+
+        /* Focus & Scroll Visibility Verification for Automated Capture */
+        :target, :focus-visible, button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, [tabindex="0"]:focus-visible {
+            outline: 2px solid var(--accent-amber) !important;
+            outline-offset: 3px !important;
+            scroll-margin: 80px 20px;
         }
 
         /* Top Navigation Bar */
@@ -456,32 +472,32 @@
 <body>
 
 <!-- TOP SHARED NAVBAR WITH MAIN TRAINING & ADMIN SUB-PAGES -->
-<nav class="top-navbar">
+<nav class="top-navbar" role="navigation" aria-label="Main Application Navigation">
     <div class="navbar-container">
-        <a href="index.html" class="nav-brand">
+        <a href="index.html" class="nav-brand" data-testid="nav-brand">
             <span class="logo-badge">PROMPT ARCH</span>
             <span>Core Prompting Principles</span>
         </a>
         <ul class="nav-links">
             <!-- Training / Course Pages -->
-            <li><a href="index.html" class="nav-link-btn">🏛️ Workbench & Guide</a></li>
-            <li><a href="comparison.html" class="nav-link-btn">⚖️ Good vs Bad Prompts</a></li>
-            <li><a href="constraints.html" class="nav-link-btn">🔒 Constraints</a></li>
-            <li><a href="exercise.html" class="nav-link-btn">🧩 Refactor Game</a></li>
+            <li><a href="index.html" class="nav-link-btn" data-testid="nav-link-workbench">🏛️ Workbench & Guide</a></li>
+            <li><a href="comparison.html" class="nav-link-btn" data-testid="nav-link-comparison">⚖️ Good vs Bad Prompts</a></li>
+            <li><a href="constraints.html" class="nav-link-btn" data-testid="nav-link-constraints">🔒 Constraints</a></li>
+            <li><a href="exercise.html" class="nav-link-btn" data-testid="nav-link-exercise">🧩 Refactor Game</a></li>
 
             <!-- Admin & Production Sub-Menu -->
             <li class="admin-dropdown">
-                <button class="nav-link-btn admin-btn active">
+                <button class="nav-link-btn admin-btn active" data-testid="admin-menu-button" aria-haspopup="true" aria-expanded="false" aria-label="Admin and Production Menu">
                     <span>⚙️ Admin & Production</span>
                     <span style="font-size: 0.7rem;">▼</span>
                 </button>
-                <div class="dropdown-menu">
-                    <a href="recording-guide.html" class="dropdown-item">📹 Recording Guide</a>
-                    <a href="shotlist.html" class="dropdown-item">🎬 Video 1.1 Shot List</a>
-                    <a href="recording-studio.html" class="dropdown-item">🎙️ Recording Studio</a>
-                    <a href="automation-guide.html" class="dropdown-item">🤖 Recording Automation & Docker</a>
+                <div class="dropdown-menu" role="menu">
+                    <a href="recording-guide.html" class="dropdown-item" data-testid="dropdown-recording-guide" role="menuitem">📹 Recording Guide</a>
+                    <a href="shotlist.html" class="dropdown-item" data-testid="dropdown-shotlist" role="menuitem">🎬 Video 1.1 Shot List</a>
+                    <a href="recording-studio.html" class="dropdown-item" data-testid="dropdown-recording-studio" role="menuitem">🎙️ Recording Studio</a>
+                    <a href="automation-guide.html" class="dropdown-item" data-testid="dropdown-automation-guide" role="menuitem">🤖 Recording Automation & Docker</a>
                     <div class="dropdown-divider"></div>
-                    <a href="https://github.com/rifaterdemsahin/CorePromptingPrinciplesStructuredInputFormats" target="_blank" class="dropdown-item">🐙 GitHub Repo ↗</a>
+                    <a href="https://github.com/rifaterdemsahin/CorePromptingPrinciplesStructuredInputFormats" target="_blank" rel="noopener" class="dropdown-item" data-testid="dropdown-github-repo" role="menuitem">🐙 GitHub Repo ↗</a>
                 </div>
             </li>
         </ul>
@@ -501,13 +517,13 @@
         </div>
 
         <div style="display: flex; gap: 0.75rem; justify-content: center; align-items: center; flex-wrap: wrap; margin-top: 0.5rem;">
-            <a href="recordings/Video1.1_Production_Takes_Timecoded.zip" download="Video1.1_Production_Takes_Timecoded.zip" class="btn-teleprompter" style="background: linear-gradient(135deg, #10b981, #059669); color: #fff; text-decoration: none;">
+            <a href="recordings/Video1.1_Production_Takes_Timecoded.zip" download="Video1.1_Production_Takes_Timecoded.zip" class="btn-teleprompter" data-testid="btn-bulk-download-shotlist" style="background: linear-gradient(135deg, #10b981, #059669); color: #fff; text-decoration: none;">
                 <span>📦</span> Bulk Download All 4 Shots (.ZIP &bull; 7.6MB)
             </a>
-            <a href="recording-studio.html" class="btn-teleprompter" style="background: linear-gradient(135deg, var(--accent-rose), #e11d48); color: #fff; text-decoration: none;">
+            <a href="recording-studio.html" class="btn-teleprompter" data-testid="btn-launch-studio" style="background: linear-gradient(135deg, var(--accent-rose), #e11d48); color: #fff; text-decoration: none;">
                 <span>🎙️</span> Launch Recording Studio
             </a>
-            <button class="btn-teleprompter" onclick="toggleTeleprompter()">
+            <button class="btn-teleprompter" data-testid="btn-toggle-teleprompter" onclick="toggleTeleprompter()">
                 <span>📜</span> Toggle Full Teleprompter Mode
             </button>
         </div>

@@ -1,50 +1,58 @@
 {
   "project": "Core Prompting Principles & Structured Input Formats",
   "module": "Video 1.1 Production",
-  "generatedAt": "2026-08-31T19:39:48.563Z",
+  "generatedAt": "2026-08-31T20:00:28.633Z",
   "resolution": "1920x1080 (1080p)",
   "framerate": "60fps",
-  "bulkDownloadZip": "Video1.1_Complete_Takes_Timecoded_Package.zip",
+  "formats": [
+    "webm",
+    "mp4"
+  ],
+  "bulkDownloadZip": "Video1.1_Production_Takes_Timecoded.zip",
   "shots": [
     {
       "shotId": 1,
-      "title": "Shot 1: Architecture & The 4 Core Components",
-      "targetPage": "index.html",
       "timecode": "00:00 - 00:24",
       "duration": "24s",
-      "timecodedFilename": "Video1.1_Shot1_00-00_to_00-24_Architecture-and-Components.webm",
-      "relativePath": "recordings/Video1.1_Shot1_00-00_to_00-24_Architecture-and-Components.webm",
-      "sizeBytes": 2574652
+      "webmFilename": "Video1.1_Shot1_00-00_to_00-24_Architecture-and-Components.webm",
+      "mp4Filename": "Video1.1_Shot1_00-00_to_00-24_Architecture-and-Components.mp4",
+      "webmPath": "recordings/Video1.1_Shot1_00-00_to_00-24_Architecture-and-Components.webm",
+      "mp4Path": "recordings/Video1.1_Shot1_00-00_to_00-24_Architecture-and-Components.mp4",
+      "webmSizeBytes": 2586223,
+      "mp4SizeBytes": 1509335
     },
     {
       "shotId": 2,
-      "title": "Shot 2: Competitive Analysis — Left vs. Right Contrast",
-      "targetPage": "comparison.html",
       "timecode": "00:24 - 00:49",
       "duration": "25s",
-      "timecodedFilename": "Video1.1_Shot2_00-24_to_00-49_Competitive-Analysis-Left-vs-Right.webm",
-      "relativePath": "recordings/Video1.1_Shot2_00-24_to_00-49_Competitive-Analysis-Left-vs-Right.webm",
-      "sizeBytes": 2722485
+      "webmFilename": "Video1.1_Shot2_00-24_to_00-49_Competitive-Analysis-Left-vs-Right.webm",
+      "mp4Filename": "Video1.1_Shot2_00-24_to_00-49_Competitive-Analysis-Left-vs-Right.mp4",
+      "webmPath": "recordings/Video1.1_Shot2_00-24_to_00-49_Competitive-Analysis-Left-vs-Right.webm",
+      "mp4Path": "recordings/Video1.1_Shot2_00-24_to_00-49_Competitive-Analysis-Left-vs-Right.mp4",
+      "webmSizeBytes": 3190208,
+      "mp4SizeBytes": 1612610
     },
     {
       "shotId": 3,
-      "title": "Shot 3: Guided Builder — Meeting Notes & Null Constraints",
-      "targetPage": "index.html#workshop",
       "timecode": "00:49 - 01:12",
       "duration": "23s",
-      "timecodedFilename": "Video1.1_Shot3_00-49_to_01-12_Guided-Builder-Meeting-Notes-and-Null.webm",
-      "relativePath": "recordings/Video1.1_Shot3_00-49_to_01-12_Guided-Builder-Meeting-Notes-and-Null.webm",
-      "sizeBytes": 2452492
+      "webmFilename": "Video1.1_Shot3_00-49_to_01-12_Guided-Builder-Meeting-Notes-and-Null.webm",
+      "mp4Filename": "Video1.1_Shot3_00-49_to_01-12_Guided-Builder-Meeting-Notes-and-Null.mp4",
+      "webmPath": "recordings/Video1.1_Shot3_00-49_to_01-12_Guided-Builder-Meeting-Notes-and-Null.webm",
+      "mp4Path": "recordings/Video1.1_Shot3_00-49_to_01-12_Guided-Builder-Meeting-Notes-and-Null.mp4",
+      "webmSizeBytes": 2406144,
+      "mp4SizeBytes": 1704342
     },
     {
       "shotId": 4,
-      "title": "Shot 4: Exercise 1.1 — The Interactive Prompt Refactor Game",
-      "targetPage": "exercise.html",
       "timecode": "01:12 - 01:35",
       "duration": "23s",
-      "timecodedFilename": "Video1.1_Shot4_01-12_to_01-35_Exercise-Prompt-Refactor-Game.webm",
-      "relativePath": "recordings/Video1.1_Shot4_01-12_to_01-35_Exercise-Prompt-Refactor-Game.webm",
-      "sizeBytes": 1448741
+      "webmFilename": "Video1.1_Shot4_01-12_to_01-35_Exercise-Prompt-Refactor-Game.webm",
+      "mp4Filename": "Video1.1_Shot4_01-12_to_01-35_Exercise-Prompt-Refactor-Game.mp4",
+      "webmPath": "recordings/Video1.1_Shot4_01-12_to_01-35_Exercise-Prompt-Refactor-Game.webm",
+      "mp4Path": "recordings/Video1.1_Shot4_01-12_to_01-35_Exercise-Prompt-Refactor-Game.mp4",
+      "webmSizeBytes": 2149827,
+      "mp4SizeBytes": 1971325
     }
   ]
 }

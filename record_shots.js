@@ -1,16 +1,28 @@
 /**
  * Automated Shotlist Screen Recorder with Visible Animated Cursor & Click Waves
  * Core Prompting Principles & Structured Input Formats — Video 1.1
- * Filenames mapped with exact timecodes
+ * Filenames mapped with exact timecodes in both WebM and MP4 formats
  */
 
 const { chromium } = require('playwright');
 const path = require('path');
 const fs = require('fs');
+const { execSync } = require('child_process');
 
 const RECORDINGS_DIR = path.join(__dirname, 'recordings');
 if (!fs.existsSync(RECORDINGS_DIR)) {
     fs.mkdirSync(RECORDINGS_DIR, { recursive: true });
+}
+
+// Convert WebM to MP4 using ffmpeg with standard H.264 compatible encoding
+function convertWebmToMp4(webmPath, mp4Path) {
+    try {
+        console.log(`🔄 Converting ${path.basename(webmPath)} to MP4...`);
+        execSync(`ffmpeg -y -i "${webmPath}" -c:v libx264 -pix_fmt yuv420p -preset fast -crf 22 "${mp4Path}"`, { stdio: 'ignore' });
+        console.log(`✅ MP4 converted: ${path.basename(mp4Path)}`);
+    } catch (e) {
+        console.warn(`⚠️ FFmpeg conversion warning for ${webmPath}:`, e.message);
+    }
 }
 
 // Injects a high-visibility cursor and click ripple animation into any page
@@ -90,13 +102,16 @@ async function smoothMove(page, startX, startY, targetX, targetY, durationMs = 6
     }
 }
 
-// Move to element and click with visible ripple
+// Move to element and click with visible ripple and guaranteed viewport visibility
 async function moveToElementAndClick(page, selector, currentPos = { x: 500, y: 500 }, durationMs = 700) {
     const el = await page.$(selector);
     if (!el) {
         console.warn(`Selector not found for click: ${selector}`);
         return currentPos;
     }
+    await el.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(100);
+
     const box = await el.boundingBox();
     if (!box) return currentPos;
 
@@ -111,13 +126,16 @@ async function moveToElementAndClick(page, selector, currentPos = { x: 500, y: 5
     return { x: targetX, y: targetY };
 }
 
-// Move to element and hover smoothly
+// Move to element and hover smoothly with guaranteed viewport visibility
 async function moveToElementAndHover(page, selector, currentPos = { x: 500, y: 500 }, durationMs = 700) {
     const el = await page.$(selector);
     if (!el) {
         console.warn(`Selector not found for hover: ${selector}`);
         return currentPos;
     }
+    await el.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(100);
+
     const box = await el.boundingBox();
     if (!box) return currentPos;
 
@@ -179,15 +197,29 @@ async function recordShot1(browser) {
     const video = await page.video();
     await context.close();
 
-    const timecodedName = 'Video1.1_Shot1_00-00_to_00-24_Architecture-and-Components.webm';
-    const targetFile = path.join(RECORDINGS_DIR, timecodedName);
-    fs.renameSync(await video.path(), targetFile);
+    const timecodedWebm = 'Video1.1_Shot1_00-00_to_00-24_Architecture-and-Components.webm';
+    const timecodedMp4 = 'Video1.1_Shot1_00-00_to_00-24_Architecture-and-Components.mp4';
+    const targetWebm = path.join(RECORDINGS_DIR, timecodedWebm);
+    const targetMp4 = path.join(RECORDINGS_DIR, timecodedMp4);
 
-    // Also link/copy legacy name for compatibility
-    fs.copyFileSync(targetFile, path.join(RECORDINGS_DIR, 'video-1.1-shot1-architecture.webm'));
+    fs.renameSync(await video.path(), targetWebm);
+    convertWebmToMp4(targetWebm, targetMp4);
 
-    console.log(`✅ Shot 1 saved to: ${targetFile}`);
-    return { path: targetFile, filename: timecodedName, timecode: "00:00 - 00:24", durationSec: 24 };
+    // Also link/copy legacy names for compatibility
+    fs.copyFileSync(targetWebm, path.join(RECORDINGS_DIR, 'video-1.1-shot1-architecture.webm'));
+    if (fs.existsSync(targetMp4)) {
+        fs.copyFileSync(targetMp4, path.join(RECORDINGS_DIR, 'video-1.1-shot1-architecture.mp4'));
+    }
+
+    console.log(`✅ Shot 1 saved: WebM (${targetWebm}) & MP4 (${targetMp4})`);
+    return {
+        path: targetWebm,
+        mp4Path: targetMp4,
+        filename: timecodedWebm,
+        mp4Filename: timecodedMp4,
+        timecode: "00:00 - 00:24",
+        durationSec: 24
+    };
 }
 
 // ----------------------------------------------------
@@ -237,15 +269,29 @@ async function recordShot2(browser) {
     const video = await page.video();
     await context.close();
 
-    const timecodedName = 'Video1.1_Shot2_00-24_to_00-49_Competitive-Analysis-Left-vs-Right.webm';
-    const targetFile = path.join(RECORDINGS_DIR, timecodedName);
-    fs.renameSync(await video.path(), targetFile);
+    const timecodedWebm = 'Video1.1_Shot2_00-24_to_00-49_Competitive-Analysis-Left-vs-Right.webm';
+    const timecodedMp4 = 'Video1.1_Shot2_00-24_to_00-49_Competitive-Analysis-Left-vs-Right.mp4';
+    const targetWebm = path.join(RECORDINGS_DIR, timecodedWebm);
+    const targetMp4 = path.join(RECORDINGS_DIR, timecodedMp4);
 
-    // Also copy legacy name
-    fs.copyFileSync(targetFile, path.join(RECORDINGS_DIR, 'video-1.1-shot2-comparison.webm'));
+    fs.renameSync(await video.path(), targetWebm);
+    convertWebmToMp4(targetWebm, targetMp4);
 
-    console.log(`✅ Shot 2 saved to: ${targetFile}`);
-    return { path: targetFile, filename: timecodedName, timecode: "00:24 - 00:49", durationSec: 25 };
+    // Also copy legacy names
+    fs.copyFileSync(targetWebm, path.join(RECORDINGS_DIR, 'video-1.1-shot2-comparison.webm'));
+    if (fs.existsSync(targetMp4)) {
+        fs.copyFileSync(targetMp4, path.join(RECORDINGS_DIR, 'video-1.1-shot2-comparison.mp4'));
+    }
+
+    console.log(`✅ Shot 2 saved: WebM (${targetWebm}) & MP4 (${targetMp4})`);
+    return {
+        path: targetWebm,
+        mp4Path: targetMp4,
+        filename: timecodedWebm,
+        mp4Filename: timecodedMp4,
+        timecode: "00:24 - 00:49",
+        durationSec: 25
+    };
 }
 
 // ----------------------------------------------------
@@ -298,15 +344,29 @@ async function recordShot3(browser) {
     const video = await page.video();
     await context.close();
 
-    const timecodedName = 'Video1.1_Shot3_00-49_to_01-12_Guided-Builder-Meeting-Notes-and-Null.webm';
-    const targetFile = path.join(RECORDINGS_DIR, timecodedName);
-    fs.renameSync(await video.path(), targetFile);
+    const timecodedWebm = 'Video1.1_Shot3_00-49_to_01-12_Guided-Builder-Meeting-Notes-and-Null.webm';
+    const timecodedMp4 = 'Video1.1_Shot3_00-49_to_01-12_Guided-Builder-Meeting-Notes-and-Null.mp4';
+    const targetWebm = path.join(RECORDINGS_DIR, timecodedWebm);
+    const targetMp4 = path.join(RECORDINGS_DIR, timecodedMp4);
 
-    // Also copy legacy name
-    fs.copyFileSync(targetFile, path.join(RECORDINGS_DIR, 'video-1.1-shot3-guided-builder.webm'));
+    fs.renameSync(await video.path(), targetWebm);
+    convertWebmToMp4(targetWebm, targetMp4);
 
-    console.log(`✅ Shot 3 saved to: ${targetFile}`);
-    return { path: targetFile, filename: timecodedName, timecode: "00:49 - 01:12", durationSec: 23 };
+    // Also copy legacy names
+    fs.copyFileSync(targetWebm, path.join(RECORDINGS_DIR, 'video-1.1-shot3-guided-builder.webm'));
+    if (fs.existsSync(targetMp4)) {
+        fs.copyFileSync(targetMp4, path.join(RECORDINGS_DIR, 'video-1.1-shot3-guided-builder.mp4'));
+    }
+
+    console.log(`✅ Shot 3 saved: WebM (${targetWebm}) & MP4 (${targetMp4})`);
+    return {
+        path: targetWebm,
+        mp4Path: targetMp4,
+        filename: timecodedWebm,
+        mp4Filename: timecodedMp4,
+        timecode: "00:49 - 01:12",
+        durationSec: 23
+    };
 }
 
 // ----------------------------------------------------
@@ -343,22 +403,36 @@ async function recordShot4(browser) {
     const video = await page.video();
     await context.close();
 
-    const timecodedName = 'Video1.1_Shot4_01-12_to_01-35_Exercise-Prompt-Refactor-Game.webm';
-    const targetFile = path.join(RECORDINGS_DIR, timecodedName);
-    fs.renameSync(await video.path(), targetFile);
+    const timecodedWebm = 'Video1.1_Shot4_01-12_to_01-35_Exercise-Prompt-Refactor-Game.webm';
+    const timecodedMp4 = 'Video1.1_Shot4_01-12_to_01-35_Exercise-Prompt-Refactor-Game.mp4';
+    const targetWebm = path.join(RECORDINGS_DIR, timecodedWebm);
+    const targetMp4 = path.join(RECORDINGS_DIR, timecodedMp4);
 
-    // Also copy legacy name
-    fs.copyFileSync(targetFile, path.join(RECORDINGS_DIR, 'video-1.1-shot4-exercise.webm'));
+    fs.renameSync(await video.path(), targetWebm);
+    convertWebmToMp4(targetWebm, targetMp4);
 
-    console.log(`✅ Shot 4 saved to: ${targetFile}`);
-    return { path: targetFile, filename: timecodedName, timecode: "01:12 - 01:35", durationSec: 23 };
+    // Also copy legacy names
+    fs.copyFileSync(targetWebm, path.join(RECORDINGS_DIR, 'video-1.1-shot4-exercise.webm'));
+    if (fs.existsSync(targetMp4)) {
+        fs.copyFileSync(targetMp4, path.join(RECORDINGS_DIR, 'video-1.1-shot4-exercise.mp4'));
+    }
+
+    console.log(`✅ Shot 4 saved: WebM (${targetWebm}) & MP4 (${targetMp4})`);
+    return {
+        path: targetWebm,
+        mp4Path: targetMp4,
+        filename: timecodedWebm,
+        mp4Filename: timecodedMp4,
+        timecode: "01:12 - 01:35",
+        durationSec: 23
+    };
 }
 
 // ----------------------------------------------------
 // MAIN RUNNER & MANIFEST GENERATOR
 // ----------------------------------------------------
 async function main() {
-    console.log('🚀 Launching Chromium Screen Recorder with Visible Virtual Cursor & Timecode Mapping...');
+    console.log('🚀 Launching Chromium Screen Recorder with Visible Virtual Cursor, Dual Formats (WebM + MP4) & Timecode Mapping...');
     const browser = await chromium.launch({
         headless: true,
         args: ['--enable-usermedia-screen-capturing', '--allow-http-screen-capture', '--no-sandbox']
@@ -372,56 +446,26 @@ async function main() {
 
         const shotObjects = [shot1, shot2, shot3, shot4];
 
-        // Generate Timecode Mapped Manifest JSON
+        // Generate Timecode Mapped Manifest JSON with both WebM and MP4 files
         const manifest = {
             project: "Core Prompting Principles & Structured Input Formats",
             module: "Video 1.1 Production",
             generatedAt: new Date().toISOString(),
             resolution: "1920x1080 (1080p)",
             framerate: "60fps",
-            bulkDownloadZip: "Video1.1_Complete_Takes_Timecoded_Package.zip",
-            shots: [
-                {
-                    shotId: 1,
-                    title: "Shot 1: Architecture & The 4 Core Components",
-                    targetPage: "index.html",
-                    timecode: shot1.timecode,
-                    duration: "24s",
-                    timecodedFilename: shot1.filename,
-                    relativePath: `recordings/${shot1.filename}`,
-                    sizeBytes: fs.statSync(shot1.path).size
-                },
-                {
-                    shotId: 2,
-                    title: "Shot 2: Competitive Analysis — Left vs. Right Contrast",
-                    targetPage: "comparison.html",
-                    timecode: shot2.timecode,
-                    duration: "25s",
-                    timecodedFilename: shot2.filename,
-                    relativePath: `recordings/${shot2.filename}`,
-                    sizeBytes: fs.statSync(shot2.path).size
-                },
-                {
-                    shotId: 3,
-                    title: "Shot 3: Guided Builder — Meeting Notes & Null Constraints",
-                    targetPage: "index.html#workshop",
-                    timecode: shot3.timecode,
-                    duration: "23s",
-                    timecodedFilename: shot3.filename,
-                    relativePath: `recordings/${shot3.filename}`,
-                    sizeBytes: fs.statSync(shot3.path).size
-                },
-                {
-                    shotId: 4,
-                    title: "Shot 4: Exercise 1.1 — The Interactive Prompt Refactor Game",
-                    targetPage: "exercise.html",
-                    timecode: shot4.timecode,
-                    duration: "23s",
-                    timecodedFilename: shot4.filename,
-                    relativePath: `recordings/${shot4.filename}`,
-                    sizeBytes: fs.statSync(shot4.path).size
-                }
-            ]
+            formats: ["webm", "mp4"],
+            bulkDownloadZip: "Video1.1_Production_Takes_Timecoded.zip",
+            shots: shotObjects.map((s, idx) => ({
+                shotId: idx + 1,
+                timecode: s.timecode,
+                duration: `${s.durationSec}s`,
+                webmFilename: s.filename,
+                mp4Filename: s.mp4Filename,
+                webmPath: `recordings/${s.filename}`,
+                mp4Path: `recordings/${s.mp4Filename}`,
+                webmSizeBytes: fs.existsSync(s.path) ? fs.statSync(s.path).size : 0,
+                mp4SizeBytes: fs.existsSync(s.mp4Path) ? fs.statSync(s.mp4Path).size : 0
+            }))
         };
 
         const manifestPath = path.join(RECORDINGS_DIR, 'takes-manifest.json');
@@ -429,30 +473,49 @@ async function main() {
 
         // Generate Timecodes text index
         const txtIndex = [
-            "============================================================",
-            "AOU CERTIFIED AI ASSOCIATE — VIDEO 1.1 PRODUCTION TIMECODES",
-            "============================================================",
+            "=========================================================================",
+            "AOU CERTIFIED AI ASSOCIATE — VIDEO 1.1 PRODUCTION TIMECODES (WEBM & MP4)",
+            "=========================================================================",
             "",
-            "1. Shot 1 [00:00 - 00:24] (24s): Video1.1_Shot1_00-00_to_00-24_Architecture-and-Components.webm",
-            "   Target: index.html (Architecture Flow & Concepts)",
+            "1. Shot 1 [00:00 - 00:24] (24s):",
+            `   - WebM: ${shot1.filename}`,
+            `   - MP4:  ${shot1.mp4Filename}`,
+            "   - Target: index.html (Architecture Flow & Concepts)",
             "",
-            "2. Shot 2 [00:24 - 00:49] (25s): Video1.1_Shot2_00-24_to_00-49_Competitive-Analysis-Left-vs-Right.webm",
-            "   Target: comparison.html (Scenario 1 Competitive Analysis)",
+            "2. Shot 2 [00:24 - 00:49] (25s):",
+            `   - WebM: ${shot2.filename}`,
+            `   - MP4:  ${shot2.mp4Filename}`,
+            "   - Target: comparison.html (Scenario 1 Competitive Analysis)",
             "",
-            "3. Shot 3 [00:49 - 01:12] (23s): Video1.1_Shot3_00-49_to_01-12_Guided-Builder-Meeting-Notes-and-Null.webm",
-            "   Target: index.html (Hands-On Workshop DO tab)",
+            "3. Shot 3 [00:49 - 01:12] (23s):",
+            `   - WebM: ${shot3.filename}`,
+            `   - MP4:  ${shot3.mp4Filename}`,
+            "   - Target: index.html (Hands-On Workshop DO tab)",
             "",
-            "4. Shot 4 [01:12 - 01:35] (23s): Video1.1_Shot4_01-12_to_01-35_Exercise-Prompt-Refactor-Game.webm",
-            "   Target: exercise.html (Prompt Refactor Game Level 1)",
+            "4. Shot 4 [01:12 - 01:35] (23s):",
+            `   - WebM: ${shot4.filename}`,
+            `   - MP4:  ${shot4.mp4Filename}`,
+            "   - Target: exercise.html (Prompt Refactor Game Level 1)",
             "",
             "Total Master Duration: 1 minute 35 seconds (95 seconds)",
+            "Dual Formats: WebM (native VP8/VP9) + MP4 (H.264 / AAC / YUV420P)",
             "Generated: " + new Date().toISOString()
         ].join('\n');
         fs.writeFileSync(path.join(RECORDINGS_DIR, 'TIMECODES_INDEX.txt'), txtIndex);
 
+        // Package all recordings into Video1.1_Production_Takes_Timecoded.zip
+        console.log('\n📦 Creating master ZIP package containing WebM + MP4 files...');
+        try {
+            const zipPath = path.join(RECORDINGS_DIR, 'Video1.1_Production_Takes_Timecoded.zip');
+            execSync(`cd "${RECORDINGS_DIR}" && zip -r Video1.1_Production_Takes_Timecoded.zip *.webm *.mp4 *.json *.txt`, { stdio: 'ignore' });
+            console.log(`✅ Master archive created: ${zipPath}`);
+        } catch (zErr) {
+            console.warn('⚠️ Zip packaging error:', zErr.message);
+        }
+
         console.log(`\n📄 Takes Manifest generated: ${manifestPath}`);
         console.log(`📋 Timecodes Index generated: ${path.join(RECORDINGS_DIR, 'TIMECODES_INDEX.txt')}`);
-        console.log('\n🎉 ALL 4 SHOTS RECORDED WITH TIMECODED FILENAMES IN ./recordings/ !');
+        console.log('\n🎉 ALL 4 SHOTS RECORDED IN BOTH WEBM AND MP4 FORMATS IN ./recordings/ !');
     } catch (err) {
         console.error('❌ Error recording shots:', err);
     } finally {

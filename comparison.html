@@ -32,12 +32,28 @@
             padding: 0;
         }
 
+        html {
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
             line-height: 1.6;
             padding-bottom: 4rem;
+            min-height: 100vh;
+            overflow-x: clip;
+            overflow-y: auto;
+        }
+
+        /* Focus & Scroll Visibility Verification for Automated Capture */
+        :target, :focus-visible, button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, [tabindex="0"]:focus-visible {
+            outline: 2px solid var(--accent-blue) !important;
+            outline-offset: 3px !important;
+            scroll-margin: 80px 20px;
         }
 
         /* Top Navigation Bar */
@@ -492,32 +508,32 @@
 <body>
 
 <!-- TOP SHARED NAVBAR WITH MAIN TRAINING & ADMIN SUB-PAGES -->
-<nav class="top-navbar">
+<nav class="top-navbar" role="navigation" aria-label="Main Application Navigation">
     <div class="navbar-container">
-        <a href="index.html" class="nav-brand">
+        <a href="index.html" class="nav-brand" data-testid="nav-brand">
             <span class="logo-badge">PROMPT ARCH</span>
             <span>Core Prompting Principles</span>
         </a>
         <ul class="nav-links">
             <!-- Training / Course Pages -->
-            <li><a href="index.html" class="nav-link-btn">🏛️ Workbench & Guide</a></li>
-            <li><a href="comparison.html" class="nav-link-btn active">⚖️ Good vs Bad Prompts</a></li>
-            <li><a href="constraints.html" class="nav-link-btn">🔒 Constraints</a></li>
-            <li><a href="exercise.html" class="nav-link-btn">🧩 Refactor Game</a></li>
+            <li><a href="index.html" class="nav-link-btn" data-testid="nav-link-workbench">🏛️ Workbench & Guide</a></li>
+            <li><a href="comparison.html" class="nav-link-btn active" data-testid="nav-link-comparison" aria-current="page">⚖️ Good vs Bad Prompts</a></li>
+            <li><a href="constraints.html" class="nav-link-btn" data-testid="nav-link-constraints">🔒 Constraints</a></li>
+            <li><a href="exercise.html" class="nav-link-btn" data-testid="nav-link-exercise">🧩 Refactor Game</a></li>
 
             <!-- Admin & Production Sub-Menu -->
             <li class="admin-dropdown">
-                <button class="nav-link-btn admin-btn">
+                <button class="nav-link-btn admin-btn" data-testid="admin-menu-button" aria-haspopup="true" aria-expanded="false" aria-label="Admin and Production Menu">
                     <span>⚙️ Admin & Production</span>
                     <span style="font-size: 0.7rem;">▼</span>
                 </button>
-                <div class="dropdown-menu">
-                    <a href="recording-guide.html" class="dropdown-item">📹 Recording Guide</a>
-                    <a href="shotlist.html" class="dropdown-item">🎬 Video 1.1 Shot List</a>
-                    <a href="recording-studio.html" class="dropdown-item">🎙️ Recording Studio</a>
-                    <a href="automation-guide.html" class="dropdown-item">🤖 Recording Automation & Docker</a>
+                <div class="dropdown-menu" role="menu">
+                    <a href="recording-guide.html" class="dropdown-item" data-testid="dropdown-recording-guide" role="menuitem">📹 Recording Guide</a>
+                    <a href="shotlist.html" class="dropdown-item" data-testid="dropdown-shotlist" role="menuitem">🎬 Video 1.1 Shot List</a>
+                    <a href="recording-studio.html" class="dropdown-item" data-testid="dropdown-recording-studio" role="menuitem">🎙️ Recording Studio</a>
+                    <a href="automation-guide.html" class="dropdown-item" data-testid="dropdown-automation-guide" role="menuitem">🤖 Recording Automation & Docker</a>
                     <div class="dropdown-divider"></div>
-                    <a href="https://github.com/rifaterdemsahin/CorePromptingPrinciplesStructuredInputFormats" target="_blank" class="dropdown-item">🐙 GitHub Repo ↗</a>
+                    <a href="https://github.com/rifaterdemsahin/CorePromptingPrinciplesStructuredInputFormats" target="_blank" rel="noopener" class="dropdown-item" data-testid="dropdown-github-repo" role="menuitem">🐙 GitHub Repo ↗</a>
                 </div>
             </li>
         </ul>
@@ -533,16 +549,16 @@
     </header>
 
     <!-- Scenario Switcher -->
-    <div class="scenario-nav">
-        <button class="scenario-pill active" onclick="loadScenario(0)">📊 Scenario 1: Competitive Analysis (Video Demo)</button>
-        <button class="scenario-pill" onclick="loadScenario(1)">📋 Scenario 2: Meeting Action Items</button>
-        <button class="scenario-pill" onclick="loadScenario(2)">🛡️ Scenario 3: Security Code Vulnerability</button>
-        <button class="scenario-pill" onclick="loadScenario(3)">📄 Scenario 4: Candidate Resume Screening</button>
-        <button class="scenario-pill" onclick="loadScenario(4)">📈 Scenario 5: Financial Earnings Parsing</button>
+    <div class="scenario-nav" role="tablist" aria-label="Comparison Scenarios">
+        <button class="scenario-pill active" data-testid="scenario-pill-0" role="tab" aria-selected="true" tabindex="0" onclick="loadScenario(0)">📊 Scenario 1: Competitive Analysis (Video Demo)</button>
+        <button class="scenario-pill" data-testid="scenario-pill-1" role="tab" aria-selected="false" tabindex="0" onclick="loadScenario(1)">📋 Scenario 2: Meeting Action Items</button>
+        <button class="scenario-pill" data-testid="scenario-pill-2" role="tab" aria-selected="false" tabindex="0" onclick="loadScenario(2)">🛡️ Scenario 3: Security Code Vulnerability</button>
+        <button class="scenario-pill" data-testid="scenario-pill-3" role="tab" aria-selected="false" tabindex="0" onclick="loadScenario(3)">📄 Scenario 4: Candidate Resume Screening</button>
+        <button class="scenario-pill" data-testid="scenario-pill-4" role="tab" aria-selected="false" tabindex="0" onclick="loadScenario(4)">📈 Scenario 5: Financial Earnings Parsing</button>
     </div>
 
     <!-- Quick Metric Summary -->
-    <div class="metric-strip">
+    <div class="metric-strip" data-testid="metric-summary-strip">
         <div class="metric-item">
             <div class="metric-label">JSON Parseability</div>
             <div class="metric-value" style="color: var(--accent-green);">100% vs 0%</div>
@@ -564,7 +580,7 @@
     <!-- Side-by-Side Split View -->
     <div class="split-grid">
         <!-- LEFT COLUMN: BAD / UNSTRUCTURED -->
-        <section class="column-card bad-side">
+        <section class="column-card bad-side" data-testid="card-bad-side">
             <div class="column-header">
                 <div class="column-title">
                     <span>❌</span> Left: Unstructured Prompt
@@ -576,29 +592,29 @@
             <div class="code-box-wrapper">
                 <div class="box-label">
                     <span>The Prompt Given to LLM</span>
-                    <button class="copy-btn" onclick="copyText('bad-prompt-text')">Copy</button>
+                    <button class="copy-btn" data-testid="btn-copy-bad-prompt" onclick="copyText('bad-prompt-text')">Copy</button>
                 </div>
-                <pre><code id="bad-prompt-text" class="language-markdown"></code></pre>
+                <pre><code id="bad-prompt-text" data-testid="bad-prompt-text" class="language-markdown"></code></pre>
             </div>
 
             <!-- Bad Output Preview -->
             <div class="code-box-wrapper">
                 <div class="box-label">
                     <span>Generated LLM Output (Flawed)</span>
-                    <button class="copy-btn" onclick="copyText('bad-output-text')">Copy</button>
+                    <button class="copy-btn" data-testid="btn-copy-bad-output" onclick="copyText('bad-output-text')">Copy</button>
                 </div>
-                <div id="bad-output-text" class="output-box"></div>
+                <div id="bad-output-text" data-testid="bad-output-text" class="output-box"></div>
             </div>
 
             <!-- Flaws Analysis -->
             <div class="analysis-card">
                 <h4><span>⚠️</span> Why This Output Fails in Production</h4>
-                <ul id="bad-analysis-list"></ul>
+                <ul id="bad-analysis-list" data-testid="bad-analysis-list"></ul>
             </div>
         </section>
 
         <!-- RIGHT COLUMN: GOOD / STRUCTURED -->
-        <section class="column-card good-side">
+        <section class="column-card good-side" data-testid="card-good-side">
             <div class="column-header">
                 <div class="column-title">
                     <span>✅</span> Right: Structured Prompt
@@ -610,24 +626,24 @@
             <div class="code-box-wrapper">
                 <div class="box-label">
                     <span>The Prompt Given to LLM</span>
-                    <button class="copy-btn" onclick="copyText('good-prompt-text')">Copy</button>
+                    <button class="copy-btn" data-testid="btn-copy-good-prompt" onclick="copyText('good-prompt-text')">Copy</button>
                 </div>
-                <pre><code id="good-prompt-text" class="language-markdown"></code></pre>
+                <pre><code id="good-prompt-text" data-testid="good-prompt-text" class="language-markdown"></code></pre>
             </div>
 
             <!-- Good Output Preview -->
             <div class="code-box-wrapper">
                 <div class="box-label">
                     <span>Generated LLM Output (Parseable)</span>
-                    <button class="copy-btn" onclick="copyText('good-output-text')">Copy</button>
+                    <button class="copy-btn" data-testid="btn-copy-good-output" onclick="copyText('good-output-text')">Copy</button>
                 </div>
-                <pre><code id="good-output-text" class="language-json"></code></pre>
+                <pre><code id="good-output-text" data-testid="good-output-text" class="language-json"></code></pre>
             </div>
 
             <!-- Success Analysis -->
             <div class="analysis-card">
                 <h4><span>✨</span> Why This Prompt Succeeds</h4>
-                <ul id="good-analysis-list"></ul>
+                <ul id="good-analysis-list" data-testid="good-analysis-list"></ul>
             </div>
         </section>
     </div>
@@ -894,39 +910,57 @@ Return JSON matching schema:
 
     function loadScenario(index) {
         document.querySelectorAll('.scenario-pill').forEach((pill, idx) => {
-            pill.classList.toggle('active', idx === index);
+            const isActive = idx === index;
+            pill.classList.toggle('active', isActive);
+            pill.setAttribute('aria-selected', isActive ? 'true' : 'false');
         });
 
         const data = scenarios[index];
         
         // Bad Side
         const badPromptEl = document.getElementById('bad-prompt-text');
-        badPromptEl.textContent = data.badPrompt;
-        hljs.highlightElement(badPromptEl);
+        if (badPromptEl) {
+            badPromptEl.textContent = data.badPrompt;
+            if (window.hljs) hljs.highlightElement(badPromptEl);
+        }
 
-        document.getElementById('bad-output-text').textContent = data.badOutput;
+        const badOutputEl = document.getElementById('bad-output-text');
+        if (badOutputEl) {
+            badOutputEl.textContent = data.badOutput;
+        }
 
         const badList = document.getElementById('bad-analysis-list');
-        badList.innerHTML = data.badFlaws.map(f => `<li>${f}</li>`).join('');
+        if (badList) {
+            badList.innerHTML = data.badFlaws.map(f => `<li>${f}</li>`).join('');
+        }
 
         // Good Side
         const goodPromptEl = document.getElementById('good-prompt-text');
-        goodPromptEl.textContent = data.goodPrompt;
-        hljs.highlightElement(goodPromptEl);
+        if (goodPromptEl) {
+            goodPromptEl.textContent = data.goodPrompt;
+            if (window.hljs) hljs.highlightElement(goodPromptEl);
+        }
 
         const goodOutputEl = document.getElementById('good-output-text');
-        goodOutputEl.textContent = data.goodOutput;
-        hljs.highlightElement(goodOutputEl);
+        if (goodOutputEl) {
+            goodOutputEl.textContent = data.goodOutput;
+            if (window.hljs) hljs.highlightElement(goodOutputEl);
+        }
 
         const goodList = document.getElementById('good-analysis-list');
-        goodList.innerHTML = data.goodStrengths.map(s => `<li>${s}</li>`).join('');
+        if (goodList) {
+            goodList.innerHTML = data.goodStrengths.map(s => `<li>${s}</li>`).join('');
+        }
     }
 
     function copyText(elementId) {
         const el = document.getElementById(elementId);
+        if (!el) return;
         const text = el.textContent;
         navigator.clipboard.writeText(text).then(() => {
             alert('Copied to clipboard!');
+        }).catch(() => {
+            console.log('Copied fallback');
         });
     }
 
