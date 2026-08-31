@@ -49,7 +49,7 @@ Return ONLY a valid JSON object matching this schema:
 
 ## 🌐 Multi-Page Interactive Suite
 
-This repository features three interconnected interactive web applications with a shared top navigation bar:
+This repository features four interconnected interactive web applications with a shared top navigation bar:
 
 1. **🏛️ Module 1.1 Workshop & Context Guide ([`index.html`](index.html))**:
    - **LLM Context Architecture**: Visual pipeline for prompt ingestion, attention mechanisms, and structured parsing.
@@ -68,6 +68,12 @@ This repository features three interconnected interactive web applications with 
    - **4 Production Domains**: E-Commerce Order Parsing, Medical Health Metric Parser, PII & GDPR Masking Filter, and SQL Safe Query Generator.
    - **Constraint Breakdown**: Details input boundary delimiters (`<data>`), role scope, JSON Schemas, missing-data `null` fallbacks, enum whitelists, and anti-preamble constraints.
 
+4. **🧩 Prompt Refactor Game & Puzzle ([`exercise.html`](exercise.html))**:
+   - **Interactive Drag-and-Drop Puzzle**: Visual LEGO-style block assembly for structural prompt engineering.
+   - **Before & Target Goal Rubrics**: Compares the flawed prompt to the required blueprint.
+   - **3 Progressive Levels**: Customer Sentiment Refactor (Level 1), Meeting Action Items Assembly (Level 2), and Security Vulnerability Parser (Level 3).
+   - **Real-Time Validation & Celebration**: Validates slot sequencing, filters distractor blocks, scores points, and triggers confetti on completion.
+
 ---
 
 ## 🚀 Getting Started & Verification
@@ -77,12 +83,15 @@ This repository features three interconnected interactive web applications with 
 open -a "Google Chrome" index.html
 open -a "Google Chrome" comparison.html
 open -a "Google Chrome" constraints.html
+open -a "Google Chrome" exercise.html
 ```
 
 ### Live GitHub Pages Deployments
 - **Main Workbench**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/)
 - **Good vs Bad Comparison**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/comparison.html](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/comparison.html)
 - **Input & Output Constraints**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/constraints.html](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/constraints.html)
+- **Prompt Refactor Game**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/exercise.html](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/exercise.html)
+
 
 
 

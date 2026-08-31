@@ -1,0 +1,1081 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Prompt Refactor Game | Core Prompting Principles</title>
+    <!-- Highlight.js for Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/markdown.min.js"></script>
+    <!-- Canvas Confetti for Celebration -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.9.2/dist/confetti.browser.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #0b1120;
+            --surface-bg: #131d33;
+            --card-bg: #1e293b;
+            --card-hover: #24344d;
+            --accent-blue: #38bdf8;
+            --accent-green: #4ade80;
+            --accent-purple: #c084fc;
+            --accent-amber: #fbbf24;
+            --accent-rose: #f87171;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --code-bg: #090e1a;
+            --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 4rem;
+            user-select: none;
+        }
+
+        /* Top Navigation Bar */
+        .top-navbar {
+            background-color: rgba(19, 29, 51, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .nav-brand span.logo-badge {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: #0b1120;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 800;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            list-style: none;
+        }
+
+        .nav-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            text-decoration: none;
+            padding: 0.45rem 0.9rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .nav-link-btn:hover {
+            color: var(--text-main);
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        .nav-link-btn.active {
+            color: var(--accent-purple);
+            background: rgba(192, 132, 252, 0.15);
+            border-color: rgba(192, 132, 252, 0.3);
+        }
+
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 0;
+        }
+
+        /* Hero */
+        .hero {
+            margin-bottom: 1.75rem;
+            padding-bottom: 1.25rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f8fafc 0%, #c084fc 50%, #38bdf8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.3rem;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1rem;
+            max-width: 750px;
+        }
+
+        /* Level Stats Box */
+        .stats-badge {
+            background: rgba(192, 132, 252, 0.15);
+            border: 1px solid var(--accent-purple);
+            border-radius: 10px;
+            padding: 0.6rem 1.25rem;
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-label {
+            font-size: 0.72rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .stat-val {
+            font-size: 1.3rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        /* Level Selectors */
+        .level-selector {
+            display: flex;
+            gap: 0.75rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            scrollbar-width: thin;
+        }
+
+        .level-btn {
+            background: var(--surface-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 0.6rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.92rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .level-btn:hover {
+            color: var(--text-main);
+            border-color: var(--accent-purple);
+        }
+
+        .level-btn.active {
+            background: rgba(192, 132, 252, 0.2);
+            border-color: var(--accent-purple);
+            color: var(--accent-purple);
+        }
+
+        /* Scenario Banner: Before & Expected */
+        .scenario-banner {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 900px) {
+            .scenario-banner { grid-template-columns: 1fr; }
+        }
+
+        .banner-card {
+            background: var(--card-bg);
+            border-radius: 10px;
+            padding: 1.25rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .banner-card.bad {
+            border-left: 4px solid var(--accent-rose);
+        }
+
+        .banner-card.target {
+            border-left: 4px solid var(--accent-green);
+        }
+
+        .banner-title {
+            font-size: 0.9rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .bad .banner-title { color: var(--accent-rose); }
+        .target .banner-title { color: var(--accent-green); }
+
+        .banner-code {
+            background: #090e1a;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 0.75rem;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            white-space: pre-wrap;
+        }
+
+        /* Game Board Layout */
+        .game-board {
+            display: grid;
+            grid-template-columns: 1fr 1.1fr;
+            gap: 2rem;
+            margin-bottom: 2.5rem;
+        }
+
+        @media (max-width: 950px) {
+            .game-board { grid-template-columns: 1fr; }
+        }
+
+        /* Left Side: Puzzle Pieces (Pool) */
+        .pool-card {
+            background: var(--surface-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .pool-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .pool-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .pool-hint {
+            font-size: 0.8rem;
+            color: var(--text-muted);
+        }
+
+        .pieces-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            min-height: 320px;
+        }
+
+        /* Draggable Piece Item */
+        .puzzle-piece {
+            background: var(--card-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.85rem 1rem;
+            cursor: grab;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.75rem;
+        }
+
+        .puzzle-piece:hover {
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(56, 189, 248, 0.2);
+        }
+
+        .puzzle-piece:active {
+            cursor: grabbing;
+            transform: scale(0.98);
+        }
+
+        .puzzle-piece.dragging {
+            opacity: 0.4;
+            border-style: dashed;
+        }
+
+        .piece-handle {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            cursor: grab;
+        }
+
+        .piece-category-tag {
+            font-size: 0.7rem;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            align-self: flex-start;
+        }
+
+        .tag-role { background: rgba(56, 189, 248, 0.2); color: var(--accent-blue); }
+        .tag-task { background: rgba(192, 132, 252, 0.2); color: var(--accent-purple); }
+        .tag-input { background: rgba(251, 191, 36, 0.2); color: var(--accent-amber); }
+        .tag-output { background: rgba(74, 222, 128, 0.2); color: var(--accent-green); }
+        .tag-bad { background: rgba(248, 113, 113, 0.2); color: var(--accent-rose); }
+
+        /* Right Side: Drop Zones */
+        .drop-target-card {
+            background: var(--surface-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        .target-slots-container {
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+        }
+
+        .drop-slot {
+            background: #090e1a;
+            border: 2px dashed #334155;
+            border-radius: 8px;
+            min-height: 80px;
+            padding: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .drop-slot.drag-over {
+            border-color: var(--accent-blue);
+            background: rgba(56, 189, 248, 0.05);
+        }
+
+        .drop-slot.filled {
+            border-style: solid;
+            border-color: var(--border-color);
+            background: var(--card-bg);
+        }
+
+        .drop-slot.correct-slot {
+            border-color: var(--accent-green);
+            background: rgba(74, 222, 128, 0.05);
+        }
+
+        .drop-slot.wrong-slot {
+            border-color: var(--accent-rose);
+            background: rgba(248, 113, 113, 0.05);
+        }
+
+        .slot-placeholder {
+            color: #64748b;
+            font-size: 0.85rem;
+            text-align: center;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            pointer-events: none;
+        }
+
+        /* Action Buttons */
+        .game-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-check {
+            background: linear-gradient(135deg, var(--accent-green), #22c55e);
+            color: #0b1120;
+            border: none;
+            padding: 0.75rem 1.75rem;
+            font-weight: 800;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .btn-check:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(74, 222, 128, 0.3);
+        }
+
+        .btn-reset {
+            background: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 0.75rem 1.25rem;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .btn-reset:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: var(--accent-blue);
+        }
+
+        /* Result Feedback Banner */
+        .result-banner {
+            padding: 1.25rem;
+            border-radius: 10px;
+            margin-top: 1.5rem;
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .result-banner.success {
+            background: rgba(74, 222, 128, 0.15);
+            border: 1px solid var(--accent-green);
+            color: var(--accent-green);
+        }
+
+        .result-banner.error {
+            background: rgba(248, 113, 113, 0.15);
+            border: 1px solid var(--accent-rose);
+            color: var(--accent-rose);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Remove / Return button on placed pieces */
+        .remove-piece-btn {
+            background: rgba(255,255,255,0.1);
+            border: none;
+            color: var(--text-muted);
+            border-radius: 4px;
+            padding: 0.2rem 0.5rem;
+            font-size: 0.75rem;
+            cursor: pointer;
+        }
+
+        .remove-piece-btn:hover {
+            background: var(--accent-rose);
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<!-- TOP SHARED NAVBAR -->
+<nav class="top-navbar">
+    <div class="navbar-container">
+        <a href="index.html" class="nav-brand">
+            <span class="logo-badge">PROMPT ARCH</span>
+            <span>Core Prompting Principles</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html" class="nav-link-btn">🏛️ Workbench & Guide</a></li>
+            <li><a href="comparison.html" class="nav-link-btn">⚖️ Good vs Bad Prompts</a></li>
+            <li><a href="constraints.html" class="nav-link-btn">🔒 Input & Output Constraints</a></li>
+            <li><a href="exercise.html" class="nav-link-btn active">🧩 Prompt Refactor Game</a></li>
+            <li><a href="https://github.com/rifaterdemsahin/CorePromptingPrinciplesStructuredInputFormats" target="_blank" class="nav-link-btn">🐙 GitHub Repo</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <header class="hero">
+        <div>
+            <h1>Interactive Prompt Refactor Puzzle</h1>
+            <p class="subtitle">
+                Drag and drop the structural prompt components into the correct production sequence. Filter out the bad unconstrained blocks to build a 100% deterministic AI prompt!
+            </p>
+        </div>
+
+        <div class="stats-badge">
+            <div class="stat-item">
+                <div class="stat-label">Level</div>
+                <div id="stat-level" class="stat-val" style="color: var(--accent-purple);">1 / 3</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Score</div>
+                <div id="stat-score" class="stat-val" style="color: var(--accent-green);">0 pts</div>
+            </div>
+            <div class="stat-item">
+                <div class="stat-label">Stars</div>
+                <div id="stat-stars" class="stat-val" style="color: var(--accent-amber);">⭐⭐⭐</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Level Selector -->
+    <div class="level-selector">
+        <button class="level-btn active" onclick="switchLevel(0)">🟢 Level 1: Customer Sentiment Refactor</button>
+        <button class="level-btn" onclick="switchLevel(1)">🟡 Level 2: Meeting Action Items Assembly</button>
+        <button class="level-btn" onclick="switchLevel(2)">🔴 Level 3: Security Vulnerability Parser</button>
+    </div>
+
+    <!-- Scenario Target Banner: Before & Target -->
+    <div class="scenario-banner">
+        <div class="banner-card bad">
+            <div class="banner-title">
+                <span>❌</span> 1. The Chaotic Previous Version (What We Need to Fix)
+            </div>
+            <div id="banner-bad-text" class="banner-code"></div>
+        </div>
+
+        <div class="banner-card target">
+            <div class="banner-title">
+                <span>🎯</span> 2. The Expected Refactored Blueprint
+            </div>
+            <div id="banner-target-text" class="banner-code"></div>
+        </div>
+    </div>
+
+    <!-- Main Game Board -->
+    <div class="game-board">
+        <!-- Left: Puzzle Pieces Pool -->
+        <div class="pool-card">
+            <div class="pool-header">
+                <div class="pool-title">
+                    <span>🧩</span> Available Building Blocks
+                </div>
+                <span class="pool-hint">Drag or Click to Slot</span>
+            </div>
+
+            <div id="pieces-pool" class="pieces-container"></div>
+        </div>
+
+        <!-- Right: Drop Target Slots -->
+        <div class="drop-target-card">
+            <div class="pool-header">
+                <div class="pool-title">
+                    <span>🏗️</span> Production Prompt Assembly Slots
+                </div>
+                <span class="pool-hint">Drop pieces in exact logical order</span>
+            </div>
+
+            <div class="target-slots-container">
+                <!-- Slot 1: Role -->
+                <div>
+                    <label style="font-size: 0.8rem; font-weight: 700; color: var(--accent-blue); margin-bottom: 0.25rem; display:block;">
+                        SLOT 1: Persona & System Context (Role)
+                    </label>
+                    <div id="slot-0" class="drop-slot" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 0)" onclick="handleSlotClick(0)">
+                        <div class="slot-placeholder"><span>⬇️</span> Drop Role Block Here</div>
+                    </div>
+                </div>
+
+                <!-- Slot 2: Task -->
+                <div>
+                    <label style="font-size: 0.8rem; font-weight: 700; color: var(--accent-purple); margin-bottom: 0.25rem; display:block;">
+                        SLOT 2: Primary Task & Objective
+                    </label>
+                    <div id="slot-1" class="drop-slot" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 1)" onclick="handleSlotClick(1)">
+                        <div class="slot-placeholder"><span>⬇️</span> Drop Task Block Here</div>
+                    </div>
+                </div>
+
+                <!-- Slot 3: Input XML Delimiter -->
+                <div>
+                    <label style="font-size: 0.8rem; font-weight: 700; color: var(--accent-amber); margin-bottom: 0.25rem; display:block;">
+                        SLOT 3: Input Data & XML Boundary Isolation
+                    </label>
+                    <div id="slot-2" class="drop-slot" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 2)" onclick="handleSlotClick(2)">
+                        <div class="slot-placeholder"><span>⬇️</span> Drop XML Data Enclosure Here</div>
+                    </div>
+                </div>
+
+                <!-- Slot 4: Output Constraints -->
+                <div>
+                    <label style="font-size: 0.8rem; font-weight: 700; color: var(--accent-green); margin-bottom: 0.25rem; display:block;">
+                        SLOT 4: Output Constraints & JSON Schema
+                    </label>
+                    <div id="slot-3" class="drop-slot" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 3)" onclick="handleSlotClick(3)">
+                        <div class="slot-placeholder"><span>⬇️</span> Drop JSON Schema Constraints Here</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Action Buttons -->
+            <div class="game-actions">
+                <button class="btn-check" onclick="checkSolution()">
+                    <span>🚀</span> Check & Test Prompt
+                </button>
+                <button class="btn-reset" onclick="resetCurrentLevel()">
+                    <span>🔄</span> Reset Slots
+                </button>
+            </div>
+
+            <!-- Result Feedback -->
+            <div id="game-feedback" class="result-banner"></div>
+        </div>
+    </div>
+</div>
+
+<script>
+    const levels = [
+        {
+            id: 1,
+            title: "Customer Sentiment Refactor",
+            badPrompt: `"Look at these customer reviews and tell me which ones are bad and why they are angry and output it as a table or list."`,
+            targetDescription: `Construct a 4-part structured prompt with:
+1. ### ROLE: Senior CX Lead
+2. ### TASK: Extract sentiment & pain points
+3. <customer_review> XML boundary
+4. JSON Schema: {"sentiment": "...", "pain_points": [...]}`,
+            slotsCount: 4,
+            pieces: [
+                {
+                    id: "role_1",
+                    type: "role",
+                    label: "### ROLE: Senior Customer Intelligence Lead.",
+                    tag: "Role Context",
+                    tagClass: "tag-role",
+                    correctSlot: 0
+                },
+                {
+                    id: "task_1",
+                    type: "task",
+                    label: "### TASK: Extract sentiment, urgency, and customer root cause pain points.",
+                    tag: "Objective",
+                    tagClass: "tag-task",
+                    correctSlot: 1
+                },
+                {
+                    id: "input_1",
+                    type: "input",
+                    label: "### INPUT DATA\n<customer_review>\nPackage was delayed 3 weeks and customer support was rude.\n</customer_review>",
+                    tag: "XML Input Boundary",
+                    tagClass: "tag-input",
+                    correctSlot: 2
+                },
+                {
+                    id: "output_1",
+                    type: "output",
+                    label: "### OUTPUT FORMAT & CONSTRAINTS\nReturn ONLY valid JSON matching: {\"sentiment\": string, \"pain_points\": string[]}\nDo not include conversational preamble.",
+                    tag: "JSON Schema",
+                    tagClass: "tag-output",
+                    correctSlot: 3
+                },
+                {
+                    id: "bad_1",
+                    type: "bad",
+                    label: "Just write whatever you feel like in a polite paragraph.",
+                    tag: "❌ Distractor",
+                    tagClass: "tag-bad",
+                    correctSlot: -1
+                },
+                {
+                    id: "bad_2",
+                    type: "bad",
+                    label: "Give me the answer without any structure or JSON tags.",
+                    tag: "❌ Distractor",
+                    tagClass: "tag-bad",
+                    correctSlot: -1
+                }
+            ]
+        },
+        {
+            id: 2,
+            title: "Meeting Action Items Assembly",
+            badPrompt: `"Get the todos and who has to do what from these notes."`,
+            targetDescription: `Construct a 4-part structured prompt with:
+1. ### ROLE: Technical Scrum Master
+2. ### TASK: Extract actionable tasks & owners
+3. <meeting_notes> XML boundary
+4. JSON Array Schema with missing field null handling`,
+            slotsCount: 4,
+            pieces: [
+                {
+                    id: "role_2",
+                    type: "role",
+                    label: "### ROLE: Technical Scrum Master & Sprint Coordinator.",
+                    tag: "Role Context",
+                    tagClass: "tag-role",
+                    correctSlot: 0
+                },
+                {
+                    id: "task_2",
+                    type: "task",
+                    label: "### TASK: Extract discrete action items, assignees, and deadlines from meeting notes.",
+                    tag: "Objective",
+                    tagClass: "tag-task",
+                    correctSlot: 1
+                },
+                {
+                    id: "input_2",
+                    type: "input",
+                    label: "### INPUT DATA\n<meeting_notes>\nAlex will refactor database queries by Friday. Sarah will review legal budget.\n</meeting_notes>",
+                    tag: "XML Input Boundary",
+                    tagClass: "tag-input",
+                    correctSlot: 2
+                },
+                {
+                    id: "output_2",
+                    type: "output",
+                    label: "### CONSTRAINTS\n- Return JSON array: [{ \"task\": string, \"owner\": string, \"due\": string|null }]\n- If deadline is missing, assign null.",
+                    tag: "JSON Schema",
+                    tagClass: "tag-output",
+                    correctSlot: 3
+                },
+                {
+                    id: "bad_3",
+                    type: "bad",
+                    label: "Make up any missing deadlines if not stated.",
+                    tag: "❌ Distractor (Hallucination)",
+                    tagClass: "tag-bad",
+                    correctSlot: -1
+                }
+            ]
+        },
+        {
+            id: 3,
+            title: "Security Vulnerability Parser",
+            badPrompt: `"Is this code safe or bad? query = 'SELECT * FROM users' + id"`,
+            targetDescription: `Construct a 4-part structured prompt with:
+1. ### ROLE: Lead Application Security Auditor
+2. ### TASK: Static vulnerability analysis
+3. <code_snippet> XML boundary
+4. Typed JSON schema with CWE taxonomy & parameterized remediation`,
+            slotsCount: 4,
+            pieces: [
+                {
+                    id: "role_3",
+                    type: "role",
+                    label: "### ROLE: Lead Application Security Auditor & Code Reviewer.",
+                    tag: "Role Context",
+                    tagClass: "tag-role",
+                    correctSlot: 0
+                },
+                {
+                    id: "task_3",
+                    type: "task",
+                    label: "### TASK: Perform static security audit and identify CWE vulnerability classes.",
+                    tag: "Objective",
+                    tagClass: "tag-task",
+                    correctSlot: 1
+                },
+                {
+                    id: "input_3",
+                    type: "input",
+                    label: "### INPUT DATA\n<code_snippet language=\"python\">\ncursor.execute(f\"SELECT * FROM users WHERE user_id = {user_id}\")\n</code_snippet>",
+                    tag: "XML Input Boundary",
+                    tagClass: "tag-input",
+                    correctSlot: 2
+                },
+                {
+                    id: "output_3",
+                    type: "output",
+                    label: "### OUTPUT CONSTRAINTS\nReturn ONLY JSON matching: {\"is_vulnerable\": boolean, \"cwe_id\": string, \"remediation\": string}",
+                    tag: "JSON Schema",
+                    tagClass: "tag-output",
+                    correctSlot: 3
+                },
+                {
+                    id: "bad_4",
+                    type: "bad",
+                    label: "Output conversational explanation in casual markdown.",
+                    tag: "❌ Distractor",
+                    tagClass: "tag-bad",
+                    correctSlot: -1
+                }
+            ]
+        }
+    ];
+
+    let currentLevelIndex = 0;
+    let score = 0;
+    let slotAssignments = [null, null, null, null];
+    let selectedPieceForClick = null;
+
+    function switchLevel(index) {
+        currentLevelIndex = index;
+        document.querySelectorAll('.level-btn').forEach((btn, idx) => {
+            btn.classList.toggle('active', idx === index);
+        });
+
+        document.getElementById('stat-level').textContent = `${index + 1} / 3`;
+        resetCurrentLevel();
+    }
+
+    function resetCurrentLevel() {
+        const lvl = levels[currentLevelIndex];
+        slotAssignments = [null, null, null, null];
+        selectedPieceForClick = null;
+
+        document.getElementById('banner-bad-text').textContent = lvl.badPrompt;
+        document.getElementById('banner-target-text').textContent = lvl.targetDescription;
+
+        // Reset Feedback
+        const feedbackEl = document.getElementById('game-feedback');
+        feedbackEl.style.display = 'none';
+
+        // Render Pieces in Pool
+        const poolEl = document.getElementById('pieces-pool');
+        poolEl.innerHTML = '';
+
+        // Shuffle pieces
+        const shuffled = [...lvl.pieces].sort(() => Math.random() - 0.5);
+
+        shuffled.forEach(piece => {
+            const pieceDiv = document.createElement('div');
+            pieceDiv.id = `piece-${piece.id}`;
+            pieceDiv.className = 'puzzle-piece';
+            pieceDiv.draggable = true;
+            pieceDiv.ondragstart = (e) => handleDragStart(e, piece.id);
+            pieceDiv.onclick = () => selectPieceForSlotting(piece.id);
+
+            pieceDiv.innerHTML = `
+                <div style="display: flex; flex-direction: column; gap: 0.3rem; flex-grow: 1;">
+                    <span class="piece-category-tag ${piece.tagClass}">${piece.tag}</span>
+                    <span style="white-space: pre-wrap;">${escapeHtml(piece.label)}</span>
+                </div>
+                <div class="piece-handle">⋮⋮</div>
+            `;
+            poolEl.appendChild(pieceDiv);
+        });
+
+        // Reset Slots
+        for (let i = 0; i < 4; i++) {
+            const slotEl = document.getElementById(`slot-${i}`);
+            slotEl.className = 'drop-slot';
+            slotEl.innerHTML = `<div class="slot-placeholder"><span>⬇️</span> Drop Slot ${i + 1} Block Here</div>`;
+        }
+    }
+
+    function escapeHtml(str) {
+        return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+    }
+
+    // Drag and drop handlers
+    function handleDragStart(e, pieceId) {
+        e.dataTransfer.setData('text/plain', pieceId);
+        const el = document.getElementById(`piece-${pieceId}`);
+        if (el) el.classList.add('dragging');
+    }
+
+    function handleDragOver(e) {
+        e.preventDefault();
+        e.currentTarget.classList.add('drag-over');
+    }
+
+    function handleDragLeave(e) {
+        e.currentTarget.classList.remove('drag-over');
+    }
+
+    function handleDrop(e, slotIndex) {
+        e.preventDefault();
+        e.currentTarget.classList.remove('drag-over');
+        const pieceId = e.dataTransfer.getData('text/plain');
+        placePieceInSlot(pieceId, slotIndex);
+    }
+
+    function selectPieceForSlotting(pieceId) {
+        selectedPieceForClick = pieceId;
+        // Find first empty slot
+        const emptySlotIdx = slotAssignments.findIndex(s => s === null);
+        if (emptySlotIdx !== -1) {
+            placePieceInSlot(pieceId, emptySlotIdx);
+        }
+    }
+
+    function handleSlotClick(slotIndex) {
+        if (selectedPieceForClick) {
+            placePieceInSlot(selectedPieceForClick, slotIndex);
+            selectedPieceForClick = null;
+        }
+    }
+
+    function placePieceInSlot(pieceId, slotIndex) {
+        const lvl = levels[currentLevelIndex];
+        const piece = lvl.pieces.find(p => p.id === pieceId);
+        if (!piece) return;
+
+        // If this piece was in another slot, clear that slot
+        const prevSlotIdx = slotAssignments.indexOf(pieceId);
+        if (prevSlotIdx !== -1) {
+            slotAssignments[prevSlotIdx] = null;
+            const prevSlotEl = document.getElementById(`slot-${prevSlotIdx}`);
+            prevSlotEl.className = 'drop-slot';
+            prevSlotEl.innerHTML = `<div class="slot-placeholder"><span>⬇️</span> Drop Slot ${prevSlotIdx + 1} Block Here</div>`;
+        }
+
+        // If slot had an existing piece, return it to pool
+        const existingPieceId = slotAssignments[slotIndex];
+        if (existingPieceId) {
+            const existingEl = document.getElementById(`piece-${existingPieceId}`);
+            if (existingEl) existingEl.style.display = 'flex';
+        }
+
+        // Assign to slot
+        slotAssignments[slotIndex] = pieceId;
+
+        // Hide piece from pool
+        const pieceEl = document.getElementById(`piece-${pieceId}`);
+        if (pieceEl) pieceEl.style.display = 'none';
+
+        // Update slot UI
+        const slotEl = document.getElementById(`slot-${slotIndex}`);
+        slotEl.className = 'drop-slot filled';
+        slotEl.innerHTML = `
+            <div style="display:flex; justify-content:space-between; align-items:flex-start; gap: 0.5rem;">
+                <div style="display:flex; flex-direction:column; gap:0.25rem;">
+                    <span class="piece-category-tag ${piece.tagClass}">${piece.tag}</span>
+                    <span style="font-family:var(--font-mono); font-size:0.85rem; white-space: pre-wrap;">${escapeHtml(piece.label)}</span>
+                </div>
+                <button class="remove-piece-btn" onclick="removePieceFromSlot(event, ${slotIndex})">✕ Return</button>
+            </div>
+        `;
+    }
+
+    function removePieceFromSlot(e, slotIndex) {
+        e.stopPropagation();
+        const pieceId = slotAssignments[slotIndex];
+        if (!pieceId) return;
+
+        slotAssignments[slotIndex] = null;
+
+        // Show back in pool
+        const pieceEl = document.getElementById(`piece-${pieceId}`);
+        if (pieceEl) pieceEl.style.display = 'flex';
+
+        // Reset slot
+        const slotEl = document.getElementById(`slot-${slotIndex}`);
+        slotEl.className = 'drop-slot';
+        slotEl.innerHTML = `<div class="slot-placeholder"><span>⬇️</span> Drop Slot ${slotIndex + 1} Block Here</div>`;
+    }
+
+    function checkSolution() {
+        const lvl = levels[currentLevelIndex];
+        const feedbackEl = document.getElementById('game-feedback');
+        feedbackEl.style.display = 'block';
+
+        // Check if all 4 slots filled
+        if (slotAssignments.includes(null)) {
+            feedbackEl.className = 'result-banner error';
+            feedbackEl.innerHTML = '<strong>⚠️ Incomplete Prompt!</strong> Please fill all 4 structural slots before testing.';
+            return;
+        }
+
+        let allCorrect = true;
+        let errors = [];
+
+        for (let i = 0; i < 4; i++) {
+            const pieceId = slotAssignments[i];
+            const piece = lvl.pieces.find(p => p.id === pieceId);
+            const slotEl = document.getElementById(`slot-${i}`);
+
+            if (piece && piece.correctSlot === i) {
+                slotEl.classList.remove('wrong-slot');
+                slotEl.classList.add('correct-slot');
+            } else {
+                allCorrect = false;
+                slotEl.classList.remove('correct-slot');
+                slotEl.classList.add('wrong-slot');
+
+                if (piece.type === 'bad') {
+                    errors.push(`Slot ${i + 1} contains a distractor block that lacks structural constraints.`);
+                } else {
+                    errors.push(`Slot ${i + 1} is out of sequence (expected a different prompt layer).`);
+                }
+            }
+        }
+
+        if (allCorrect) {
+            score += 100;
+            document.getElementById('stat-score').textContent = `${score} pts`;
+
+            feedbackEl.className = 'result-banner success';
+            feedbackEl.innerHTML = `
+                <div style="font-size: 1.1rem; font-weight: 800; margin-bottom: 0.5rem;">
+                    🎉 Perfect Assembly! +100 Points!
+                </div>
+                <p style="margin:0; font-size: 0.9rem;">
+                    Your structured prompt is 100% production-ready. The AI engine ingested the Markdown role, locked attention onto the XML boundaries, and executed strict JSON schema decoding without preamble!
+                </p>
+            `;
+
+            // Trigger celebration confetti
+            if (window.confetti) {
+                confetti({
+                    particleCount: 100,
+                    spread: 70,
+                    origin: { y: 0.6 }
+                });
+            }
+        } else {
+            feedbackEl.className = 'result-banner error';
+            feedbackEl.innerHTML = `
+                <strong>❌ Sequence Check Failed:</strong><br>
+                &bull; ${errors.join('<br>&bull; ')}
+            `;
+        }
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        switchLevel(0);
+    });
+</script>
+
+</body>
+</html>
