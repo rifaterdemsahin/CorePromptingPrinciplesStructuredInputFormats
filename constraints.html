@@ -1,0 +1,839 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input & Output Constraints in LLMs | Core Prompting Principles</title>
+    <!-- Highlight.js for Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/markdown.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #0b1120;
+            --surface-bg: #131d33;
+            --card-bg: #1e293b;
+            --accent-blue: #38bdf8;
+            --accent-green: #4ade80;
+            --accent-purple: #c084fc;
+            --accent-amber: #fbbf24;
+            --accent-rose: #f87171;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --code-bg: #090e1a;
+            --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 4rem;
+        }
+
+        /* Top Navigation Bar */
+        .top-navbar {
+            background-color: rgba(19, 29, 51, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .nav-brand span.logo-badge {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: #0b1120;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 800;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            list-style: none;
+        }
+
+        .nav-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            text-decoration: none;
+            padding: 0.45rem 0.9rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .nav-link-btn:hover {
+            color: var(--text-main);
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        .nav-link-btn.active {
+            color: var(--accent-blue);
+            background: rgba(56, 189, 248, 0.12);
+            border-color: rgba(56, 189, 248, 0.3);
+        }
+
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 0;
+        }
+
+        /* Hero */
+        .hero {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f8fafc 0%, #fbbf24 40%, #4ade80 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            max-width: 900px;
+        }
+
+        /* Interactive Constraint Controller */
+        .controller-card {
+            background: var(--surface-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .controller-title {
+            font-size: 1.15rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .toggle-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+        }
+
+        @media (max-width: 950px) {
+            .toggle-grid { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        @media (max-width: 600px) {
+            .toggle-grid { grid-template-columns: 1fr; }
+        }
+
+        .toggle-box {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.85rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .toggle-box:hover {
+            border-color: var(--accent-blue);
+        }
+
+        .toggle-box input[type="checkbox"] {
+            margin-top: 0.25rem;
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent-blue);
+            cursor: pointer;
+        }
+
+        .toggle-box label {
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: var(--text-main);
+            display: block;
+        }
+
+        .toggle-desc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            margin-top: 0.2rem;
+        }
+
+        /* Scenario Selector Pills */
+        .scenario-nav {
+            display: flex;
+            gap: 0.6rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            scrollbar-width: thin;
+        }
+
+        .scenario-pill {
+            background: var(--surface-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 0.6rem 1.1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .scenario-pill:hover {
+            color: var(--text-main);
+            border-color: var(--accent-amber);
+        }
+
+        .scenario-pill.active {
+            background: rgba(251, 191, 36, 0.15);
+            border-color: var(--accent-amber);
+            color: var(--accent-amber);
+            font-weight: 700;
+        }
+
+        /* Side by side comparison */
+        .split-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.75rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 950px) {
+            .split-grid { grid-template-columns: 1fr; }
+        }
+
+        .column-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            border-top: 4px solid;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .column-card.unset-side {
+            border-color: var(--accent-rose);
+            border-left: 1px solid rgba(248, 113, 113, 0.2);
+            border-right: 1px solid rgba(248, 113, 113, 0.2);
+            border-bottom: 1px solid rgba(248, 113, 113, 0.2);
+        }
+
+        .column-card.set-side {
+            border-color: var(--accent-green);
+            border-left: 1px solid rgba(74, 222, 128, 0.2);
+            border-right: 1px solid rgba(74, 222, 128, 0.2);
+            border-bottom: 1px solid rgba(74, 222, 128, 0.2);
+        }
+
+        .column-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .column-title {
+            font-size: 1.25rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .unset-side .column-title { color: var(--accent-rose); }
+        .set-side .column-title { color: var(--accent-green); }
+
+        .tag-badge {
+            padding: 0.25rem 0.65rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .unset-badge { background: rgba(248, 113, 113, 0.2); color: var(--accent-rose); border: 1px solid var(--accent-rose); }
+        .set-badge { background: rgba(74, 222, 128, 0.2); color: var(--accent-green); border: 1px solid var(--accent-green); }
+
+        .box-label {
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.3rem;
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            margin: 0;
+            overflow-x: auto;
+        }
+
+        pre code {
+            display: block;
+            padding: 1rem;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .output-box {
+            background: #090e1a;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            min-height: 160px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+
+        .unset-side .output-box {
+            color: #fca5a5;
+            border-left: 3px solid var(--accent-rose);
+        }
+
+        .set-side .output-box {
+            color: var(--accent-green);
+            border-left: 3px solid var(--accent-green);
+        }
+
+        /* Constraint Badge List */
+        .constraint-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.4rem;
+            margin-top: 0.5rem;
+        }
+
+        .c-badge {
+            font-size: 0.72rem;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            font-family: var(--font-mono);
+        }
+
+        .c-badge.active { background: rgba(74, 222, 128, 0.15); color: var(--accent-green); border: 1px solid var(--accent-green); }
+        .c-badge.missing { background: rgba(248, 113, 113, 0.15); color: var(--accent-rose); border: 1px solid var(--accent-rose); }
+
+        /* Copy Button */
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: var(--accent-blue);
+            color: #0b1120;
+        }
+
+        /* Guide Card */
+        .guide-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        @media (max-width: 800px) {
+            .guide-grid { grid-template-columns: 1fr; }
+        }
+
+        .guide-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+        }
+
+        .guide-card h3 {
+            font-size: 1.15rem;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .guide-card ul {
+            margin-left: 1.25rem;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .guide-card li {
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+
+<!-- TOP SHARED NAVBAR -->
+<nav class="top-navbar">
+    <div class="navbar-container">
+        <a href="index.html" class="nav-brand">
+            <span class="logo-badge">PROMPT ARCH</span>
+            <span>Core Prompting Principles</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html" class="nav-link-btn">🏛️ Workbench & Guide</a></li>
+            <li><a href="comparison.html" class="nav-link-btn">⚖️ Good vs Bad Prompts</a></li>
+            <li><a href="constraints.html" class="nav-link-btn active">🔒 Input & Output Constraints</a></li>
+            <li><a href="https://github.com/rifaterdemsahin/CorePromptingPrinciplesStructuredInputFormats" target="_blank" class="nav-link-btn">🐙 GitHub Repo</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <header class="hero">
+        <h1>Input & Output Constraints in LLM Engineering</h1>
+        <p class="subtitle">
+            Explore how setting strict input boundaries (delimiters, length bounds, data schemas) and output constraints (JSON Schemas, Enums, missing-field null handling, anti-preamble rules) transforms chaotic LLM inference into production-grade determinism.
+        </p>
+    </header>
+
+    <!-- Interactive Constraint Switcher -->
+    <div class="scenario-nav">
+        <button class="scenario-pill active" onclick="loadConstraintScenario(0)">📦 1. E-Commerce Order Parsing</button>
+        <button class="scenario-pill" onclick="loadConstraintScenario(1)">🩺 2. Medical Health Metric Parser</button>
+        <button class="scenario-pill" onclick="loadConstraintScenario(2)">🛡️ 3. PII & GDPR Masking Filter</button>
+        <button class="scenario-pill" onclick="loadConstraintScenario(3)">💾 4. SQL Safe Query Generator</button>
+    </div>
+
+    <!-- Side-by-Side Split View -->
+    <div class="split-grid">
+        <!-- LEFT: UNCONSTRAINED (CONSTRAINTS NOT SET) -->
+        <section class="column-card unset-side">
+            <div class="column-header">
+                <div class="column-title">
+                    <span>🔓</span> Constraints NOT Set (Unconstrained)
+                </div>
+                <span class="tag-badge unset-badge">Unpredictable</span>
+            </div>
+
+            <!-- Input Constraints Status -->
+            <div>
+                <div class="box-label">
+                    <span>Input Constraints Active:</span>
+                </div>
+                <div class="constraint-list">
+                    <span class="c-badge missing">❌ No Data Boundary Delimiters</span>
+                    <span class="c-badge missing">❌ No Input Data Type Specification</span>
+                    <span class="c-badge missing">❌ Unbounded Prompt Length</span>
+                </div>
+            </div>
+
+            <!-- The Prompt -->
+            <div>
+                <div class="box-label">
+                    <span>The Unconstrained Prompt</span>
+                    <button class="copy-btn" onclick="copySnippet('unset-prompt')">Copy</button>
+                </div>
+                <pre><code id="unset-prompt" class="language-markdown"></code></pre>
+            </div>
+
+            <!-- Output Constraints Status -->
+            <div>
+                <div class="box-label">
+                    <span>Output Constraints Active:</span>
+                </div>
+                <div class="constraint-list">
+                    <span class="c-badge missing">❌ No Output JSON Schema</span>
+                    <span class="c-badge missing">❌ No Enum Value Whitelist</span>
+                    <span class="c-badge missing">❌ No Missing-Field Rule (Hallucination Risk)</span>
+                    <span class="c-badge missing">❌ Conversational Preamble Allowed</span>
+                </div>
+            </div>
+
+            <!-- The Resulting Output -->
+            <div>
+                <div class="box-label">
+                    <span>Resulting Output (Chaotic & Non-Deterministic)</span>
+                    <button class="copy-btn" onclick="copySnippet('unset-output')">Copy</button>
+                </div>
+                <div id="unset-output" class="output-box"></div>
+            </div>
+        </section>
+
+        <!-- RIGHT: CONSTRAINED (CONSTRAINTS STRICTLY SET) -->
+        <section class="column-card set-side">
+            <div class="column-header">
+                <div class="column-title">
+                    <span>🔒</span> Constraints SET (Production-Grade)
+                </div>
+                <span class="tag-badge set-badge">100% Deterministic</span>
+            </div>
+
+            <!-- Input Constraints Status -->
+            <div>
+                <div class="box-label">
+                    <span>Input Constraints Active:</span>
+                </div>
+                <div class="constraint-list">
+                    <span class="c-badge active">✅ XML Delimiter Tagging (`&lt;data&gt;`)</span>
+                    <span class="c-badge active">✅ Explicit Context & Role Scope</span>
+                    <span class="c-badge active">✅ Injection & Untrusted Data Isolation</span>
+                </div>
+            </div>
+
+            <!-- The Prompt -->
+            <div>
+                <div class="box-label">
+                    <span>The Constrained Prompt</span>
+                    <button class="copy-btn" onclick="copySnippet('set-prompt')">Copy</button>
+                </div>
+                <pre><code id="set-prompt" class="language-markdown"></code></pre>
+            </div>
+
+            <!-- Output Constraints Status -->
+            <div>
+                <div class="box-label">
+                    <span>Output Constraints Active:</span>
+                </div>
+                <div class="constraint-list">
+                    <span class="c-badge active">✅ Strict JSON Schema Enforced</span>
+                    <span class="c-badge active">✅ Enums Restricted (No Hallucinated Types)</span>
+                    <span class="c-badge active">✅ Missing Fields Assigned `null`</span>
+                    <span class="c-badge active">✅ Zero Conversational Preamble Rule</span>
+                </div>
+            </div>
+
+            <!-- The Resulting Output -->
+            <div>
+                <div class="box-label">
+                    <span>Resulting Output (Type-Safe & Parseable)</span>
+                    <button class="copy-btn" onclick="copySnippet('set-output')">Copy</button>
+                </div>
+                <pre><code id="set-output" class="language-json"></code></pre>
+            </div>
+        </section>
+    </div>
+
+    <!-- Educational Reference Cards -->
+    <div class="guide-grid">
+        <div class="guide-card">
+            <h3 style="color: var(--accent-blue);">📥 1. Core Input Constraints</h3>
+            <ul>
+                <li><strong>Boundary Delimiters (<code>&lt;input_data&gt;</code>)</strong>: Prevents user-provided inputs from escaping their intended context and masquerading as system commands (Prompt Injection Defense).</li>
+                <li><strong>Persona & Role Scope (<code>### ROLE</code>)</strong>: Constrains the model's vocabulary, reasoning horizon, and confidence calibration.</li>
+                <li><strong>Input Length & Format Whitelists</strong>: Reject or truncate malformed input before token processing.</li>
+            </ul>
+        </div>
+
+        <div class="guide-card">
+            <h3 style="color: var(--accent-green);">📤 2. Core Output Constraints</h3>
+            <ul>
+                <li><strong>Strict JSON Schema</strong>: Restricts valid outputs to precise typed fields (strings, numbers, arrays, booleans) compatible with <code>JSON.parse()</code>.</li>
+                <li><strong>Missing Data Fallback (<code>null</code> Rule)</strong>: Instructs the model explicitly to return <code>null</code> rather than inventing dates, prices, or names.</li>
+                <li><strong>Enum Whitelisting</strong>: Limits categorical classifications to predefined constants (e.g. <code>"PENDING" | "SHIPPED" | "REFUNDED"</code>).</li>
+                <li><strong>Negative Prompt Rules</strong>: <em>"Do not include conversational preamble or markdown code fences."</em></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script>
+    const constraintScenarios = [
+        {
+            name: "E-Commerce Order Parsing",
+            unsetPrompt: `Parse this customer email for an order update:
+
+Hi, I ordered 2 Wireless Mouse (SKU: WM-404) and 1 Mechanical Keyboard yesterday. Can you change my shipping to Express? Also, my discount code SUMMER20 didn't apply.`,
+            unsetOutput: `Hello! I would be happy to help you with that order update!
+
+Here are the items mentioned in the customer's email:
+• 2x Wireless Mouse (SKU: WM-404)
+• 1x Mechanical Keyboard (SKU not specified)
+
+Changes requested:
+- Upgrade shipping method to Express Delivery.
+- Fix discount code SUMMER20 (was not applied at checkout).
+
+Let me know if you want me to update the database records for this user!`,
+            setPrompt: `### ROLE
+E-Commerce Fulfillment API Gateway.
+
+### TASK
+Extract line items, requested fulfillment changes, and discount inquiries.
+
+### INPUT CONSTRAINTS
+- Isolate untrusted customer email body within <raw_email> tags.
+
+### INPUT DATA
+<raw_email>
+Hi, I ordered 2 Wireless Mouse (SKU: WM-404) and 1 Mechanical Keyboard yesterday. Can you change my shipping to Express? Also, my discount code SUMMER20 didn't apply.
+</raw_email>
+
+### OUTPUT CONSTRAINTS
+- Return ONLY valid JSON matching this schema.
+- If SKU or promo status is missing, set value to null. Do not hallucinate SKUs.
+- shipping_speed must be one of: ["STANDARD", "EXPRESS", "OVERNIGHT"].
+- Do not include conversational greeting or signoff.
+{
+  "line_items": [
+    { "item_name": string, "quantity": number, "sku": string|null }
+  ],
+  "requested_shipping_speed": "STANDARD" | "EXPRESS" | "OVERNIGHT",
+  "promo_code_inquiry": string|null
+}`,
+            setOutput: `{
+  "line_items": [
+    {
+      "item_name": "Wireless Mouse",
+      "quantity": 2,
+      "sku": "WM-404"
+    },
+    {
+      "item_name": "Mechanical Keyboard",
+      "quantity": 1,
+      "sku": null
+    }
+  ],
+  "requested_shipping_speed": "EXPRESS",
+  "promo_code_inquiry": "SUMMER20"
+}`
+        },
+        {
+            name: "Medical Health Metric Parser",
+            unsetPrompt: `Extract the blood pressure and glucose from these doctor notes:
+
+Patient reports fasting blood sugar around 110 mg/dL this morning. Sitting BP measured 128/82. Weight not recorded today.`,
+            unsetOutput: `Here is the medical summary from today's visit:
+
+- Blood Sugar: 110 mg/dL (fasting)
+- Blood Pressure: 128/82 mmHg (Normal to elevated)
+- Weight: Missing from chart (Estimated 75kg based on history)
+
+The patient's readings look fairly stable overall.`,
+            setPrompt: `### ROLE
+Clinical Informatics Data Normalizer.
+
+### TASK
+Extract vital metrics from clinical note snippets into standardized numerical health records.
+
+### INPUT CONSTRAINTS
+- Text enclosed in <clinical_note> tags.
+
+### INPUT DATA
+<clinical_note>
+Patient reports fasting blood sugar around 110 mg/dL this morning. Sitting BP measured 128/82. Weight not recorded today.
+</clinical_note>
+
+### OUTPUT CONSTRAINTS
+- Output ONLY valid JSON matching schema.
+- Numeric fields must be numbers (not strings).
+- If a metric is not recorded in the input, set value to null. Strict zero hallucination rule.
+{
+  "systolic_bp_mmhg": number|null,
+  "diastolic_bp_mmhg": number|null,
+  "fasting_blood_glucose_mg_dl": number|null,
+  "weight_kg": number|null
+}`,
+            setOutput: `{
+  "systolic_bp_mmhg": 128,
+  "diastolic_bp_mmhg": 82,
+  "fasting_blood_glucose_mg_dl": 110,
+  "weight_kg": null
+}`
+        },
+        {
+            name: "PII & GDPR Masking Filter",
+            unsetPrompt: `Redact personal info from this comment:
+My name is Sarah Miller (sarah.m@example.com, SSN 000-12-3456). I love the app!`,
+            unsetOutput: `Here is the redacted version:
+My name is [REDACTED NAME] ([EMAIL HIDDEN], SSN ***-**-****). I love the app!
+
+All your personal details have been safely masked!`,
+            setPrompt: `### ROLE
+Data Privacy & GDPR Sanitization Engine.
+
+### TASK
+Identify Personally Identifiable Information (PII) and output standardized anonymized token records.
+
+### INPUT CONSTRAINTS
+- Raw user text inside <untrusted_comment> tags.
+
+### INPUT DATA
+<untrusted_comment>
+My name is Sarah Miller (sarah.m@example.com, SSN 000-12-3456). I love the app!
+</untrusted_comment>
+
+### OUTPUT CONSTRAINTS
+- Return ONLY valid JSON.
+- Anonymize PII with standardized tokens: "[NAME]", "[EMAIL]", "[SSN]".
+{
+  "sanitized_text": string,
+  "pii_detected": boolean,
+  "redacted_entity_types": string[]
+}`,
+            setOutput: `{
+  "sanitized_text": "My name is [NAME] ([EMAIL], SSN [SSN]). I love the app!",
+  "pii_detected": true,
+  "redacted_entity_types": [
+    "NAME",
+    "EMAIL_ADDRESS",
+    "GOVERNMENT_ID"
+  ]
+}`
+        },
+        {
+            name: "SQL Safe Query Generator",
+            unsetPrompt: `Write SQL query to find active users in Berlin who spent more than 500 dollars:`,
+            unsetOutput: `Sure! Here is the SQL query you need:
+
+SELECT * FROM users u
+JOIN orders o ON u.id = o.user_id
+WHERE u.city = 'Berlin' AND u.status = 'active'
+GROUP BY u.id
+HAVING SUM(o.total_amount) > 500;
+
+You can run this query directly in PostgreSQL or MySQL workbench!`,
+            setPrompt: `### ROLE
+Read-Only Database Query Synthesizer.
+
+### TASK
+Generate parameterized ANSI-SQL query for user spending analysis.
+
+### INPUT CONSTRAINTS
+<query_parameters>
+City: Berlin
+Status: ACTIVE
+MinSpendingUSD: 500
+</query_parameters>
+
+### OUTPUT CONSTRAINTS
+- Must return JSON with parameterized SQL query and parameter mapping dictionary.
+- Must ONLY use SELECT statements (No DROP, DELETE, INSERT, UPDATE).
+- Must include query execution timeout constraint.
+{
+  "sql_statement": string,
+  "parameters": object,
+  "read_only": true,
+  "max_timeout_ms": number
+}`,
+            setOutput: `{
+  "sql_statement": "SELECT u.user_id, u.email, SUM(o.amount) AS total_spent FROM users u JOIN orders o ON u.user_id = o.user_id WHERE u.city = :city AND u.status = :status GROUP BY u.user_id, u.email HAVING SUM(o.amount) > :min_spent",
+  "parameters": {
+    "city": "Berlin",
+    "status": "ACTIVE",
+    "min_spent": 500
+  },
+  "read_only": true,
+  "max_timeout_ms": 3000
+}`
+        }
+    ];
+
+    function loadConstraintScenario(idx) {
+        document.querySelectorAll('.scenario-pill').forEach((pill, i) => {
+            pill.classList.toggle('active', i === idx);
+        });
+
+        const sc = constraintScenarios[idx];
+
+        // Unset
+        const unsetPromptEl = document.getElementById('unset-prompt');
+        unsetPromptEl.textContent = sc.unsetPrompt;
+        hljs.highlightElement(unsetPromptEl);
+        document.getElementById('unset-output').textContent = sc.unsetOutput;
+
+        // Set
+        const setPromptEl = document.getElementById('set-prompt');
+        setPromptEl.textContent = sc.setPrompt;
+        hljs.highlightElement(setPromptEl);
+
+        const setOutputEl = document.getElementById('set-output');
+        setOutputEl.textContent = sc.setOutput;
+        hljs.highlightElement(setOutputEl);
+    }
+
+    function copySnippet(id) {
+        const el = document.getElementById(id);
+        const text = el.textContent;
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Copied to clipboard!');
+        });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        loadConstraintScenario(0);
+    });
+</script>
+
+</body>
+</html>

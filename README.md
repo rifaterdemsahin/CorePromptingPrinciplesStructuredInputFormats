@@ -49,7 +49,7 @@ Return ONLY a valid JSON object matching this schema:
 
 ## 🌐 Multi-Page Interactive Suite
 
-This repository features two interconnected interactive web applications with a shared top navigation bar:
+This repository features three interconnected interactive web applications with a shared top navigation bar:
 
 1. **🏛️ Module 1.1 Workshop & Context Guide ([`index.html`](index.html))**:
    - **LLM Context Architecture**: Visual pipeline for prompt ingestion, attention mechanisms, and structured parsing.
@@ -61,7 +61,12 @@ This repository features two interconnected interactive web applications with a 
    - **Unstructured vs Structured Split View**: Direct side-by-side contrast of chaotic prompts vs production-grade structured prompts.
    - **Real Model Outputs**: Displays the flawed conversational output on the left versus deterministic typed JSON output on the right.
    - **5 Interactive Scenarios**: Customer Feedback Triage, Meeting Action Items, Security Code Vulnerability, Candidate Resume Screening, and Financial Earnings Parsing.
-   - **Failure & Success Root-Cause Analysis**: Identifies exact failure reasons (conversational fluff, hallucinated missing dates, injection risk) and success factors (explicit XML boundaries, strict JSON schemas).
+   - **Failure & Success Root-Cause Analysis**: Identifies exact failure reasons and success factors.
+
+3. **🔒 Input & Output Constraints Showcase ([`constraints.html`](constraints.html))**:
+   - **Constraints Set vs. Unset Comparison**: Side-by-side contrast of prompts and outputs with input and output constraints activated vs. unconstrained.
+   - **4 Production Domains**: E-Commerce Order Parsing, Medical Health Metric Parser, PII & GDPR Masking Filter, and SQL Safe Query Generator.
+   - **Constraint Breakdown**: Details input boundary delimiters (`<data>`), role scope, JSON Schemas, missing-data `null` fallbacks, enum whitelists, and anti-preamble constraints.
 
 ---
 
@@ -71,10 +76,13 @@ This repository features two interconnected interactive web applications with a 
 ```bash
 open -a "Google Chrome" index.html
 open -a "Google Chrome" comparison.html
+open -a "Google Chrome" constraints.html
 ```
 
 ### Live GitHub Pages Deployments
 - **Main Workbench**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/)
 - **Good vs Bad Comparison**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/comparison.html](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/comparison.html)
+- **Input & Output Constraints**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/constraints.html](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/constraints.html)
+
 
 
