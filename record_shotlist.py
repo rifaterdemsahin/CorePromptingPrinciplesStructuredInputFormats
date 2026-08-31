@@ -164,7 +164,8 @@ def check_project():
         "exercise.html",
         "recording-guide.html",
         "shotlist.html",
-        "recording-studio.html"
+        "recording-studio.html",
+        "automation-guide.html"
     ]
     print("\n🔍 Validating project pages and integrity...")
     all_ok = True

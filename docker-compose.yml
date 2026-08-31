@@ -1,0 +1,13 @@
+version: '3.8'
+
+services:
+  shot-recorder:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: shotlist-video-recorder
+    volumes:
+      - ./recordings:/app/recordings
+    environment:
+      - NODE_ENV=production
+    command: npm run record

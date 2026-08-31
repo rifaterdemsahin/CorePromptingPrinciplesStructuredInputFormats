@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Screen Recording Automation & Docker Architecture | Core Prompting Principles</title>
+    <!-- Highlight.js for Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #0b1120;
+            --surface-bg: #131d33;
+            --card-bg: #1e293b;
+            --card-hover: #24344d;
+            --accent-blue: #38bdf8;
+            --accent-green: #4ade80;
+            --accent-purple: #c084fc;
+            --accent-amber: #fbbf24;
+            --accent-rose: #f87171;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --code-bg: #090e1a;
+            --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 4rem;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* Top Navigation Bar */
+        .top-navbar {
+            background-color: rgba(19, 29, 51, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-container {
+            max-width: 1320px;
+            margin: 0 auto;
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .nav-brand span.logo-badge {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: #0b1120;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 800;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            list-style: none;
+        }
+
+        .nav-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            text-decoration: none;
+            padding: 0.45rem 0.85rem;
+            border-radius: 6px;
+            font-size: 0.88rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .nav-link-btn:hover {
+            color: var(--text-main);
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        .nav-link-btn.active {
+            color: var(--accent-amber);
+            background: rgba(251, 191, 36, 0.15);
+            border-color: rgba(251, 191, 36, 0.3);
+        }
+
+        /* Admin Dropdown Menu */
+        .admin-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .admin-btn {
+            background: rgba(192, 132, 252, 0.12);
+            border: 1px solid rgba(192, 132, 252, 0.35);
+            color: var(--accent-purple);
+            cursor: pointer;
+        }
+
+        .admin-btn:hover {
+            background: rgba(192, 132, 252, 0.2);
+            color: #fff;
+            border-color: var(--accent-purple);
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: calc(100% + 0.5rem);
+            background: #131d33;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            min-width: 240px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            z-index: 200;
+            padding: 0.5rem 0;
+        }
+
+        .admin-dropdown:hover .dropdown-menu,
+        .admin-dropdown:focus-within .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.6rem 1rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 600;
+            transition: all 0.15s;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255,255,255,0.06);
+            color: var(--text-main);
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 0.4rem 0;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 0;
+        }
+
+        /* Hero */
+        .hero {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 1.25rem;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f8fafc 0%, #38bdf8 40%, #c084fc 80%, #fbbf24 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.4rem;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            max-width: 820px;
+        }
+
+        /* Section Cards */
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.75rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+        }
+
+        .card-header-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* Comparison Grid (Native vs Docker) */
+        .choice-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        @media (max-width: 850px) {
+            .choice-grid { grid-template-columns: 1fr; }
+        }
+
+        .choice-card {
+            background: #0f172a;
+            border: 1px solid var(--border-color);
+            border-radius: 10px;
+            padding: 1.5rem;
+            position: relative;
+        }
+
+        .choice-card.recommended {
+            border-color: var(--accent-green);
+            box-shadow: 0 0 20px rgba(74, 222, 128, 0.12);
+        }
+
+        .badge-recommended {
+            position: absolute;
+            top: -12px;
+            right: 16px;
+            background: var(--accent-green);
+            color: #0b1120;
+            font-size: 0.72rem;
+            font-weight: 800;
+            padding: 0.2rem 0.6rem;
+            border-radius: 9999px;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        /* Steps Layout */
+        .step-block {
+            display: flex;
+            gap: 1.25rem;
+            margin-bottom: 1.5rem;
+            align-items: flex-start;
+        }
+
+        .step-badge {
+            width: 38px;
+            height: 38px;
+            background: rgba(56, 189, 248, 0.15);
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+            font-family: var(--font-mono);
+            font-size: 1rem;
+            font-weight: 800;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            margin-top: 0.2rem;
+        }
+
+        .step-content {
+            flex-grow: 1;
+        }
+
+        .step-content h3 {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 0.3rem;
+        }
+
+        /* Code Block */
+        pre {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem 1.25rem;
+            overflow-x: auto;
+            font-family: var(--font-mono);
+            font-size: 0.9rem;
+            margin: 0.75rem 0;
+            color: #e2e8f0;
+        }
+
+        code {
+            font-family: var(--font-mono);
+            background: rgba(255,255,255,0.06);
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-size: 0.88rem;
+            color: var(--accent-blue);
+        }
+
+        /* Interactive Cursor Test Sandbox */
+        .sandbox-box {
+            background: #090e1a;
+            border: 2px dashed rgba(56, 189, 248, 0.4);
+            border-radius: 10px;
+            padding: 2rem;
+            text-align: center;
+            margin: 1.5rem 0;
+            cursor: pointer;
+            position: relative;
+            user-select: none;
+            transition: all 0.2s;
+        }
+
+        .sandbox-box:hover {
+            border-color: var(--accent-blue);
+            background: rgba(56, 189, 248, 0.04);
+        }
+
+        /* Cursor & Ripple demo */
+        .demo-cursor {
+            position: absolute;
+            width: 34px;
+            height: 34px;
+            pointer-events: none;
+            transition: transform 0.08s ease-out;
+            z-index: 10;
+        }
+
+        .demo-ripple {
+            position: absolute;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: rgba(251, 191, 36, 0.5);
+            border: 2.5px solid #38bdf8;
+            pointer-events: none;
+            transform: translate(-50%, -50%) scale(0.4);
+            animation: ripple-anim 0.65s cubic-bezier(0.1, 0.3, 0.7, 1) forwards;
+        }
+
+        @keyframes ripple-anim {
+            0% { transform: translate(-50%, -50%) scale(0.4); opacity: 1; }
+            100% { transform: translate(-50%, -50%) scale(3.8); opacity: 0; }
+        }
+
+        .btn-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.65rem 1.25rem;
+            border-radius: 8px;
+            font-weight: 800;
+            font-size: 0.92rem;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+
+        .btn-blue {
+            background: linear-gradient(135deg, var(--accent-blue), #0284c7);
+            color: #0b1120;
+        }
+
+        .btn-purple {
+            background: linear-gradient(135deg, var(--accent-purple), #9333ea);
+            color: #fff;
+        }
+    </style>
+</head>
+<body>
+
+<!-- TOP SHARED NAVBAR -->
+<nav class="top-navbar">
+    <div class="navbar-container">
+        <a href="index.html" class="nav-brand">
+            <span class="logo-badge">PROMPT ARCH</span>
+            <span>Core Prompting Principles</span>
+        </a>
+        <ul class="nav-links">
+            <!-- Training / Course Pages -->
+            <li><a href="index.html" class="nav-link-btn">🏛️ Workbench & Guide</a></li>
+            <li><a href="comparison.html" class="nav-link-btn">⚖️ Good vs Bad Prompts</a></li>
+            <li><a href="constraints.html" class="nav-link-btn">🔒 Constraints</a></li>
+            <li><a href="exercise.html" class="nav-link-btn">🧩 Refactor Game</a></li>
+
+            <!-- Admin & Production Sub-Menu -->
+            <li class="admin-dropdown">
+                <button class="nav-link-btn admin-btn active">
+                    <span>⚙️ Admin & Production</span>
+                    <span style="font-size: 0.7rem;">▼</span>
+                </button>
+                <div class="dropdown-menu">
+                    <a href="recording-guide.html" class="dropdown-item">📹 Recording Guide</a>
+                    <a href="shotlist.html" class="dropdown-item">🎬 Video 1.1 Shot List</a>
+                    <a href="recording-studio.html" class="dropdown-item">🎙️ Recording Studio</a>
+                    <a href="automation-guide.html" class="dropdown-item" style="color: var(--accent-amber);">🤖 Recording Automation & Docker</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="https://github.com/rifaterdemsahin/CorePromptingPrinciplesStructuredInputFormats" target="_blank" class="dropdown-item">🐙 GitHub Repo ↗</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <!-- HERO -->
+    <header class="hero">
+        <div>
+            <div style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.25rem 0.75rem; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.4); border-radius: 9999px; color: var(--accent-blue); font-size: 0.8rem; font-weight: 700; margin-bottom: 0.5rem;">
+                <span>🤖</span> Production Engineering SOP &bull; Automated Screen Capture
+            </div>
+            <h1>Screen Recording Automation & Docker Architecture</h1>
+            <p class="subtitle">
+                Complete guide to the automated recording pipeline: prerequisites, virtual cursor tracking, click wave physics, Playwright headless execution, and Docker containerization.
+            </p>
+        </div>
+
+        <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;">
+            <a href="recording-studio.html" class="btn-action btn-blue">
+                <span>🎙️</span> Open Recording Studio
+            </a>
+            <a href="shotlist.html" class="nav-link-btn" style="background: rgba(255,255,255,0.06);">
+                <span>📋</span> View Shot List
+            </a>
+        </div>
+    </header>
+
+    <!-- SECTION 1: DO YOU NEED DOCKER? -->
+    <section class="card">
+        <div class="card-header-flex">
+            <div class="card-title">
+                <span>🐳</span> Prerequisites: Do You Need Docker?
+            </div>
+            <span style="font-size: 0.85rem; color: var(--accent-amber); font-weight: 700;">Executive Decision Guide</span>
+        </div>
+
+        <p style="color: var(--text-muted); margin-bottom: 1rem;">
+            <strong>Short Answer:</strong> <strong>Docker is optional.</strong> If you are on macOS with Node.js installed, you can run the recorder directly with hardware acceleration in 1 command. However, if you want zero-dependency sandboxing or CI/CD automated pipeline builds, Docker is fully configured and ready.
+        </p>
+
+        <div class="choice-grid">
+            <!-- Choice A: Native Local (Recommended) -->
+            <div class="choice-card recommended">
+                <span class="badge-recommended">Recommended (Fastest)</span>
+                <h3 style="color: var(--accent-green); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+                    <span>🍎</span> Native macOS / Local Run
+                </h3>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+                    Fastest execution with GPU hardware acceleration, instant screen feedback, and native Google Chrome rendering.
+                </p>
+                <div style="font-size: 0.85rem; color: #cbd5e1;">
+                    <strong>Prerequisites:</strong>
+                    <ul style="margin-left: 1.25rem; margin-top: 0.3rem;">
+                        <li><strong>Node.js</strong> &ge; 18 (Installed: <code>v22.22.0</code>)</li>
+                        <li><strong>Playwright & Chromium</strong> (<code>npm install</code> & <code>npx playwright install chromium</code>)</li>
+                    </ul>
+                </div>
+                <pre><code># 1. Run automated recording
+npm run record
+
+# 2. View recorded takes in recordings/
+ls -lh recordings/</code></pre>
+            </div>
+
+            <!-- Choice B: Docker Container -->
+            <div class="choice-card">
+                <h3 style="color: var(--accent-blue); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.4rem;">
+                    <span>🐳</span> Docker Containerized Run
+                </h3>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 0.75rem;">
+                    Best for isolated CI/CD cloud runners, Linux servers without GUI, and automated weekly documentation build pipelines.
+                </p>
+                <div style="font-size: 0.85rem; color: #cbd5e1;">
+                    <strong>Prerequisites:</strong>
+                    <ul style="margin-left: 1.25rem; margin-top: 0.3rem;">
+                        <li><strong>Docker Desktop</strong> (Started / Running)</li>
+                        <li>No Node.js installation needed on host</li>
+                    </ul>
+                </div>
+                <pre><code># 1. Start Docker Desktop, then run:
+docker compose up
+
+# Videos are automatically output to ./recordings</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 2: HOW THE RECORDING PIPELINE WORKS -->
+    <section class="card">
+        <div class="card-header-flex">
+            <div class="card-title">
+                <span>⚙️</span> How the Automation Engine Works Under the Hood
+            </div>
+            <span style="font-size: 0.85rem; color: var(--accent-blue); font-family: var(--font-mono);">record_shots.js</span>
+        </div>
+
+        <!-- Step 1 -->
+        <div class="step-block">
+            <div class="step-badge">1</div>
+            <div class="step-content">
+                <h3>Chromium Browser Viewport & Video Pipe Setup</h3>
+                <p style="color: var(--text-muted); font-size: 0.92rem;">
+                    Playwright launches a headless Chromium instance with a fixed <strong>1920x1080 resolution (1080p @ 60fps)</strong> and streams the frame buffer directly to a <code>.webm</code> encoder inside the <code>recordings/</code> directory.
+                </p>
+            </div>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step-block">
+            <div class="step-badge">2</div>
+            <div class="step-content">
+                <h3>Virtual Animated Cursor Injection (<code>injectVisualCursor</code>)</h3>
+                <p style="color: var(--text-muted); font-size: 0.92rem;">
+                    Because headless browsers do not show the operating system mouse cursor, our script injects a high-visibility SVG pointer (gold body with cyan core and drop shadow) into the page DOM at <code>z-index: 9999999</code>.
+                </p>
+            </div>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step-block">
+            <div class="step-badge">3</div>
+            <div class="step-content">
+                <h3>Smooth Cubic Bezier Motion Interpolation (<code>smoothMove</code>)</h3>
+                <p style="color: var(--text-muted); font-size: 0.92rem;">
+                    Rather than jumping abruptly between coordinates, mouse movements use a <strong>Cubic Ease-In-Out</strong> interpolation curve (<code>t &lt; 0.5 ? 4*t^3 : 1 - (-2*t+2)^3/2</code>) across 18ms timesteps, giving the pointer natural, professional presenter movement.
+                </p>
+            </div>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step-block">
+            <div class="step-badge">4</div>
+            <div class="step-content">
+                <h3>Click Wave Ripple Physics (<code>rec-click-ripple</code>)</h3>
+                <p style="color: var(--text-muted); font-size: 0.92rem;">
+                    Every click on buttons, form fields, and puzzle blocks triggers a glowing cyan & amber wave that expands from scale 0.4 to 3.8 before fading out, providing clear visual confirmation of interactions in the video.
+                </p>
+            </div>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="step-block">
+            <div class="step-badge">5</div>
+            <div class="step-content">
+                <h3>Takes Vault Manifest Generation (<code>takes-manifest.json</code>)</h3>
+                <p style="color: var(--text-muted); font-size: 0.92rem;">
+                    Upon completing all 4 shots, the script renames the video files into standard production naming conventions (<code>video-1.1-shot1-architecture.webm</code>) and writes a complete JSON manifest with durations, byte counts, and timestamps.
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: INTERACTIVE CURSOR & CLICK PLAYGROUND -->
+    <section class="card">
+        <div class="card-header-flex">
+            <div class="card-title">
+                <span>🎯</span> Interactive Cursor & Click Wave Sandbox
+            </div>
+            <span style="font-size: 0.85rem; color: var(--accent-purple);">Live Visualizer Demo</span>
+        </div>
+        <p style="color: var(--text-muted); font-size: 0.92rem;">
+            Click anywhere inside the sandbox box below or click the automated demo button to see the exact virtual cursor and click wave physics used during the video recording process.
+        </p>
+
+        <div id="sandbox" class="sandbox-box" onclick="triggerSandboxClick(event)">
+            <span style="color: var(--accent-amber); font-weight: 800; font-size: 1.1rem; display: block; margin-bottom: 0.5rem;">
+                🖱️ Click Anywhere Inside This Box to Trigger Click Wave
+            </span>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">
+                Observe the expanding cyan/gold wave animation with smooth cubic timing.
+            </span>
+        </div>
+
+        <div style="display: flex; gap: 0.75rem; justify-content: center;">
+            <button class="btn-action btn-purple" onclick="runAutomatedPointerDemo()">
+                <span>▶️</span> Run Automated Cursor Path Demo
+            </button>
+        </div>
+    </section>
+
+    <!-- SECTION 4: SOURCE CODE BLUEPRINTS -->
+    <section class="card">
+        <div class="card-header-flex">
+            <div class="card-title">
+                <span>📄</span> Production Code Reference
+            </div>
+            <span style="font-size: 0.85rem; color: var(--accent-green);">Ready to inspect</span>
+        </div>
+
+        <h4 style="color: var(--accent-blue); margin-bottom: 0.5rem;">1. Dockerfile</h4>
+        <pre><code class="language-dockerfile"># Automated Video Shot Recorder Container
+FROM mcr.microsoft.com/playwright:v1.49.1-noble
+
+WORKDIR /app
+COPY package*.json ./
+RUN npm ci || npm install
+COPY . .
+RUN mkdir -p /app/recordings
+
+CMD ["npm", "run", "record"]</code></pre>
+
+        <h4 style="color: var(--accent-amber); margin-top: 1.5rem; margin-bottom: 0.5rem;">2. Docker Compose Configuration (<code>docker-compose.yml</code>)</h4>
+        <pre><code class="language-yaml">version: '3.8'
+
+services:
+  shot-recorder:
+    build: .
+    container_name: shotlist-video-recorder
+    volumes:
+      - ./recordings:/app/recordings
+    command: npm run record</code></pre>
+    </section>
+</div>
+
+<script>
+    hljs.highlightAll();
+
+    function triggerSandboxClick(e) {
+        const rect = e.currentTarget.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+
+        const ripple = document.createElement('div');
+        ripple.className = 'demo-ripple';
+        ripple.style.left = `${x}px`;
+        ripple.style.top = `${y}px`;
+        e.currentTarget.appendChild(ripple);
+
+        setTimeout(() => ripple.remove(), 700);
+    }
+
+    function runAutomatedPointerDemo() {
+        const box = document.getElementById('sandbox');
+        const rect = box.getBoundingClientRect();
+
+        // Create or get cursor
+        let cursor = document.getElementById('demo-test-cursor');
+        if (!cursor) {
+            cursor = document.createElement('div');
+            cursor.id = 'demo-test-cursor';
+            cursor.className = 'demo-cursor';
+            cursor.innerHTML = `
+                <svg width="34" height="34" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" style="filter: drop-shadow(0 4px 10px rgba(0,0,0,0.7));">
+                    <path d="M6 3L23 15L14 18L10 27L6 3Z" fill="#fbbf24" stroke="#0b1120" stroke-width="2.5" stroke-linejoin="round"/>
+                    <circle cx="6" cy="3" r="3.5" fill="#38bdf8" stroke="#0b1120" stroke-width="1.5" />
+                </svg>
+            `;
+            box.appendChild(cursor);
+        }
+
+        const points = [
+            { x: 40, y: 30 },
+            { x: rect.width / 2, y: 50 },
+            { x: rect.width - 80, y: 40 },
+            { x: rect.width / 2, y: 80 }
+        ];
+
+        let step = 0;
+        function nextMove() {
+            if (step >= points.length) return;
+            const pt = points[step];
+            cursor.style.transform = `translate(${pt.x}px, ${pt.y}px)`;
+
+            // Trigger ripple at point
+            setTimeout(() => {
+                const ripple = document.createElement('div');
+                ripple.className = 'demo-ripple';
+                ripple.style.left = `${pt.x}px`;
+                ripple.style.top = `${pt.y}px`;
+                box.appendChild(ripple);
+                setTimeout(() => ripple.remove(), 700);
+            }, 300);
+
+            step++;
+            setTimeout(nextMove, 700);
+        }
+        nextMove();
+    }
+</script>
+
+</body>
+</html>

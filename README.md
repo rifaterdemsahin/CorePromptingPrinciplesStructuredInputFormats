@@ -88,23 +88,31 @@ The platform separates **Student-Facing Training Modules** from **Instructor/Pro
    - **Synchronized Karaoke Teleprompter**: Auto-scrolling voiceover script with sentence highlighter sync'd to shot durations.
    - **Take Manager & Production Vault**: Track takes, mark favorite/best take (⭐), review instant replays, and download `.webm` / export `takes-manifest.json`.
 
+8. **🤖 Recording Automation & Docker Guide ([`automation-guide.html`](automation-guide.html))**:
+   - **Playwright 1080p Engine**: Automated virtual cursor tracking, Bezier motion paths, and click wave physics.
+   - **Docker & Container Architecture**: Zero-dependency containerized execution via `Dockerfile` and `docker-compose.yml`.
+
 ---
 
 ## 🛠️ CLI Automation & Production Helper
 
-A Python automation assistant [`record_shotlist.py`](record_shotlist.py) is included for recording orchestration:
+### Option A: Local Run (Recommended — Fastest)
 ```bash
-# Start local studio server and open in Google Chrome
+# Install dependencies & Chromium
+npm install
+npx playwright install chromium
+
+# Automated 4-shot screen recording (with cursor & click waves)
+npm run record
+
+# Start local server and open Studio in Google Chrome
 python3 record_shotlist.py --serve
+```
 
-# Open a specific shot page (1-4) in Google Chrome
-python3 record_shotlist.py --shot 1
-
-# Print continuous voiceover teleprompter script to terminal
-python3 record_shotlist.py --teleprompter
-
-# Check and validate all project files
-python3 record_shotlist.py --check
+### Option B: Docker Containerized Run (Optional / CI/CD)
+```bash
+# Build & run inside isolated container (outputs to ./recordings)
+docker compose up
 ```
 
 ---
@@ -120,6 +128,7 @@ open -a "Google Chrome" exercise.html
 open -a "Google Chrome" recording-guide.html
 open -a "Google Chrome" shotlist.html
 open -a "Google Chrome" recording-studio.html
+open -a "Google Chrome" automation-guide.html
 ```
 
 ### Live GitHub Pages Deployments
@@ -130,6 +139,7 @@ open -a "Google Chrome" recording-studio.html
 - **Recording Guide (Admin)**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/recording-guide.html](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/recording-guide.html)
 - **Video 1.1 Shot List (Admin)**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/shotlist.html](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/shotlist.html)
 - **Recording Studio (Admin)**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/recording-studio.html](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/recording-studio.html)
+- **Recording Automation Guide (Admin)**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/automation-guide.html](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/automation-guide.html)
 
 
 
