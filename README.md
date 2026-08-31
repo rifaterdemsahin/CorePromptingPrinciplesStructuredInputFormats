@@ -1,82 +1,72 @@
-# Core Prompting Principles & Structured Input Formats
+# Core Prompting Principles & Structured Input Formats: Markdown & JSON in LLM Contexts
 
-> https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/
+> **Live Application**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/)
+>
+> **AOU Certified AI Associate — Module 1.1 Workshop & Interactive Reference**
 
-> **AOU Certified AI Associate — Module 1.1 Workshop**
-
-This repository establishes the foundation for effective interaction with AI Agents (such as Claude, Gemini, and GPT). In this course module, we cover the fundamental **"3 Cs" of prompting—Context, Clarity, and Constraints**, and demonstrate how structuring inputs using specific formats (Markdown, XML tags, and JSON) significantly improves output predictability and eliminates hallucination.
-
----
-
-## 🎯 Course & Module Overview
-
-Effective AI interaction requires treating prompts as software specifications rather than casual conversations. This module provides a standard starting template for any business prompt and demonstrates how defining a clear **Persona** and **Target Audience** dramatically shapes the quality and relevance of the model's output.
-
-### The 3 Cs of Prompting
-1. **Context**: Giving the model background information, reference data, the persona/role to adopt, and the intended target audience.
-2. **Clarity**: Unambiguous, step-by-step instructions describing exactly what task needs to be performed.
-3. **Constraints**: Guardrails, formatting rules, schemas (e.g., JSON schema), and edge-case handling (e.g., handling missing data).
+This repository establishes the foundation for effective interaction with AI Agents and Large Language Models (such as Claude, Gemini, and GPT). In this module and interactive application, we cover the fundamental **"3 Cs" of prompting—Context, Clarity, and Constraints**, and demonstrate how structuring inputs and outputs using **Markdown**, **XML delimiters**, and **JSON Schemas** dramatically improves model attention, eliminates hallucinations, and enables deterministic software integration.
 
 ---
 
-## 🛠️ Key Concepts & Techniques Covered
+## 🎯 Key Concepts: Markdown & JSON in LLM Contexts
 
-### 1. Persona & Target Audience Definition
-- **Persona / System Role**: Assigns domain expertise and tone (e.g., `Senior Project Manager`, `Lead Security Auditor`).
-- **Target Audience**: Defines the reading level and presentation style required for stakeholders.
+### 1. Markdown in LLMs (`###`, `-`, `|`)
+- **As Input (Prompt Architecture)**: Breaks complex system prompts into distinct semantic regions (`### ROLE`, `### TASK`, `### CONSTRAINTS`). Consumes minimal tokens while leveraging LLMs' strong pre-training familiarity with Markdown.
+- **As Output (Human Interfaces)**: Powers rich UI rendering, formatted tables, code blocks with syntax highlighting, and checklists.
 
-### 2. Structured Delimiters & Formats
-- **Markdown Headers (`###`)**: Segments instructions into distinct logical sections (`### ROLE`, `### TASK`, `### CONSTRAINTS`).
-- **XML Tag Delimiters (`<data>...</data>`)**: Encapsulates untrusted or dynamic user data within explicit boundaries, preventing prompt injection and confusion between instructions and data.
-- **Strict Output Schemas (JSON / Tables)**: Enforces deterministic, parseable output structures.
+### 2. JSON in LLMs (`{}`, `[]`)
+- **As Input (Few-Shot & Data Payloads)**: Ingests API payloads, structured objects, and few-shot input/output demonstration pairs.
+- **As Output (Structured Outputs & Tool Calling)**: Enforces strict type schemas (strings, booleans, enums, arrays, nulls) for machine-to-machine integrations and function calling with constrained decoding.
 
-### 3. Standard Business Prompt Template
+### 3. XML Delimiters (`<tag>...</tag>`)
+- **Boundary Isolation**: Encapsulates dynamic, untrusted customer data (e.g. emails, notes, transcripts) to protect against prompt injection and prevent instruction-data confusion.
+
+### 4. The Production Hybrid Prompt Formula
 ```markdown
-### ROLE
-[Define persona, role, and domain expertise]
+### ROLE & PERSONA
+Senior Customer Intelligence Lead.
 
-### TASK
-[Clear, actionable description of the objective]
+### INSTRUCTIONS
+Extract sentiment, key issues, and churn risk from customer feedback.
 
 ### INPUT DATA
-<raw_input>
-[Reference text, raw notes, or customer data]
-</raw_input>
+<customer_feedback>
+I have been waiting 3 weeks for my shipment. Your support team ignored my last 2 emails.
+</customer_feedback>
 
-### CONSTRAINTS & OUTPUT FORMAT
-- Output valid JSON matching: [{"task": string, "owner": string, "due": string|null}]
-- If any required field is missing from the input, set value to null.
-- Do not include explanatory text or conversational preamble.
+### OUTPUT FORMAT & CONSTRAINTS
+Return ONLY a valid JSON object matching this schema:
+{
+  "sentiment": "POSITIVE" | "NEUTRAL" | "NEGATIVE",
+  "urgency": "LOW" | "MEDIUM" | "HIGH",
+  "key_issues": string[],
+  "churn_risk": boolean,
+  "recommended_action": string
+}
 ```
 
 ---
 
-## 🌐 Interactive Workshop Application (`index.html`)
+## 🌐 Interactive Application (`index.html`)
 
-This repository includes a standalone interactive workshop page ([`index.html`](index.html)) designed for hands-on practice:
-
-### 1. Part 1: DO — Guided Interactive Builder
-- **Workbench**: Live input fields to define Role/System Context, Primary Task, Input Data, and Output Constraints.
-- **Real-Time Live Preview**: Instant generation of structured prompts formatted with Markdown headers and XML data tags.
-
-### 2. Part 2: APPLY — Hands-On Refactor Challenge
-- **Scenario**: Takes a vague, unstructured business prompt (e.g., *"Look at these customer reviews and tell me which ones are bad..."*).
-- **Interactive Workspace**: A dedicated editor where students refactor the prompt into production-grade structured format.
-- **Built-in Validator**: Evaluates the submission in real-time for:
-  - Markdown structural headers (`### ROLE`, `### TASK`, `### CONSTRAINTS`)
-  - XML data delimiters (`<reviews>...</reviews>`)
-  - Explicit output format constraints (e.g., JSON specification)
+The interactive web application includes:
+1. **🏛️ LLM Context Architecture**: Visual flow diagram illustrating how tokens traverse system prompts, data enclosures, attention mechanisms, and structured outputs.
+2. **📝 Markdown Inputs & Outputs**: Deep dive into Markdown prompt structuring and live rendered output previews.
+3. **📦 JSON & Structured Schemas**: Real-time JSON schema validator and constrained decoding explanations.
+4. **⚖️ Decision Matrix**: Comparative evaluation across Token Overhead, Machine Parseability, Prompt Injection Defense, and UI UX.
+5. **🧪 Live Context Sandbox**: Interactive playground with preset scenarios (Customer Sentiment, Meeting Action Items, Code Refactoring) and live token metrics.
+6. **🎯 Hands-On Workshop**: Guided Interactive Builder (**DO**) & Certification Refactor Challenge (**APPLY**).
 
 ---
 
-## 🚀 Getting Started & Visual Verification
+## 🚀 Getting Started & Verification
 
 ### Open Locally in Google Chrome
-You can directly open the interactive workshop in Google Chrome:
-
 ```bash
 open -a "Google Chrome" index.html
 ```
 
-### GitHub Pages Deployment
-A GitHub Actions workflow is included at [`.github/workflows/static.yml`](.github/workflows/static.yml) for automatic static deployment to GitHub Pages.
+### Live GitHub Pages Deployment
+The repository is automatically deployed to GitHub Pages via GitHub Actions:
+- **Live URL**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/)
+

@@ -3,144 +3,470 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Module 1.1 Hands-On Workshop | AOU AI Associate</title>
+    <title>Markdown & JSON in LLM Contexts | Core Prompting Principles</title>
+    <!-- Highlight.js for Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/markdown.min.js"></script>
+    <!-- Marked.js for Live Markdown Rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
     <style>
         :root {
-            --bg-color: #0f172a;
+            --bg-color: #0b1120;
+            --surface-bg: #131d33;
             --card-bg: #1e293b;
+            --card-hover: #24344d;
             --accent-blue: #38bdf8;
             --accent-green: #4ade80;
             --accent-purple: #c084fc;
+            --accent-amber: #fbbf24;
+            --accent-rose: #fb7185;
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
             --border-color: #334155;
+            --code-bg: #090e1a;
+            --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-main);
-            margin: 0;
-            padding: 2rem;
-            line-height: 1.5;
+            line-height: 1.6;
+            padding-bottom: 4rem;
         }
 
         .container {
-            max-width: 1100px;
+            max-width: 1240px;
             margin: 0 auto;
+            padding: 0 1.5rem;
         }
 
+        /* Header & Navigation */
         header {
-            margin-bottom: 2.5rem;
+            padding: 2.5rem 0 1.5rem;
             border-bottom: 1px solid var(--border-color);
-            padding-bottom: 1rem;
-        }
-
-        h1 {
-            color: var(--accent-blue);
-            margin-bottom: 0.5rem;
-        }
-
-        .section-badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 9999px;
-            font-size: 0.85rem;
-            font-weight: bold;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-bottom: 1rem;
-        }
-
-        .badge-do { background-color: rgba(56, 189, 248, 0.2); color: var(--accent-blue); border: 1px solid var(--accent-blue); }
-        .badge-apply { background-color: rgba(74, 222, 128, 0.2); color: var(--accent-green); border: 1px solid var(--accent-green); }
-
-        .card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 1.5rem;
+            background: linear-gradient(180deg, rgba(30, 41, 59, 0.4) 0%, rgba(11, 17, 32, 0) 100%);
             margin-bottom: 2rem;
         }
 
+        .header-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.3rem 0.8rem;
+            background: rgba(56, 189, 248, 0.15);
+            border: 1px solid rgba(56, 189, 248, 0.4);
+            border-radius: 9999px;
+            color: var(--accent-blue);
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+        }
+
+        h1 {
+            font-size: 2.25rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f8fafc 0%, #38bdf8 50%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.1rem;
+            max-width: 850px;
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 0.5rem;
+            overflow-x: auto;
+            padding: 0.5rem 0 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            margin-bottom: 2rem;
+            scrollbar-width: thin;
+        }
+
+        .nav-tab {
+            background: var(--surface-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 0.6rem 1.2rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-tab:hover {
+            color: var(--text-main);
+            border-color: var(--accent-blue);
+            background: var(--card-bg);
+        }
+
+        .nav-tab.active {
+            background: var(--accent-blue);
+            color: #0b1120;
+            border-color: var(--accent-blue);
+            font-weight: 700;
+        }
+
+        /* Tab Content */
+        .tab-panel {
+            display: none;
+            animation: fadeIn 0.3s ease-in-out;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(6px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Card styles */
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.75rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+        }
+
+        h2 {
+            font-size: 1.5rem;
+            color: var(--text-main);
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        h3 {
+            font-size: 1.2rem;
+            color: var(--accent-blue);
+            margin-bottom: 0.75rem;
+        }
+
+        p {
+            color: #cbd5e1;
+            margin-bottom: 1rem;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-block;
+            padding: 0.2rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .badge-md { background: rgba(56, 189, 248, 0.2); color: var(--accent-blue); border: 1px solid var(--accent-blue); }
+        .badge-json { background: rgba(251, 191, 36, 0.2); color: var(--accent-amber); border: 1px solid var(--accent-amber); }
+        .badge-hybrid { background: rgba(192, 132, 252, 0.2); color: var(--accent-purple); border: 1px solid var(--accent-purple); }
+        .badge-do { background: rgba(56, 189, 248, 0.2); color: var(--accent-blue); border: 1px solid var(--accent-blue); }
+        .badge-apply { background: rgba(74, 222, 128, 0.2); color: var(--accent-green); border: 1px solid var(--accent-green); }
+
+        /* Grids */
         .grid-2col {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 1.5rem;
         }
 
-        @media (max-width: 768px) {
-            .grid-2col { grid-template-columns: 1fr; }
+        .grid-3col {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.25rem;
         }
 
+        @media (max-width: 900px) {
+            .grid-2col, .grid-3col { grid-template-columns: 1fr; }
+        }
+
+        /* Flow Diagram */
+        .flow-diagram {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+            background: #090e1a;
+            padding: 1.5rem;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
+            margin: 1.5rem 0;
+            overflow-x: auto;
+        }
+
+        .flow-node {
+            background: var(--surface-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            min-width: 160px;
+            text-align: center;
+            flex-shrink: 0;
+        }
+
+        .flow-node.highlight-blue { border-color: var(--accent-blue); box-shadow: 0 0 10px rgba(56, 189, 248, 0.2); }
+        .flow-node.highlight-amber { border-color: var(--accent-amber); box-shadow: 0 0 10px rgba(251, 191, 36, 0.2); }
+        .flow-node.highlight-purple { border-color: var(--accent-purple); box-shadow: 0 0 10px rgba(192, 132, 252, 0.2); }
+        .flow-node.highlight-green { border-color: var(--accent-green); box-shadow: 0 0 10px rgba(74, 222, 128, 0.2); }
+
+        .flow-node-title {
+            font-weight: 700;
+            font-size: 0.9rem;
+            margin-bottom: 0.3rem;
+        }
+
+        .flow-node-desc {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+        }
+
+        .flow-arrow {
+            color: var(--accent-blue);
+            font-size: 1.5rem;
+            font-weight: bold;
+        }
+
+        /* Code & Pre */
+        pre {
+            background-color: var(--code-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            margin: 0;
+            overflow-x: auto;
+        }
+
+        pre code {
+            display: block;
+            padding: 1.25rem;
+            font-family: var(--font-mono);
+            font-size: 0.88rem;
+            line-height: 1.5;
+        }
+
+        .code-container {
+            position: relative;
+            margin-bottom: 1rem;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0d1527;
+            padding: 0.5rem 1rem;
+            border-top-left-radius: 8px;
+            border-top-right-radius: 8px;
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+            font-size: 0.8rem;
+            color: var(--text-muted);
+            font-family: var(--font-mono);
+        }
+
+        .code-header + pre {
+            border-top-left-radius: 0;
+            border-top-right-radius: 0;
+        }
+
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 0.25rem 0.6rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: var(--accent-blue);
+            color: #0b1120;
+        }
+
+        /* Form Controls */
         label {
             display: block;
             font-weight: 600;
-            margin-bottom: 0.5rem;
+            margin-bottom: 0.4rem;
             color: var(--text-muted);
+            font-size: 0.88rem;
         }
 
         input, textarea, select {
             width: 100%;
-            background-color: #0f172a;
+            background-color: var(--code-bg);
             border: 1px solid var(--border-color);
             color: var(--text-main);
             padding: 0.75rem;
             border-radius: 6px;
-            box-sizing: border-box;
-            font-family: monospace;
+            font-family: var(--font-mono);
             font-size: 0.9rem;
             margin-bottom: 1rem;
+            transition: border-color 0.2s;
         }
 
-        input:focus, textarea:focus {
+        input:focus, textarea:focus, select:focus {
             outline: none;
             border-color: var(--accent-blue);
+            box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2);
         }
 
-        pre {
-            background-color: #090d16;
-            padding: 1rem;
-            border-radius: 6px;
-            border: 1px solid var(--border-color);
-            color: var(--accent-green);
-            font-family: 'Courier New', Courier, monospace;
-            white-space: pre-wrap;
-            word-break: break-all;
-            margin: 0;
-            min-height: 200px;
-        }
-
-        button {
+        button.btn-primary {
             background-color: var(--accent-blue);
             color: #0f172a;
             border: none;
             padding: 0.75rem 1.5rem;
-            font-weight: bold;
+            font-weight: 700;
             border-radius: 6px;
             cursor: pointer;
-            transition: opacity 0.2s;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
-        button:hover { opacity: 0.9; }
+        button.btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
 
+        button.btn-secondary {
+            background-color: transparent;
+            color: var(--text-main);
+            border: 1px solid var(--border-color);
+            padding: 0.75rem 1.5rem;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        button.btn-secondary:hover {
+            background: rgba(255,255,255,0.05);
+            border-color: var(--accent-blue);
+        }
+
+        /* Comparison Table */
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 1.5rem 0;
+            font-size: 0.9rem;
+        }
+
+        .compare-table th, .compare-table td {
+            padding: 0.85rem 1rem;
+            text-align: left;
+            border: 1px solid var(--border-color);
+        }
+
+        .compare-table th {
+            background: #0d1527;
+            color: var(--accent-blue);
+            font-weight: 700;
+        }
+
+        .compare-table tr:nth-child(even) {
+            background: rgba(255,255,255,0.02);
+        }
+
+        /* Interactive Markdown Preview Box */
+        .md-rendered-preview {
+            background: #090e1a;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+            min-height: 220px;
+            color: var(--text-main);
+        }
+
+        .md-rendered-preview h1, .md-rendered-preview h2, .md-rendered-preview h3 {
+            color: var(--accent-blue);
+            margin: 0.8rem 0 0.4rem;
+        }
+        .md-rendered-preview p { margin-bottom: 0.6rem; }
+        .md-rendered-preview ul, .md-rendered-preview ol { margin-left: 1.5rem; margin-bottom: 0.8rem; }
+        .md-rendered-preview code { background: #1e293b; padding: 0.15rem 0.4rem; border-radius: 4px; font-family: var(--font-mono); }
+        .md-rendered-preview table { border-collapse: collapse; width: 100%; margin: 0.8rem 0; }
+        .md-rendered-preview th, .md-rendered-preview td { border: 1px solid var(--border-color); padding: 0.5rem; }
+        .md-rendered-preview th { background: #1e293b; color: var(--accent-blue); }
+
+        /* JSON Validation Result */
+        .json-valid-box {
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-family: var(--font-mono);
+            margin-top: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        .valid { background: rgba(74, 222, 128, 0.15); border: 1px solid var(--accent-green); color: var(--accent-green); }
+        .invalid { background: rgba(251, 113, 113, 0.15); border: 1px solid var(--accent-rose); color: var(--accent-rose); }
+
+        /* Feedback for challenge */
         .feedback {
             margin-top: 1rem;
             padding: 1rem;
             border-radius: 6px;
             display: none;
         }
-
         .feedback.success {
             background-color: rgba(74, 222, 128, 0.1);
             border: 1px solid var(--accent-green);
             color: var(--accent-green);
         }
-
         .feedback.error {
             background-color: rgba(248, 113, 113, 0.1);
             border: 1px solid #f87171;
             color: #f87171;
+        }
+
+        /* Pill tags */
+        .pill {
+            display: inline-block;
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            background: rgba(255,255,255,0.08);
+            margin-right: 0.3rem;
         }
     </style>
 </head>
@@ -148,71 +474,604 @@
 
 <div class="container">
     <header>
-        <p style="color: var(--text-muted); font-size: 0.9rem;">AOU Certified AI Associate &bull; Video 1.1 Workshop</p>
-        <h1>Core Prompting Principles & Structured Formats</h1>
+        <div class="header-badge">
+            <span>✨</span> AOU AI Certified Associate &bull; Module 1.1 Workshop
+        </div>
+        <h1>Markdown & JSON in LLM Contexts</h1>
+        <p class="subtitle">
+            Explore how Markdown and JSON structured formats are ingested as inputs, generated as outputs, and orchestrated across modern LLM architectures (GPT, Claude, Gemini).
+        </p>
     </header>
 
-    <section class="card">
-        <span class="section-badge badge-do">Part 1: DO — Guided Interactive Builder</span>
-        <h2>Guided Workbench: Construct a Structured Prompt</h2>
-        <p style="color: var(--text-muted);">Fill in the architectural components below to assemble a production-grade prompt template with Markdown headers and XML boundaries in real time.</p>
+    <!-- Navigation Tabs -->
+    <nav class="nav-tabs">
+        <button class="nav-tab active" onclick="switchTab('architecture')">🏛️ LLM Context Architecture</button>
+        <button class="nav-tab" onclick="switchTab('markdown')">📝 Markdown: Inputs & Outputs</button>
+        <button class="nav-tab" onclick="switchTab('json')">📦 JSON & Structured Schemas</button>
+        <button class="nav-tab" onclick="switchTab('comparison')">⚖️ Comparison & Decision Matrix</button>
+        <button class="nav-tab" onclick="switchTab('sandbox')">🧪 Live Context Sandbox</button>
+        <button class="nav-tab" onclick="switchTab('workshop')">🎯 Hands-On Workshop (DO & APPLY)</button>
+    </nav>
 
-        <div class="grid-2col">
-            <div>
-                <label for="doRole">1. Role / System Context</label>
-                <input type="text" id="doRole" value="Senior Project Manager" oninput="updateDoPreview()">
+    <!-- TAB 1: ARCHITECTURE -->
+    <div id="tab-architecture" class="tab-panel active">
+        <section class="card">
+            <div class="card-header">
+                <h2><span>🏛️</span> How LLM Contexts Process Structured Data</h2>
+                <span class="badge badge-hybrid">Context Anatomy</span>
+            </div>
+            <p>
+                An LLM context window is a unified sequence of tokens containing instructions, roles, background documents, dynamic user inputs, and few-shot examples. <strong>Structure prevents attention dilution and ambiguity</strong>.
+            </p>
 
-                <label for="doTask">2. Primary Task</label>
-                <input type="text" id="doTask" value="Extract action items and assignees from raw meeting notes." oninput="updateDoPreview()">
-
-                <label for="doData">3. Context / Input Data</label>
-                <textarea id="doData" rows="3" oninput="updateDoPreview()">John will present slides by Tuesday. Sarah needs to approve budget by Friday. Unknown deadline for legal review.</textarea>
-
-                <label for="doConstraints">4. Output Constraints (Schema Rule)</label>
-                <input type="text" id="doConstraints" value="Return JSON array: [{'task': string, 'owner': string, 'due': string|null}]" oninput="updateDoPreview()">
+            <div class="flow-diagram">
+                <div class="flow-node highlight-blue">
+                    <div class="flow-node-title">1. System Prompt</div>
+                    <div class="flow-node-desc">Markdown Roles (`### ROLE`), Output Rules, Schema constraints</div>
+                </div>
+                <div class="flow-arrow">&rarr;</div>
+                <div class="flow-node highlight-purple">
+                    <div class="flow-node-title">2. Input Data Enclosure</div>
+                    <div class="flow-node-desc">XML (`&lt;data&gt;`) or JSON payloads to isolate raw data</div>
+                </div>
+                <div class="flow-arrow">&rarr;</div>
+                <div class="flow-node highlight-amber">
+                    <div class="flow-node-title">3. LLM Attention & Inference</div>
+                    <div class="flow-node-desc">Attention heads lock onto Markdown headers & JSON keys</div>
+                </div>
+                <div class="flow-arrow">&rarr;</div>
+                <div class="flow-node highlight-green">
+                    <div class="flow-node-title">4. Structured Output</div>
+                    <div class="flow-node-desc">Parseable JSON or rich Markdown rendered in UI / APIs</div>
+                </div>
             </div>
 
-            <div>
-                <label>Real-Time Prompt Preview</label>
-                <pre id="doOutput"></pre>
+            <div class="grid-3col">
+                <div style="background: rgba(255,255,255,0.02); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                    <h3 style="color: var(--accent-blue);">1. Markdown Context Layer</h3>
+                    <p style="font-size: 0.9rem;">
+                        <strong>Best for:</strong> Prompt architecture, step-by-step reasoning chains, human-facing docs, tables, and system roles.
+                    </p>
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">
+                        ⚡ Token-efficient syntax (`#`, `-`, `|`) that models are extensively pre-trained to recognize.
+                    </div>
+                </div>
+                <div style="background: rgba(255,255,255,0.02); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                    <h3 style="color: var(--accent-amber);">2. JSON Schema Layer</h3>
+                    <p style="font-size: 0.9rem;">
+                        <strong>Best for:</strong> Machine-to-machine integrations, function/tool calling, database records, and deterministic API contracts.
+                    </p>
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">
+                        🔒 Strict schema validation (OpenAI JSON Mode, Gemini Structured Outputs, Anthropic Tools).
+                    </div>
+                </div>
+                <div style="background: rgba(255,255,255,0.02); padding: 1.25rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                    <h3 style="color: var(--accent-purple);">3. XML Tag Delimiters</h3>
+                    <p style="font-size: 0.9rem;">
+                        <strong>Best for:</strong> Isolating untrusted user input, raw notes, transcripts, or code snippets from system instructions.
+                    </p>
+                    <div style="font-size: 0.8rem; color: var(--text-muted);">
+                        🛡️ Prevents prompt injection and eliminates instruction-data boundary confusion.
+                    </div>
+                </div>
             </div>
-        </div>
-    </section>
+        </section>
+    </div>
 
-    <section class="card">
-        <span class="section-badge badge-apply">Part 2: APPLY — Hands-On Refactor Challenge</span>
-        <h2>Exercise 1.1: Refactor the Unstructured Prompt</h2>
-        <p style="color: var(--text-muted);">
-            <strong>Scenario:</strong> The raw prompt below consistently produces chaotic output. Refactor it into a structured format using:
-            <br>&bull; A clear <code>### ROLE</code> or <code>### SYSTEM</code>
-            <br>&bull; Data wrapped inside <code>&lt;input&gt;&lt;/input&gt;</code> tags
-            <br>&bull; Explicit <code>JSON</code> schema constraints
-        </p>
+    <!-- TAB 2: MARKDOWN IN LLM CONTEXTS -->
+    <div id="tab-markdown" class="tab-panel">
+        <section class="card">
+            <div class="card-header">
+                <h2><span>📝</span> Markdown in LLM Inputs & Outputs</h2>
+                <span class="badge badge-md">Markdown Focus</span>
+            </div>
+            <p>
+                Markdown is the native language of Large Language Models. Models are trained on petabytes of GitHub repositories, technical documentation, and Wikipedia articles. Using Markdown headers establishes strict semantic hierarchies.
+            </p>
 
-        <div style="background-color: #090d16; padding: 1rem; border-radius: 6px; margin-bottom: 1.5rem; border-left: 4px solid #f87171;">
-            <strong style="color: #f87171;">Raw / Unstructured Prompt to Fix:</strong><br>
-            <code style="color: var(--text-muted);">"Look at these customer reviews and tell me which ones are bad and why they are angry and output it as a table or list."</code>
-        </div>
+            <div class="grid-2col">
+                <div>
+                    <h3>1. Markdown as Context Input (The 3 Cs)</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">
+                        Structuring prompt inputs with Markdown headers (<code>### ROLE</code>, <code>### TASK</code>, <code>### CONSTRAINTS</code>) signals distinct semantic compartments to LLM attention heads:
+                    </p>
 
-        <label for="applyPrompt">Your Refactored Prompt Workspace:</label>
-        <textarea id="applyPrompt" rows="10" placeholder="### ROLE
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span>Markdown Input Prompt Example</span>
+                            <button class="copy-btn" onclick="copyCode('md-input-sample')">Copy</button>
+                        </div>
+                        <pre><code id="md-input-sample" class="language-markdown">### SYSTEM / ROLE
+You are an expert Technical Writer analyzing API specifications.
+
+### OBJECTIVE
+Summarize the authentication flow and rate limits for frontend engineers.
+
+### CONTEXT & RULES
+- Target Audience: Junior Web Developers
+- Tone: Precise, instructive, minimal jargon
+- Highlight edge cases in bullet points
+
+### INPUT DATA
+&lt;api_spec&gt;
+Endpoint: POST /api/v1/auth/token
+Rate Limit: 100 requests per minute per IP
+Tokens expire after 3600 seconds.
+&lt;/api_spec&gt;</code></pre>
+                    </div>
+                </div>
+
+                <div>
+                    <h3>2. Markdown as LLM Output</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">
+                        LLMs generate Markdown for instant UI rendering, formatted tables, code blocks with syntax highlighting, and checklists:
+                    </p>
+
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span>Generated LLM Output (Rendered)</span>
+                            <button class="copy-btn" onclick="copyCode('md-output-raw')">Copy Raw</button>
+                        </div>
+                        <div class="md-rendered-preview" id="md-live-output-preview"></div>
+                        <pre style="display:none;"><code id="md-output-raw" class="language-markdown">## Authentication Overview
+
+All client requests must authenticate via the token endpoint before accessing protected resources.
+
+| Parameter | Value | Details |
+| :--- | :--- | :--- |
+| **Endpoint** | `POST /api/v1/auth/token` | Returns JWT Bearer token |
+| **Rate Limit** | `100 req/min/IP` | Exceeding returns `429 Too Many Requests` |
+| **TTL** | `3600s (1 hour)` | Refresh required before expiry |
+
+### Key Edge Cases to Handle:
+- ⚠️ Token expiration triggers automatic re-auth flow
+- 🚫 IP rate limiting applies across all user accounts on the same proxy</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 1.5rem; background: rgba(56, 189, 248, 0.05); padding: 1.25rem; border-radius: 8px; border-left: 4px solid var(--accent-blue);">
+                <h4 style="color: var(--accent-blue); margin-bottom: 0.4rem;">💡 Why Markdown Works Best for Prompt Engineering</h4>
+                <ul style="margin-left: 1.5rem; color: var(--text-muted); font-size: 0.9rem;">
+                    <li><strong>Token Efficiency:</strong> A header like <code>### ROLE</code> consumes only 2-3 tokens, compared to verbose XML or nested JSON wrappers.</li>
+                    <li><strong>Pre-training Familiarity:</strong> High density in training datasets means models reliably adhere to heading boundaries.</li>
+                    <li><strong>Human Readability:</strong> Prompts are easy for developer teams to review, version control in Git, and debug.</li>
+                </ul>
+            </div>
+        </section>
+    </div>
+
+    <!-- TAB 3: JSON IN LLM CONTEXTS -->
+    <div id="tab-json" class="tab-panel">
+        <section class="card">
+            <div class="card-header">
+                <h2><span>📦</span> JSON in LLM Contexts & Structured Outputs</h2>
+                <span class="badge badge-json">JSON & Schemas</span>
+            </div>
+            <p>
+                While Markdown is ideal for human reading and prompt structure, <strong>JSON is the industry standard for programmatic data exchange and tool execution</strong>. Modern LLMs support strict JSON Schema decoding.
+            </p>
+
+            <div class="grid-2col">
+                <div>
+                    <h3>1. JSON as Input (Few-Shot & Data Payloads)</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">
+                        Passing structured JSON arrays for Few-Shot demonstrations primes the model to recognize exact key structures:
+                    </p>
+
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span>Few-Shot Prompt with JSON</span>
+                            <button class="copy-btn" onclick="copyCode('json-input-sample')">Copy</button>
+                        </div>
+                        <pre><code id="json-input-sample" class="language-markdown">### TASK
+Extract incident severity and affected microservices.
+
+### FEW-SHOT EXAMPLES
+[
+  {
+    "input": "Database replica in us-east went down, latency rose to 4s on checkout.",
+    "output": {
+      "severity": "CRITICAL",
+      "service": "checkout-service",
+      "region": "us-east"
+    }
+  }
+]
+
+### TARGET INPUT
+&lt;alert&gt;
+Search cache miss rate increased to 80% after deploy in eu-west.
+&lt;/alert&gt;</code></pre>
+                    </div>
+                </div>
+
+                <div>
+                    <h3>2. JSON as Structured Output (Deterministic Schema)</h3>
+                    <p style="font-size: 0.9rem; color: var(--text-muted);">
+                        By specifying a strict schema constraint, LLMs guarantee type-safe deserialization directly into code objects:
+                    </p>
+
+                    <div class="code-container">
+                        <div class="code-header">
+                            <span>Target JSON Output & Live Validator</span>
+                            <button class="copy-btn" onclick="copyCode('json-validator-input')">Copy</button>
+                        </div>
+                        <textarea id="json-validator-input" rows="8" style="font-family: var(--font-mono); font-size: 0.85rem;" oninput="validateLiveJson()">{
+  "severity": "MEDIUM",
+  "service": "search-cache",
+  "region": "eu-west",
+  "action_required": true,
+  "confidence_score": 0.95
+}</textarea>
+                        <div id="json-validation-status" class="json-valid-box valid">
+                            <span>✅</span> Valid JSON Schema structure detected.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 1.5rem; background: rgba(251, 191, 36, 0.05); padding: 1.25rem; border-radius: 8px; border-left: 4px solid var(--accent-amber);">
+                <h4 style="color: var(--accent-amber); margin-bottom: 0.4rem;">⚙️ How Constrained Decoding / JSON Mode Works in LLM Engines</h4>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 0.5rem;">
+                    During token generation, modern inference engines (e.g. OpenAI Structured Outputs, Gemini Schema) dynamically mask out tokens in the probability distribution that would violate valid JSON grammar or the specified JSON Schema, guaranteeing 100% syntactically valid outputs.
+                </p>
+            </div>
+        </section>
+    </div>
+
+    <!-- TAB 4: COMPARISON & MATRIX -->
+    <div id="tab-comparison" class="tab-panel">
+        <section class="card">
+            <div class="card-header">
+                <h2><span>⚖️</span> Format Decision Matrix: Markdown vs. JSON vs. XML</h2>
+                <span class="badge badge-hybrid">Architectural Guide</span>
+            </div>
+            <p>
+                Choosing the right format for inputs and outputs depends on whether the consumer is a human or an automated software pipeline.
+            </p>
+
+            <table class="compare-table">
+                <thead>
+                    <tr>
+                        <th>Evaluation Dimension</th>
+                        <th>Markdown (<code>###</code>, <code>-</code>, <code>|</code>)</th>
+                        <th>JSON (<code>{}</code>, <code>[]</code>)</th>
+                        <th>XML Delimiters (<code>&lt;tag&gt;</code>)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>Primary LLM Role</strong></td>
+                        <td>System Prompt Structure & Human Output</td>
+                        <td>Deterministic Machine Outputs & Payloads</td>
+                        <td>Untrusted Data Boundary Isolation</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Token Overhead</strong></td>
+                        <td><span class="pill" style="color: var(--accent-green);">Lowest</span> (Minimal syntax chars)</td>
+                        <td><span class="pill" style="color: var(--accent-amber);">Medium</span> (Key repetition, quotes, braces)</td>
+                        <td><span class="pill" style="color: var(--accent-blue);">Low-Medium</span> (Opening & closing tags)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Machine Parseability</strong></td>
+                        <td>Requires Regex / Markdown Parser</td>
+                        <td><span class="pill" style="color: var(--accent-green);">Direct</span> (Standard `JSON.parse()`)</td>
+                        <td>Requires XML/DOM Parser</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Prompt Injection Defense</strong></td>
+                        <td>Moderate</td>
+                        <td>High (when escaped)</td>
+                        <td><span class="pill" style="color: var(--accent-green);">Highest</span> (Explicit boundary isolation)</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Streaming UI UX</strong></td>
+                        <td><span class="pill" style="color: var(--accent-green);">Best</span> (Progressive Markdown rendering)</td>
+                        <td>Requires partial JSON stream parsers</td>
+                        <td>Awkward for direct user display</td>
+                    </tr>
+                    <tr>
+                        <td><strong>Recommended Use Case</strong></td>
+                        <td>Role definitions, task briefs, report outputs</td>
+                        <td>API payloads, function calling, DB insertion</td>
+                        <td>Encapsulating raw customer emails, articles</td>
+                    </tr>
+                </tbody>
+            </table>
+
+            <h3 style="margin-top: 2rem;">🏆 The Production "Golden Standard" Hybrid Prompt Formula</h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem;">
+                Production LLM systems combine all three formats into an optimal hybrid architecture:
+            </p>
+
+            <div class="code-container">
+                <div class="code-header">
+                    <span>Recommended Production Prompt Architecture</span>
+                    <button class="copy-btn" onclick="copyCode('hybrid-pattern-code')">Copy</button>
+                </div>
+                <pre><code id="hybrid-pattern-code" class="language-markdown">### ROLE & PERSONA [Markdown]
+Senior Customer Intelligence Lead.
+
+### INSTRUCTIONS [Markdown]
+Extract sentiment, key issues, and churn risk from customer feedback.
+
+### INPUT DATA [XML Tag Boundary]
+&lt;customer_feedback&gt;
+I have been waiting 3 weeks for my shipment. Your support team ignored my last 2 emails.
+&lt;/customer_feedback&gt;
+
+### OUTPUT FORMAT & CONSTRAINTS [JSON Schema]
+Return ONLY a valid JSON object matching this schema:
+{
+  "sentiment": "POSITIVE" | "NEUTRAL" | "NEGATIVE",
+  "urgency": "LOW" | "MEDIUM" | "HIGH",
+  "key_issues": string[],
+  "churn_risk": boolean,
+  "recommended_action": string
+}</code></pre>
+            </div>
+        </section>
+    </div>
+
+    <!-- TAB 5: LIVE SANDBOX -->
+    <div id="tab-sandbox" class="tab-panel">
+        <section class="card">
+            <div class="card-header">
+                <h2><span>🧪</span> Interactive LLM Context Sandbox</h2>
+                <span class="badge badge-hybrid">Live Simulator</span>
+            </div>
+            <p>
+                Test how changing prompt format configurations alters the simulated token flow and generated LLM response.
+            </p>
+
+            <div style="margin-bottom: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                <button class="btn-secondary" onclick="loadPreset('sentiment')">📂 Preset 1: Customer Sentiment</button>
+                <button class="btn-secondary" onclick="loadPreset('meeting')">📂 Preset 2: Meeting Action Items</button>
+                <button class="btn-secondary" onclick="loadPreset('code')">📂 Preset 3: Code Refactor Analyzer</button>
+            </div>
+
+            <div class="grid-2col">
+                <div>
+                    <label for="sandbox-prompt">Context & Input Prompt (Edit Live):</label>
+                    <textarea id="sandbox-prompt" rows="14" oninput="runSandboxSimulation()"></textarea>
+                    
+                    <div style="display: flex; gap: 0.75rem;">
+                        <button class="btn-primary" onclick="runSandboxSimulation()">▶️ Run LLM Inference</button>
+                        <button class="btn-secondary" onclick="copyCode('sandbox-prompt')">📋 Copy Prompt</button>
+                    </div>
+                </div>
+
+                <div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 0.4rem;">
+                        <label style="margin:0;">Simulated LLM Output Stream:</label>
+                        <span id="sandbox-token-metric" style="font-size: 0.8rem; color: var(--accent-green); font-family: var(--font-mono);">Tokens: ~142 | Latency: 280ms</span>
+                    </div>
+                    <pre><code id="sandbox-output" class="language-json"></code></pre>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- TAB 6: WORKSHOP DO & APPLY -->
+    <div id="tab-workshop" class="tab-panel">
+        <section class="card">
+            <div class="card-header">
+                <h2><span>🛠️</span> Part 1: DO — Guided Interactive Builder</h2>
+                <span class="badge badge-do">Guided Workbench</span>
+            </div>
+            <p style="color: var(--text-muted);">Fill in the architectural components below to assemble a production-grade prompt template with Markdown headers and XML boundaries in real time.</p>
+
+            <div class="grid-2col">
+                <div>
+                    <label for="doRole">1. Role / System Context (Markdown Persona)</label>
+                    <input type="text" id="doRole" value="Senior Project Manager" oninput="updateDoPreview()">
+
+                    <label for="doTask">2. Primary Task (Markdown Objective)</label>
+                    <input type="text" id="doTask" value="Extract action items and assignees from raw meeting notes." oninput="updateDoPreview()">
+
+                    <label for="doData">3. Context / Input Data (XML Enclosure)</label>
+                    <textarea id="doData" rows="3" oninput="updateDoPreview()">John will present slides by Tuesday. Sarah needs to approve budget by Friday. Unknown deadline for legal review.</textarea>
+
+                    <label for="doConstraints">4. Output Constraints (JSON Schema Rule)</label>
+                    <input type="text" id="doConstraints" value="Return JSON array: [{'task': string, 'owner': string, 'due': string|null}]" oninput="updateDoPreview()">
+                </div>
+
+                <div>
+                    <div class="code-header">
+                        <span>Real-Time Assembled Prompt</span>
+                        <button class="copy-btn" onclick="copyCode('doOutput')">Copy</button>
+                    </div>
+                    <pre><code id="doOutput" class="language-markdown"></code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section class="card">
+            <div class="card-header">
+                <h2><span>🎯</span> Part 2: APPLY — Hands-On Refactor Challenge</h2>
+                <span class="badge badge-apply">Certification Exercise</span>
+            </div>
+            <p style="color: var(--text-muted);">
+                <strong>Scenario:</strong> The raw unstructured prompt below produces chaotic results in production. Refactor it into a structured format using:
+                <br>&bull; A clear Markdown header (<code>### ROLE</code> or <code>### SYSTEM</code>)
+                <br>&bull; Dynamic review data enclosed inside <code>&lt;reviews&gt;&lt;/reviews&gt;</code> XML tags
+                <br>&bull; Explicit <code>JSON</code> schema constraints for structured deserialization
+            </p>
+
+            <div style="background-color: #090d16; padding: 1rem; border-radius: 6px; margin-bottom: 1.5rem; border-left: 4px solid #f87171;">
+                <strong style="color: #f87171;">Raw / Unstructured Prompt to Fix:</strong><br>
+                <code style="color: var(--text-muted);">"Look at these customer reviews and tell me which ones are bad and why they are angry and output it as a table or list."</code>
+            </div>
+
+            <label for="applyPrompt">Your Refactored Prompt Workspace:</label>
+            <textarea id="applyPrompt" rows="10" placeholder="### ROLE
 System Analyst...
 
-### INPUT
+### INPUT DATA
 <reviews>
 {insert customer reviews}
 </reviews>
 
-### CONSTRAINTS / OUTPUT FORMAT
-Return JSON..."></textarea>
+### CONSTRAINTS & OUTPUT FORMAT
+Return JSON array..."></textarea>
 
-        <button onclick="validateApplyPrompt()">Validate Structured Prompt</button>
+            <div style="display: flex; gap: 0.75rem;">
+                <button class="btn-primary" onclick="validateApplyPrompt()">✅ Validate Structured Prompt</button>
+                <button class="btn-secondary" onclick="loadSolutionPrompt()">💡 Insert Model Solution</button>
+            </div>
 
-        <div id="applyFeedback" class="feedback"></div>
-    </section>
+            <div id="applyFeedback" class="feedback"></div>
+        </section>
+    </div>
 </div>
 
 <script>
+    // Tab Switching
+    function switchTab(tabId) {
+        document.querySelectorAll('.tab-panel').forEach(panel => panel.classList.remove('active'));
+        document.querySelectorAll('.nav-tab').forEach(tab => tab.classList.remove('active'));
+
+        const targetPanel = document.getElementById(`tab-${tabId}`);
+        if (targetPanel) targetPanel.classList.add('active');
+
+        const activeBtn = Array.from(document.querySelectorAll('.nav-tab')).find(b => b.getAttribute('onclick').includes(tabId));
+        if (activeBtn) activeBtn.classList.add('active');
+    }
+
+    // Copy to Clipboard
+    function copyCode(elementId) {
+        const el = document.getElementById(elementId);
+        const text = el.tagName === 'TEXTAREA' ? el.value : el.textContent;
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Copied to clipboard!');
+        });
+    }
+
+    // Markdown Live Render for Output Tab
+    function renderMarkdownPreview() {
+        const rawMd = document.getElementById('md-output-raw').textContent;
+        const previewEl = document.getElementById('md-live-output-preview');
+        if (previewEl && window.marked) {
+            previewEl.innerHTML = marked.parse(rawMd);
+        }
+    }
+
+    // JSON Live Validator
+    function validateLiveJson() {
+        const input = document.getElementById('json-validator-input').value;
+        const status = document.getElementById('json-validation-status');
+        try {
+            JSON.parse(input);
+            status.className = 'json-valid-box valid';
+            status.innerHTML = '<span>✅</span> Valid JSON Schema structure detected.';
+        } catch (e) {
+            status.className = 'json-valid-box invalid';
+            status.innerHTML = `<span>❌</span> Invalid JSON: ${e.message}`;
+        }
+    }
+
+    // Sandbox Presets
+    const presets = {
+        sentiment: `### ROLE
+Senior Customer Experience Lead.
+
+### TASK
+Analyze customer review text and extract sentiment metrics.
+
+### INPUT DATA
+<review>
+The onboarding experience was super smooth and intuitive! However, your mobile app keeps crashing during payment checkout. Please fix ASAP.
+</review>
+
+### CONSTRAINTS
+- Return valid JSON matching schema:
+{
+  "overall_sentiment": "POSITIVE" | "MIXED" | "NEGATIVE",
+  "praise_points": string[],
+  "pain_points": string[],
+  "critical_bug_reported": boolean
+}`,
+        meeting: `### ROLE
+Technical Scrum Master.
+
+### TASK
+Parse sprint retrospective notes into structured action tickets.
+
+### INPUT DATA
+<retro_notes>
+Team agreed that CI/CD build times are too slow (45 mins). Alex will containerize tests by Thursday. Lisa will audit flaky integration tests.
+</retro_notes>
+
+### CONSTRAINTS
+- Output ONLY valid JSON:
+[
+  { "ticket": string, "assignee": string, "deadline": string|null }
+]`,
+        code: `### ROLE
+Lead Software Architect & Security Reviewer.
+
+### TASK
+Audit the provided code snippet for vulnerabilities and refactor suggestions.
+
+### INPUT DATA
+<code_snippet>
+query = f"SELECT * FROM users WHERE username = '{user_input}'"
+cursor.execute(query)
+</code_snippet>
+
+### CONSTRAINTS
+- Output strictly formatted JSON:
+{
+  "vulnerability_detected": true,
+  "cwe_id": "CWE-89 (SQL Injection)",
+  "remediation": string,
+  "secure_code_example": string
+}`
+    };
+
+    function loadPreset(key) {
+        document.getElementById('sandbox-prompt').value = presets[key];
+        runSandboxSimulation();
+    }
+
+    function runSandboxSimulation() {
+        const prompt = document.getElementById('sandbox-prompt').value;
+        const outputEl = document.getElementById('sandbox-output');
+
+        let simulatedResponse = "";
+        if (prompt.includes('sentiment') || prompt.includes('review')) {
+            simulatedResponse = JSON.stringify({
+                "overall_sentiment": "MIXED",
+                "praise_points": ["Smooth and intuitive onboarding"],
+                "pain_points": ["Mobile app crash during payment checkout"],
+                "critical_bug_reported": true,
+                "urgency": "HIGH"
+            }, null, 2);
+        } else if (prompt.includes('retro') || prompt.includes('ticket')) {
+            simulatedResponse = JSON.stringify([
+                { "ticket": "Containerize CI/CD tests to reduce build time", "assignee": "Alex", "deadline": "Thursday" },
+                { "ticket": "Audit and stabilize flaky integration tests", "assignee": "Lisa", "deadline": null }
+            ], null, 2);
+        } else if (prompt.includes('SQL') || prompt.includes('code_snippet')) {
+            simulatedResponse = JSON.stringify({
+                "vulnerability_detected": true,
+                "cwe_id": "CWE-89 (SQL Injection)",
+                "remediation": "Use parameterized queries with prepared statements instead of f-string formatting.",
+                "secure_code_example": "cursor.execute('SELECT * FROM users WHERE username = %s', (user_input,))"
+            }, null, 2);
+        } else {
+            simulatedResponse = JSON.stringify({
+                "status": "success",
+                "extracted_entities": ["Structured prompt received"],
+                "structured_output": true
+            }, null, 2);
+        }
+
+        outputEl.textContent = simulatedResponse;
+        hljs.highlightElement(outputEl);
+    }
+
     // Real-Time Builder (DO Section)
     function updateDoPreview() {
         const role = document.getElementById('doRole').value;
@@ -235,7 +1094,9 @@ ${data}
 - ${constraints}
 - If information is missing, output null.`;
 
-        document.getElementById('doOutput').textContent = generatedPrompt;
+        const doOutput = document.getElementById('doOutput');
+        doOutput.textContent = generatedPrompt;
+        hljs.highlightElement(doOutput);
     }
 
     // Interactive Validation (APPLY Section)
@@ -243,8 +1104,7 @@ ${data}
         const input = document.getElementById('applyPrompt').value;
         const feedback = document.getElementById('applyFeedback');
 
-        // Validation Checks
-        const hasHeader = /###\s*(ROLE|SYSTEM|TASK|CONTEXT)/i.test(input);
+        const hasHeader = /###\s*(ROLE|SYSTEM|TASK|CONTEXT|INPUT|CONSTRAINTS)/i.test(input);
         const hasXml = /<[a-zA-Z0-9_]+>[\s\S]*?<\/[a-zA-Z0-9_]+>/.test(input);
         const hasJsonConstraint = /json/i.test(input);
 
@@ -252,20 +1112,51 @@ ${data}
 
         if (hasHeader && hasXml && hasJsonConstraint) {
             feedback.className = 'feedback success';
-            feedback.innerHTML = '<strong>Great Work!</strong> Your refactored prompt includes systemic roles, explicit XML data tagging, and deterministic JSON output constraints.';
+            feedback.innerHTML = '<strong>🎉 Outstanding Work!</strong> Your refactored prompt includes systemic Markdown headers, explicit XML data delimiters, and deterministic JSON schema constraints.';
         } else {
             feedback.className = 'feedback error';
             let errors = [];
-            if (!hasHeader) errors.push('Missing Markdown headers (e.g., <code>### ROLE</code> or <code>### SYSTEM</code>).');
+            if (!hasHeader) errors.push('Missing Markdown headers (e.g., <code>### ROLE</code> or <code>### TASK</code>).');
             if (!hasXml) errors.push('Missing XML data delimiters (e.g., <code>&lt;reviews&gt;...&lt;/reviews&gt;</code>).');
-            if (!hasJsonConstraint) errors.push('Missing explicit output structure instruction (e.g., specify <code>JSON</code>).');
+            if (!hasJsonConstraint) errors.push('Missing explicit output structure instruction (e.g., specify <code>JSON</code> schema).');
 
             feedback.innerHTML = '<strong>Structure Check Failed:</strong><br>&bull; ' + errors.join('<br>&bull; ');
         }
     }
 
-    // Initial render call
-    updateDoPreview();
+    function loadSolutionPrompt() {
+        document.getElementById('applyPrompt').value = `### ROLE
+Senior Customer Feedback Analyst.
+
+### TASK
+Analyze the customer feedback to categorize sentiment, identify pain points, and extract actionable feedback.
+
+### INPUT DATA
+<reviews>
+{insert customer reviews here}
+</reviews>
+
+### CONSTRAINTS & OUTPUT FORMAT
+Return ONLY valid JSON matching this schema:
+[
+  {
+    "review_id": number,
+    "sentiment": "POSITIVE" | "NEGATIVE" | "NEUTRAL",
+    "customer_pain_point": string,
+    "urgency": "LOW" | "MEDIUM" | "HIGH"
+  }
+]
+Do not include conversational preamble.`;
+        validateApplyPrompt();
+    }
+
+    // Initialization
+    window.addEventListener('DOMContentLoaded', () => {
+        hljs.highlightAll();
+        renderMarkdownPreview();
+        updateDoPreview();
+        loadPreset('sentiment');
+    });
 </script>
 
 </body>
