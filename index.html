@@ -468,9 +468,96 @@
             background: rgba(255,255,255,0.08);
             margin-right: 0.3rem;
         }
+
+        /* Top Navigation Bar */
+        .top-navbar {
+            background-color: rgba(19, 29, 51, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .nav-brand span.logo-badge {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: #0b1120;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 800;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            list-style: none;
+        }
+
+        .nav-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            text-decoration: none;
+            padding: 0.45rem 0.9rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .nav-link-btn:hover {
+            color: var(--text-main);
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        .nav-link-btn.active {
+            color: var(--accent-blue);
+            background: rgba(56, 189, 248, 0.12);
+            border-color: rgba(56, 189, 248, 0.3);
+        }
     </style>
 </head>
 <body>
+
+<!-- TOP SHARED NAVBAR -->
+<nav class="top-navbar">
+    <div class="navbar-container">
+        <a href="index.html" class="nav-brand">
+            <span class="logo-badge">PROMPT ARCH</span>
+            <span>Core Prompting Principles</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html" class="nav-link-btn active">🏛️ Workbench & Guide</a></li>
+            <li><a href="comparison.html" class="nav-link-btn">⚖️ Good vs Bad Prompts</a></li>
+            <li><a href="https://github.com/rifaterdemsahin/CorePromptingPrinciplesStructuredInputFormats" target="_blank" class="nav-link-btn">🐙 GitHub Repo</a></li>
+        </ul>
+    </div>
+</nav>
 
 <div class="container">
     <header>

@@ -47,15 +47,21 @@ Return ONLY a valid JSON object matching this schema:
 
 ---
 
-## 🌐 Interactive Application (`index.html`)
+## 🌐 Multi-Page Interactive Suite
 
-The interactive web application includes:
-1. **🏛️ LLM Context Architecture**: Visual flow diagram illustrating how tokens traverse system prompts, data enclosures, attention mechanisms, and structured outputs.
-2. **📝 Markdown Inputs & Outputs**: Deep dive into Markdown prompt structuring and live rendered output previews.
-3. **📦 JSON & Structured Schemas**: Real-time JSON schema validator and constrained decoding explanations.
-4. **⚖️ Decision Matrix**: Comparative evaluation across Token Overhead, Machine Parseability, Prompt Injection Defense, and UI UX.
-5. **🧪 Live Context Sandbox**: Interactive playground with preset scenarios (Customer Sentiment, Meeting Action Items, Code Refactoring) and live token metrics.
-6. **🎯 Hands-On Workshop**: Guided Interactive Builder (**DO**) & Certification Refactor Challenge (**APPLY**).
+This repository features two interconnected interactive web applications with a shared top navigation bar:
+
+1. **🏛️ Module 1.1 Workshop & Context Guide ([`index.html`](index.html))**:
+   - **LLM Context Architecture**: Visual pipeline for prompt ingestion, attention mechanisms, and structured parsing.
+   - **Markdown & JSON Deep Dives**: How Markdown and JSON are utilized as inputs and outputs.
+   - **Interactive Prompt Sandbox**: Live simulator with realistic LLM responses and token latency metrics.
+   - **Hands-On Workshop (DO & APPLY)**: Real-time prompt assembly workbench and certification refactor challenge.
+
+2. **⚖️ Good vs Bad Prompts: Side-by-Side Showcase ([`comparison.html`](comparison.html))**:
+   - **Unstructured vs Structured Split View**: Direct side-by-side contrast of chaotic prompts vs production-grade structured prompts.
+   - **Real Model Outputs**: Displays the flawed conversational output on the left versus deterministic typed JSON output on the right.
+   - **5 Interactive Scenarios**: Customer Feedback Triage, Meeting Action Items, Security Code Vulnerability, Candidate Resume Screening, and Financial Earnings Parsing.
+   - **Failure & Success Root-Cause Analysis**: Identifies exact failure reasons (conversational fluff, hallucinated missing dates, injection risk) and success factors (explicit XML boundaries, strict JSON schemas).
 
 ---
 
@@ -64,9 +70,11 @@ The interactive web application includes:
 ### Open Locally in Google Chrome
 ```bash
 open -a "Google Chrome" index.html
+open -a "Google Chrome" comparison.html
 ```
 
-### Live GitHub Pages Deployment
-The repository is automatically deployed to GitHub Pages via GitHub Actions:
-- **Live URL**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/)
+### Live GitHub Pages Deployments
+- **Main Workbench**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/)
+- **Good vs Bad Comparison**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/comparison.html](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/comparison.html)
+
 

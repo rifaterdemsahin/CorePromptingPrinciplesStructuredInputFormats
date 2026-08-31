@@ -1,0 +1,805 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Good vs Bad Prompt Showcase | Core Prompting Principles</title>
+    <!-- Highlight.js for Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/json.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/markdown.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #0b1120;
+            --surface-bg: #131d33;
+            --card-bg: #1e293b;
+            --accent-blue: #38bdf8;
+            --accent-green: #4ade80;
+            --accent-purple: #c084fc;
+            --accent-amber: #fbbf24;
+            --accent-rose: #f87171;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --code-bg: #090e1a;
+            --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 4rem;
+        }
+
+        /* Top Navigation Bar */
+        .top-navbar {
+            background-color: rgba(19, 29, 51, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .nav-brand span.logo-badge {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: #0b1120;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 800;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            list-style: none;
+        }
+
+        .nav-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            text-decoration: none;
+            padding: 0.45rem 0.9rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .nav-link-btn:hover {
+            color: var(--text-main);
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        .nav-link-btn.active {
+            color: var(--accent-blue);
+            background: rgba(56, 189, 248, 0.12);
+            border-color: rgba(56, 189, 248, 0.3);
+        }
+
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 0;
+        }
+
+        /* Hero */
+        .hero {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f8fafc 0%, #f87171 40%, #4ade80 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            max-width: 900px;
+        }
+
+        /* Scenario Selector Pills */
+        .scenario-nav {
+            display: flex;
+            gap: 0.6rem;
+            overflow-x: auto;
+            padding-bottom: 1rem;
+            margin-bottom: 1.5rem;
+            scrollbar-width: thin;
+        }
+
+        .scenario-pill {
+            background: var(--surface-bg);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 0.6rem 1.1rem;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .scenario-pill:hover {
+            color: var(--text-main);
+            border-color: var(--accent-blue);
+        }
+
+        .scenario-pill.active {
+            background: rgba(56, 189, 248, 0.15);
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+            font-weight: 700;
+        }
+
+        /* Split Columns Layout */
+        .split-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.75rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 950px) {
+            .split-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Card styles */
+        .column-card {
+            background-color: var(--card-bg);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            border-top: 4px solid;
+            display: flex;
+            flex-direction: column;
+            gap: 1.25rem;
+        }
+
+        .column-card.bad-side {
+            border-color: var(--accent-rose);
+            border-left: 1px solid rgba(248, 113, 113, 0.2);
+            border-right: 1px solid rgba(248, 113, 113, 0.2);
+            border-bottom: 1px solid rgba(248, 113, 113, 0.2);
+        }
+
+        .column-card.good-side {
+            border-color: var(--accent-green);
+            border-left: 1px solid rgba(74, 222, 128, 0.2);
+            border-right: 1px solid rgba(74, 222, 128, 0.2);
+            border-bottom: 1px solid rgba(74, 222, 128, 0.2);
+        }
+
+        .column-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .column-title {
+            font-size: 1.3rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .bad-side .column-title { color: var(--accent-rose); }
+        .good-side .column-title { color: var(--accent-green); }
+
+        .tag-badge {
+            padding: 0.25rem 0.65rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .bad-badge { background: rgba(248, 113, 113, 0.2); color: var(--accent-rose); border: 1px solid var(--accent-rose); }
+        .good-badge { background: rgba(74, 222, 128, 0.2); color: var(--accent-green); border: 1px solid var(--accent-green); }
+
+        /* Code Containers */
+        .code-box-wrapper {
+            display: flex;
+            flex-direction: column;
+            gap: 0.3rem;
+        }
+
+        .box-label {
+            font-size: 0.82rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--text-muted);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        pre {
+            background-color: var(--code-bg);
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            margin: 0;
+            overflow-x: auto;
+        }
+
+        pre code {
+            display: block;
+            padding: 1rem;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .output-box {
+            background: #090e1a;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            min-height: 180px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            line-height: 1.5;
+        }
+
+        .bad-side .output-box {
+            color: #fca5a5;
+            border-left: 3px solid var(--accent-rose);
+        }
+
+        .good-side .output-box {
+            color: var(--accent-green);
+            border-left: 3px solid var(--accent-green);
+        }
+
+        /* Analysis Box */
+        .analysis-card {
+            background: rgba(11, 17, 32, 0.6);
+            border-radius: 8px;
+            padding: 1rem;
+            font-size: 0.88rem;
+            border: 1px solid var(--border-color);
+        }
+
+        .analysis-card h4 {
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .bad-side .analysis-card h4 { color: var(--accent-rose); }
+        .good-side .analysis-card h4 { color: var(--accent-green); }
+
+        .analysis-card ul {
+            margin-left: 1.25rem;
+            color: var(--text-muted);
+        }
+
+        .analysis-card li {
+            margin-bottom: 0.35rem;
+        }
+
+        /* Metric comparison strip */
+        .metric-strip {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            background: var(--surface-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 768px) {
+            .metric-strip { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .metric-item {
+            text-align: center;
+        }
+
+        .metric-label {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+
+        .metric-value {
+            font-size: 1.35rem;
+            font-weight: 800;
+        }
+
+        /* Copy Button */
+        .copy-btn {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-size: 0.72rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .copy-btn:hover {
+            background: var(--accent-blue);
+            color: #0b1120;
+        }
+    </style>
+</head>
+<body>
+
+<!-- TOP SHARED NAVBAR -->
+<nav class="top-navbar">
+    <div class="navbar-container">
+        <a href="index.html" class="nav-brand">
+            <span class="logo-badge">PROMPT ARCH</span>
+            <span>Core Prompting Principles</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html" class="nav-link-btn">🏛️ Workbench & Guide</a></li>
+            <li><a href="comparison.html" class="nav-link-btn active">⚖️ Good vs Bad Prompts</a></li>
+            <li><a href="https://github.com/rifaterdemsahin/CorePromptingPrinciplesStructuredInputFormats" target="_blank" class="nav-link-btn">🐙 GitHub Repo</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <header class="hero">
+        <h1>Unstructured vs. Structured Prompts</h1>
+        <p class="subtitle">
+            Compare side-by-side how unstructured, chaotic prompts cause attention drift and hallucination versus how structured prompts (Markdown headers, XML delimiters, and JSON schema constraints) produce 100% deterministic outputs.
+        </p>
+    </header>
+
+    <!-- Scenario Switcher -->
+    <div class="scenario-nav">
+        <button class="scenario-pill active" onclick="loadScenario(0)">🛒 Scenario 1: Customer Feedback Triage</button>
+        <button class="scenario-pill" onclick="loadScenario(1)">📋 Scenario 2: Meeting Action Items</button>
+        <button class="scenario-pill" onclick="loadScenario(2)">🛡️ Scenario 3: Security Code Vulnerability</button>
+        <button class="scenario-pill" onclick="loadScenario(3)">📄 Scenario 4: Candidate Resume Screening</button>
+        <button class="scenario-pill" onclick="loadScenario(4)">📈 Scenario 5: Financial Earnings Parsing</button>
+    </div>
+
+    <!-- Quick Metric Summary -->
+    <div class="metric-strip">
+        <div class="metric-item">
+            <div class="metric-label">JSON Parseability</div>
+            <div class="metric-value" style="color: var(--accent-green);">100% vs 0%</div>
+        </div>
+        <div class="metric-item">
+            <div class="metric-label">Preamble Noise</div>
+            <div class="metric-value" style="color: var(--accent-green);">0 vs ~45 Words</div>
+        </div>
+        <div class="metric-item">
+            <div class="metric-label">Missing Field Handling</div>
+            <div class="metric-value" style="color: var(--accent-green);">Typed `null` vs Hallucinated</div>
+        </div>
+        <div class="metric-item">
+            <div class="metric-label">Injection Risk</div>
+            <div class="metric-value" style="color: var(--accent-green);">Isolated vs High</div>
+        </div>
+    </div>
+
+    <!-- Side-by-Side Split View -->
+    <div class="split-grid">
+        <!-- LEFT COLUMN: BAD / UNSTRUCTURED -->
+        <section class="column-card bad-side">
+            <div class="column-header">
+                <div class="column-title">
+                    <span>❌</span> Left: Unstructured Prompt
+                </div>
+                <span class="tag-badge bad-badge">Chaotic & Flawed</span>
+            </div>
+
+            <!-- Bad Prompt Code -->
+            <div class="code-box-wrapper">
+                <div class="box-label">
+                    <span>The Prompt Given to LLM</span>
+                    <button class="copy-btn" onclick="copyText('bad-prompt-text')">Copy</button>
+                </div>
+                <pre><code id="bad-prompt-text" class="language-markdown"></code></pre>
+            </div>
+
+            <!-- Bad Output Preview -->
+            <div class="code-box-wrapper">
+                <div class="box-label">
+                    <span>Generated LLM Output (Flawed)</span>
+                    <button class="copy-btn" onclick="copyText('bad-output-text')">Copy</button>
+                </div>
+                <div id="bad-output-text" class="output-box"></div>
+            </div>
+
+            <!-- Flaws Analysis -->
+            <div class="analysis-card">
+                <h4><span>⚠️</span> Why This Output Fails in Production</h4>
+                <ul id="bad-analysis-list"></ul>
+            </div>
+        </section>
+
+        <!-- RIGHT COLUMN: GOOD / STRUCTURED -->
+        <section class="column-card good-side">
+            <div class="column-header">
+                <div class="column-title">
+                    <span>✅</span> Right: Structured Prompt
+                </div>
+                <span class="tag-badge good-badge">Deterministic & Strict</span>
+            </div>
+
+            <!-- Good Prompt Code -->
+            <div class="code-box-wrapper">
+                <div class="box-label">
+                    <span>The Prompt Given to LLM</span>
+                    <button class="copy-btn" onclick="copyText('good-prompt-text')">Copy</button>
+                </div>
+                <pre><code id="good-prompt-text" class="language-markdown"></code></pre>
+            </div>
+
+            <!-- Good Output Preview -->
+            <div class="code-box-wrapper">
+                <div class="box-label">
+                    <span>Generated LLM Output (Parseable)</span>
+                    <button class="copy-btn" onclick="copyText('good-output-text')">Copy</button>
+                </div>
+                <pre><code id="good-output-text" class="language-json"></code></pre>
+            </div>
+
+            <!-- Success Analysis -->
+            <div class="analysis-card">
+                <h4><span>✨</span> Why This Prompt Succeeds</h4>
+                <ul id="good-analysis-list"></ul>
+            </div>
+        </section>
+    </div>
+</div>
+
+<script>
+    const scenarios = [
+        {
+            title: "Customer Feedback Triage",
+            badPrompt: `Look at these customer reviews and tell me which ones are bad and why they are angry and output it as a table or list.
+
+Review:
+I loved the sleek design! But my package was delayed 2 weeks and support was completely useless and rude. 1 star.`,
+            badOutput: `Sure thing! Here is what I found from the review you gave me:
+
+- The customer is very angry because their shipment took an extra two weeks to arrive.
+- They also complained that customer service was unresponsive and rude.
+- On the bright side, they did say the design was sleek!
+- Sentiment: Bad (1/5 stars).
+
+Hope this helps you triage your customer feedback! Let me know if you need more analysis.`,
+            badFlaws: [
+                "Unparseable conversational fluff ('Sure thing! Here is what I found...', 'Hope this helps!').",
+                "Mixed qualitative format that crashes automated JSON pipelines with SyntaxError.",
+                "No schema rules: model arbitrarily chose bullet points instead of machine-readable fields."
+            ],
+            goodPrompt: `### ROLE
+Senior Customer Experience Intelligence Lead.
+
+### TASK
+Extract sentiment, root causes, and urgency from customer feedback.
+
+### INPUT DATA
+<customer_review>
+I loved the sleek design! But my package was delayed 2 weeks and support was completely useless and rude. 1 star.
+</customer_review>
+
+### CONSTRAINTS & OUTPUT FORMAT
+Return ONLY valid JSON matching this schema:
+{
+  "overall_sentiment": "POSITIVE" | "NEGATIVE" | "MIXED",
+  "rating": number,
+  "praise_points": string[],
+  "pain_points": string[],
+  "urgency": "LOW" | "MEDIUM" | "HIGH",
+  "requires_agent_followup": boolean
+}
+Do not include conversational preamble.`,
+            goodOutput: `{
+  "overall_sentiment": "MIXED",
+  "rating": 1,
+  "praise_points": [
+    "Sleek product design"
+  ],
+  "pain_points": [
+    "Package delayed by 2 weeks",
+    "Customer support was unhelpful and rude"
+  ],
+  "urgency": "HIGH",
+  "requires_agent_followup": true
+}`,
+            goodStrengths: [
+                "100% deterministic JSON output ready for direct database insertion.",
+                "Explicit XML boundary (<customer_review>) isolates dynamic feedback text.",
+                "Typed enum constraints ('MIXED', 'HIGH') prevent unpredictable model vocabulary."
+            ]
+        },
+        {
+            title: "Meeting Action Items",
+            badPrompt: `Read these notes and get the todos and who has to do what:
+
+Dave will update the architecture diagram before sprint planning on Wednesday. Maria mentioned we need budget approval from legal. John was sick today.`,
+            badOutput: `Here are the todos from the meeting:
+
+1. Dave: Architecture diagram (Due Wednesday before sprint planning)
+2. Maria / Legal: Budget approval needed (Deadline not mentioned, maybe end of month?)
+3. John: Was sick, will catch up later.`,
+            badFlaws: [
+                "Hallucination: Invented 'maybe end of month?' for legal deadline.",
+                "Irrelevant information included (John being sick is not an action item).",
+                "Non-standardized string keys making programmatic dispatch impossible."
+            ],
+            goodPrompt: `### ROLE
+Technical Scrum Master & Project Manager.
+
+### TASK
+Extract actionable sprint tasks, owners, and explicit due dates from raw notes.
+
+### INPUT DATA
+<raw_notes>
+Dave will update the architecture diagram before sprint planning on Wednesday. Maria mentioned we need budget approval from legal. John was sick today.
+</raw_notes>
+
+### CONSTRAINTS & OUTPUT FORMAT
+- Return ONLY a JSON array of tasks.
+- If a deadline or owner is unknown, set to null. Do not guess or hallucinate.
+Schema:
+[
+  { "task": string, "owner": string, "due_date": string|null }
+]`,
+            goodOutput: `[
+  {
+    "task": "Update architecture diagram before sprint planning",
+    "owner": "Dave",
+    "due_date": "Wednesday"
+  },
+  {
+    "task": "Obtain budget approval from legal",
+    "owner": "Legal",
+    "due_date": null
+  }
+]`,
+            goodStrengths: [
+                "Handles missing deadlines cleanly with null instead of hallucinating dates.",
+                "Filters out irrelevant status notes (John being sick) based on strict task schema.",
+                "Clean JSON array maps directly to Jira / GitHub Issue creation APIs."
+            ]
+        },
+        {
+            title: "Security Code Vulnerability",
+            badPrompt: `Is this code safe?
+query = "SELECT * FROM users WHERE email = '" + user_email + "'"`,
+            badOutput: `No, this code is not safe. It has a SQL Injection problem because you are concatenating strings. You should fix it with parameterized queries. Let me know if you want an example in Python or PHP!`,
+            badFlaws: [
+                "Lacks standardized CWE vulnerability taxonomy (e.g. CWE-89).",
+                "Offers conversational assistance instead of executable code remediation.",
+                "Cannot be consumed by CI/CD automated security scanners."
+            ],
+            goodPrompt: `### ROLE
+Lead Application Security Auditor.
+
+### TASK
+Perform static vulnerability analysis on code snippet.
+
+### INPUT DATA
+<code_snippet language="python">
+query = "SELECT * FROM users WHERE email = '" + user_email + "'"
+</code_snippet>
+
+### CONSTRAINTS & OUTPUT FORMAT
+Return JSON object matching schema:
+{
+  "is_vulnerable": boolean,
+  "cwe_id": string,
+  "severity": "LOW" | "MEDIUM" | "HIGH" | "CRITICAL",
+  "explanation": string,
+  "remediated_code": string
+}`,
+            goodOutput: `{
+  "is_vulnerable": true,
+  "cwe_id": "CWE-89: Improper Neutralization of Special Elements used in an SQL Command",
+  "severity": "CRITICAL",
+  "explanation": "Direct string concatenation of user_email enables arbitrary SQL injection payloads.",
+  "remediated_code": "cursor.execute('SELECT * FROM users WHERE email = %s', (user_email,))"
+}`,
+            goodStrengths: [
+                "Provides official CWE identifier and severity for automated security dashboards.",
+                "Includes verified drop-in parameterized code remediation.",
+                "Consistent boolean flag 'is_vulnerable' for automated PR build gating."
+            ]
+        },
+        {
+            title: "Candidate Resume Screening",
+            badPrompt: `Look at this person and tell me if they are good for a Senior DevOps job:
+Candidate: Alex Chen. 6 years experience with AWS, Kubernetes, Terraform. Led cloud migration at Acme Corp.`,
+            badOutput: `Alex Chen seems like a very strong fit for your Senior DevOps role! They have 6 years in cloud tech including Kubernetes and Terraform which are great. I'd give them an 8/10!`,
+            badFlaws: [
+                "Subjective, uncalibrated score ('8/10') without structured skill breakdown.",
+                "No verification of core requirements against a hiring rubric.",
+                "Unusable for candidate ranking systems or ATS matching."
+            ],
+            goodPrompt: `### ROLE
+Senior Technical Talent Assessor.
+
+### TASK
+Evaluate candidate experience against Senior DevOps requirements.
+
+### INPUT DATA
+<candidate_profile>
+Alex Chen. 6 years experience with AWS, Kubernetes, Terraform. Led cloud migration at Acme Corp.
+</candidate_profile>
+
+### CONSTRAINTS & OUTPUT FORMAT
+Return valid JSON matching:
+{
+  "candidate_name": string,
+  "years_experience": number,
+  "matched_skills": string[],
+  "seniority_match": boolean,
+  "recommendation": "STRONG_HIRE" | "HIRE" | "NO_HIRE",
+  "summary_reasoning": string
+}`,
+            goodOutput: `{
+  "candidate_name": "Alex Chen",
+  "years_experience": 6,
+  "matched_skills": ["AWS", "Kubernetes", "Terraform", "Cloud Migration"],
+  "seniority_match": true,
+  "recommendation": "STRONG_HIRE",
+  "summary_reasoning": "Candidate possesses 6 years domain experience and verifiable leadership of enterprise cloud migrations."
+}`,
+            goodStrengths: [
+                "Extracts discrete numeric and array fields for automated ATS filtering.",
+                "Strict enum recommendation ensures uniform evaluation across hundreds of candidates.",
+                "XML tags prevent malicious prompt injections embedded within candidate resumes."
+            ]
+        },
+        {
+            title: "Financial Earnings Parsing",
+            badPrompt: `Extract the revenue and profit from this:
+Q3 Earnings: Total revenue reached $4.2B, up 12% YoY. Net income was $850M. Next quarter guidance is $4.5B.`,
+            badOutput: `Here is the financial breakdown:
+- Q3 Revenue: $4.2 Billion (Growth: +12%)
+- Net Income (Profit): $850 Million
+- Future Guidance: $4.5B for next quarter.`,
+            badFlaws: [
+                "Inconsistent units ($4.2 Billion vs $850 Million) make mathematical computation difficult.",
+                "Markdown bullet text requires brittle string parsing to import into financial spreadsheets.",
+                "No currency standardization."
+            ],
+            goodPrompt: `### ROLE
+Financial Quantitative Analyst.
+
+### TASK
+Normalize earnings metrics into standardized numerical values in USD.
+
+### INPUT DATA
+<report_text>
+Q3 Earnings: Total revenue reached $4.2B, up 12% YoY. Net income was $850M. Next quarter guidance is $4.5B.
+</report_text>
+
+### CONSTRAINTS & OUTPUT FORMAT
+Return JSON matching schema:
+{
+  "quarter": string,
+  "revenue_usd_raw": number,
+  "yoy_growth_percentage": number,
+  "net_income_usd_raw": number,
+  "q4_guidance_usd_raw": number
+}`,
+            goodOutput: `{
+  "quarter": "Q3",
+  "revenue_usd_raw": 4200000000,
+  "yoy_growth_percentage": 12.0,
+  "net_income_usd_raw": 850000000,
+  "q4_guidance_usd_raw": 4500000000
+}`,
+            goodStrengths: [
+                "Numbers normalized to exact integers (4200000000) eliminating parsing ambiguity.",
+                "Ready for instant ingestion into quantitative algorithmic trading models.",
+                "Completely eliminates unit mismatch errors (Billion vs Million)."
+            ]
+        }
+    ];
+
+    function loadScenario(index) {
+        document.querySelectorAll('.scenario-pill').forEach((pill, idx) => {
+            pill.classList.toggle('active', idx === index);
+        });
+
+        const data = scenarios[index];
+        
+        // Bad Side
+        const badPromptEl = document.getElementById('bad-prompt-text');
+        badPromptEl.textContent = data.badPrompt;
+        hljs.highlightElement(badPromptEl);
+
+        document.getElementById('bad-output-text').textContent = data.badOutput;
+
+        const badList = document.getElementById('bad-analysis-list');
+        badList.innerHTML = data.badFlaws.map(f => `<li>${f}</li>`).join('');
+
+        // Good Side
+        const goodPromptEl = document.getElementById('good-prompt-text');
+        goodPromptEl.textContent = data.goodPrompt;
+        hljs.highlightElement(goodPromptEl);
+
+        const goodOutputEl = document.getElementById('good-output-text');
+        goodOutputEl.textContent = data.goodOutput;
+        hljs.highlightElement(goodOutputEl);
+
+        const goodList = document.getElementById('good-analysis-list');
+        goodList.innerHTML = data.goodStrengths.map(s => `<li>${s}</li>`).join('');
+    }
+
+    function copyText(elementId) {
+        const el = document.getElementById(elementId);
+        const text = el.textContent;
+        navigator.clipboard.writeText(text).then(() => {
+            alert('Copied to clipboard!');
+        });
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+        loadScenario(0);
+    });
+</script>
+
+</body>
+</html>
