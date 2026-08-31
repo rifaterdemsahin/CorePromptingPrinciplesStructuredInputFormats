@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Prompt Refactor Game | Core Prompting Principles</title>
+    <title>Prompt Refactor Puzzle: Role, Context, Task & Constraints | Core Prompting Principles</title>
     <!-- Highlight.js for Syntax Highlighting -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
@@ -135,9 +135,9 @@
         }
 
         h1 {
-            font-size: 2.2rem;
+            font-size: 2.15rem;
             font-weight: 800;
-            background: linear-gradient(135deg, #f8fafc 0%, #c084fc 50%, #38bdf8 100%);
+            background: linear-gradient(135deg, #f8fafc 0%, #c084fc 40%, #38bdf8 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             margin-bottom: 0.3rem;
@@ -146,8 +146,30 @@
         .subtitle {
             color: var(--text-muted);
             font-size: 1rem;
-            max-width: 750px;
+            max-width: 800px;
         }
+
+        /* Framework Badges Strip */
+        .framework-strip {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.6rem;
+        }
+
+        .framework-pill {
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            font-family: var(--font-mono);
+        }
+
+        .pill-role { background: rgba(56, 189, 248, 0.2); color: var(--accent-blue); border: 1px solid var(--accent-blue); }
+        .pill-context { background: rgba(192, 132, 252, 0.2); color: var(--accent-purple); border: 1px solid var(--accent-purple); }
+        .pill-task { background: rgba(251, 191, 36, 0.2); color: var(--accent-amber); border: 1px solid var(--accent-amber); }
+        .pill-boundary { background: rgba(56, 189, 248, 0.2); color: var(--accent-blue); border: 1px solid var(--accent-blue); }
+        .pill-constraint { background: rgba(74, 222, 128, 0.2); color: var(--accent-green); border: 1px solid var(--accent-green); }
 
         /* Level Stats Box */
         .stats-badge {
@@ -214,7 +236,7 @@
             color: var(--accent-purple);
         }
 
-        /* Scenario Banner: Before & Expected */
+        /* Scenario Banner: Before & Target */
         .scenario-banner {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -242,7 +264,7 @@
         }
 
         .banner-title {
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 0.05em;
@@ -269,7 +291,7 @@
         /* Game Board Layout */
         .game-board {
             display: grid;
-            grid-template-columns: 1fr 1.1fr;
+            grid-template-columns: 1fr 1.15fr;
             gap: 2rem;
             margin-bottom: 2.5rem;
         }
@@ -313,7 +335,7 @@
             display: flex;
             flex-direction: column;
             gap: 0.75rem;
-            min-height: 320px;
+            min-height: 400px;
         }
 
         /* Draggable Piece Item */
@@ -336,9 +358,9 @@
         }
 
         .puzzle-piece:hover {
-            border-color: var(--accent-blue);
+            border-color: var(--accent-purple);
             transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(56, 189, 248, 0.2);
+            box-shadow: 0 6px 16px rgba(192, 132, 252, 0.2);
         }
 
         .puzzle-piece:active {
@@ -359,7 +381,7 @@
 
         .piece-category-tag {
             font-size: 0.7rem;
-            padding: 0.15rem 0.4rem;
+            padding: 0.15rem 0.45rem;
             border-radius: 4px;
             font-weight: 700;
             text-transform: uppercase;
@@ -367,11 +389,12 @@
             align-self: flex-start;
         }
 
-        .tag-role { background: rgba(56, 189, 248, 0.2); color: var(--accent-blue); }
-        .tag-task { background: rgba(192, 132, 252, 0.2); color: var(--accent-purple); }
-        .tag-input { background: rgba(251, 191, 36, 0.2); color: var(--accent-amber); }
-        .tag-output { background: rgba(74, 222, 128, 0.2); color: var(--accent-green); }
-        .tag-bad { background: rgba(248, 113, 113, 0.2); color: var(--accent-rose); }
+        .tag-role { background: rgba(56, 189, 248, 0.2); color: var(--accent-blue); border: 1px solid var(--accent-blue); }
+        .tag-context { background: rgba(192, 132, 252, 0.2); color: var(--accent-purple); border: 1px solid var(--accent-purple); }
+        .tag-task { background: rgba(251, 191, 36, 0.2); color: var(--accent-amber); border: 1px solid var(--accent-amber); }
+        .tag-input { background: rgba(56, 189, 248, 0.2); color: var(--accent-blue); border: 1px solid var(--accent-blue); }
+        .tag-constraint { background: rgba(74, 222, 128, 0.2); color: var(--accent-green); border: 1px solid var(--accent-green); }
+        .tag-bad { background: rgba(248, 113, 113, 0.2); color: var(--accent-rose); border: 1px solid var(--accent-rose); }
 
         /* Right Side: Drop Zones */
         .drop-target-card {
@@ -394,8 +417,8 @@
             background: #090e1a;
             border: 2px dashed #334155;
             border-radius: 8px;
-            min-height: 80px;
-            padding: 0.75rem;
+            min-height: 70px;
+            padding: 0.65rem 0.85rem;
             display: flex;
             flex-direction: column;
             justify-content: center;
@@ -404,8 +427,8 @@
         }
 
         .drop-slot.drag-over {
-            border-color: var(--accent-blue);
-            background: rgba(56, 189, 248, 0.05);
+            border-color: var(--accent-purple);
+            background: rgba(192, 132, 252, 0.08);
         }
 
         .drop-slot.filled {
@@ -426,13 +449,13 @@
 
         .slot-placeholder {
             color: #64748b;
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             text-align: center;
             font-weight: 600;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 0.5rem;
+            gap: 0.4rem;
             pointer-events: none;
         }
 
@@ -506,7 +529,6 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Remove / Return button on placed pieces */
         .remove-piece-btn {
             background: rgba(255,255,255,0.1);
             border: none;
@@ -536,7 +558,7 @@
             <li><a href="index.html" class="nav-link-btn">🏛️ Workbench & Guide</a></li>
             <li><a href="comparison.html" class="nav-link-btn">⚖️ Good vs Bad Prompts</a></li>
             <li><a href="constraints.html" class="nav-link-btn">🔒 Input & Output Constraints</a></li>
-            <li><a href="exercise.html" class="nav-link-btn active">🧩 Prompt Refactor Game</a></li>
+            <li><a href="exercise.html" class="nav-link-btn active">🧩 Refactor Game</a></li>
             <li><a href="https://github.com/rifaterdemsahin/CorePromptingPrinciplesStructuredInputFormats" target="_blank" class="nav-link-btn">🐙 GitHub Repo</a></li>
         </ul>
     </div>
@@ -545,10 +567,17 @@
 <div class="container">
     <header class="hero">
         <div>
-            <h1>Interactive Prompt Refactor Puzzle</h1>
+            <h1>Role, Context, Task & Constraint Puzzle</h1>
             <p class="subtitle">
-                Drag and drop the structural prompt components into the correct production sequence. Filter out the bad unconstrained blocks to build a 100% deterministic AI prompt!
+                Refactor chaotic prompts by assembling the industry-standard <strong>Role, Context, Task & Constraint (RCTC)</strong> architectural framework using <strong>Markdown headers (`###`)</strong> and <strong>XML boundary delimiters (`&lt;data&gt;`)</strong>.
             </p>
+            <div class="framework-strip">
+                <span class="framework-pill pill-role">1. ### ROLE</span>
+                <span class="framework-pill pill-context">2. ### CONTEXT</span>
+                <span class="framework-pill pill-task">3. ### TASK</span>
+                <span class="framework-pill pill-boundary">4. &lt;XML_INPUT_DATA&gt;</span>
+                <span class="framework-pill pill-constraint">5. ### CONSTRAINTS</span>
+            </div>
         </div>
 
         <div class="stats-badge">
@@ -569,23 +598,23 @@
 
     <!-- Level Selector -->
     <div class="level-selector">
-        <button class="level-btn active" onclick="switchLevel(0)">🟢 Level 1: Customer Sentiment Refactor</button>
-        <button class="level-btn" onclick="switchLevel(1)">🟡 Level 2: Meeting Action Items Assembly</button>
-        <button class="level-btn" onclick="switchLevel(2)">🔴 Level 3: Security Vulnerability Parser</button>
+        <button class="level-btn active" onclick="switchLevel(0)">🟢 Level 1: Customer Sentiment & Churn Triage</button>
+        <button class="level-btn" onclick="switchLevel(1)">🟡 Level 2: Meeting Action Items & Deadline Extractor</button>
+        <button class="level-btn" onclick="switchLevel(2)">🔴 Level 3: AppSec Code Vulnerability Auditor</button>
     </div>
 
     <!-- Scenario Target Banner: Before & Target -->
     <div class="scenario-banner">
         <div class="banner-card bad">
             <div class="banner-title">
-                <span>❌</span> 1. The Chaotic Previous Version (What We Need to Fix)
+                <span>❌</span> 1. The Chaotic Previous Version (Unstructured)
             </div>
             <div id="banner-bad-text" class="banner-code"></div>
         </div>
 
         <div class="banner-card target">
             <div class="banner-title">
-                <span>🎯</span> 2. The Expected Refactored Blueprint
+                <span>🎯</span> 2. Expected Blueprint (Role + Context + Task + XML + Constraint)
             </div>
             <div id="banner-target-text" class="banner-code"></div>
         </div>
@@ -609,48 +638,58 @@
         <div class="drop-target-card">
             <div class="pool-header">
                 <div class="pool-title">
-                    <span>🏗️</span> Production Prompt Assembly Slots
+                    <span>🏗️</span> Production Prompt Assembly (5 Framework Slots)
                 </div>
                 <span class="pool-hint">Drop pieces in exact logical order</span>
             </div>
 
             <div class="target-slots-container">
-                <!-- Slot 1: Role -->
+                <!-- Slot 0: Role -->
                 <div>
-                    <label style="font-size: 0.8rem; font-weight: 700; color: var(--accent-blue); margin-bottom: 0.25rem; display:block;">
-                        SLOT 1: Persona & System Context (Role)
+                    <label style="font-size: 0.8rem; font-weight: 700; color: var(--accent-blue); margin-bottom: 0.2rem; display:block;">
+                        SLOT 1: ### ROLE (Persona & Domain Authority)
                     </label>
                     <div id="slot-0" class="drop-slot" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 0)" onclick="handleSlotClick(0)">
                         <div class="slot-placeholder"><span>⬇️</span> Drop Role Block Here</div>
                     </div>
                 </div>
 
-                <!-- Slot 2: Task -->
+                <!-- Slot 1: Context -->
                 <div>
-                    <label style="font-size: 0.8rem; font-weight: 700; color: var(--accent-purple); margin-bottom: 0.25rem; display:block;">
-                        SLOT 2: Primary Task & Objective
+                    <label style="font-size: 0.8rem; font-weight: 700; color: var(--accent-purple); margin-bottom: 0.2rem; display:block;">
+                        SLOT 2: ### CONTEXT (Audience, Setting & Background)
                     </label>
                     <div id="slot-1" class="drop-slot" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 1)" onclick="handleSlotClick(1)">
+                        <div class="slot-placeholder"><span>⬇️</span> Drop Context Block Here</div>
+                    </div>
+                </div>
+
+                <!-- Slot 2: Task -->
+                <div>
+                    <label style="font-size: 0.8rem; font-weight: 700; color: var(--accent-amber); margin-bottom: 0.2rem; display:block;">
+                        SLOT 3: ### TASK (Actionable Objective & Steps)
+                    </label>
+                    <div id="slot-2" class="drop-slot" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 2)" onclick="handleSlotClick(2)">
                         <div class="slot-placeholder"><span>⬇️</span> Drop Task Block Here</div>
                     </div>
                 </div>
 
-                <!-- Slot 3: Input XML Delimiter -->
+                <!-- Slot 3: Input XML Delimiters -->
                 <div>
-                    <label style="font-size: 0.8rem; font-weight: 700; color: var(--accent-amber); margin-bottom: 0.25rem; display:block;">
-                        SLOT 3: Input Data & XML Boundary Isolation
+                    <label style="font-size: 0.8rem; font-weight: 700; color: var(--accent-blue); margin-bottom: 0.2rem; display:block;">
+                        SLOT 4: ### INPUT DATA (&lt;xml_boundary&gt; Isolation)
                     </label>
-                    <div id="slot-2" class="drop-slot" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 2)" onclick="handleSlotClick(2)">
+                    <div id="slot-3" class="drop-slot" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 3)" onclick="handleSlotClick(3)">
                         <div class="slot-placeholder"><span>⬇️</span> Drop XML Data Enclosure Here</div>
                     </div>
                 </div>
 
                 <!-- Slot 4: Output Constraints -->
                 <div>
-                    <label style="font-size: 0.8rem; font-weight: 700; color: var(--accent-green); margin-bottom: 0.25rem; display:block;">
-                        SLOT 4: Output Constraints & JSON Schema
+                    <label style="font-size: 0.8rem; font-weight: 700; color: var(--accent-green); margin-bottom: 0.2rem; display:block;">
+                        SLOT 5: ### CONSTRAINTS (JSON Schema & Negative Rules)
                     </label>
-                    <div id="slot-3" class="drop-slot" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 3)" onclick="handleSlotClick(3)">
+                    <div id="slot-4" class="drop-slot" ondragover="handleDragOver(event)" ondragleave="handleDragLeave(event)" ondrop="handleDrop(event, 4)" onclick="handleSlotClick(4)">
                         <div class="slot-placeholder"><span>⬇️</span> Drop JSON Schema Constraints Here</div>
                     </div>
                 </div>
@@ -676,60 +715,69 @@
     const levels = [
         {
             id: 1,
-            title: "Customer Sentiment Refactor",
+            title: "Customer Sentiment & Churn Triage",
             badPrompt: `"Look at these customer reviews and tell me which ones are bad and why they are angry and output it as a table or list."`,
-            targetDescription: `Construct a 4-part structured prompt with:
-1. ### ROLE: Senior CX Lead
-2. ### TASK: Extract sentiment & pain points
-3. <customer_review> XML boundary
-4. JSON Schema: {"sentiment": "...", "pain_points": [...]}`,
-            slotsCount: 4,
+            targetDescription: `Construct a 5-part framework prompt:
+1. ### ROLE: Senior Customer Intelligence Lead
+2. ### CONTEXT: E-Commerce executive weekly review
+3. ### TASK: Classify sentiment, root causes & urgency
+4. <customer_review> XML boundary isolation
+5. ### CONSTRAINTS: Typed JSON Schema without preamble`,
+            slotsCount: 5,
             pieces: [
                 {
                     id: "role_1",
                     type: "role",
-                    label: "### ROLE: Senior Customer Intelligence Lead.",
-                    tag: "Role Context",
+                    label: "### ROLE\nSenior Customer Intelligence Lead.",
+                    tag: "1. Role Block",
                     tagClass: "tag-role",
                     correctSlot: 0
                 },
                 {
+                    id: "context_1",
+                    type: "context",
+                    label: "### CONTEXT\nPreparing executive churn risk report for VP of Customer Experience.",
+                    tag: "2. Context Block",
+                    tagClass: "tag-context",
+                    correctSlot: 1
+                },
+                {
                     id: "task_1",
                     type: "task",
-                    label: "### TASK: Extract sentiment, urgency, and customer root cause pain points.",
-                    tag: "Objective",
+                    label: "### TASK\nExtract overall sentiment, specific pain points, and classify follow-up urgency.",
+                    tag: "3. Task Block",
                     tagClass: "tag-task",
-                    correctSlot: 1
+                    correctSlot: 2
                 },
                 {
                     id: "input_1",
                     type: "input",
-                    label: "### INPUT DATA\n<customer_review>\nPackage was delayed 3 weeks and customer support was rude.\n</customer_review>",
-                    tag: "XML Input Boundary",
+                    label: "### INPUT DATA\n<customer_review>\nPackage was delayed 3 weeks and support was rude. 1 star.\n</customer_review>",
+                    tag: "4. XML Boundary",
                     tagClass: "tag-input",
-                    correctSlot: 2
+                    correctSlot: 3
                 },
                 {
                     id: "output_1",
                     type: "output",
-                    label: "### OUTPUT FORMAT & CONSTRAINTS\nReturn ONLY valid JSON matching: {\"sentiment\": string, \"pain_points\": string[]}\nDo not include conversational preamble.",
-                    tag: "JSON Schema",
-                    tagClass: "tag-output",
-                    correctSlot: 3
+                    label: "### CONSTRAINTS & OUTPUT FORMAT\nReturn ONLY valid JSON: {\"sentiment\": \"POSITIVE\"|\"MIXED\"|\"NEGATIVE\", \"pain_points\": string[], \"urgency\": \"HIGH\"|\"LOW\"}\nDo not include conversational preamble.",
+                    tag: "5. Constraints",
+                    tagClass: "tag-constraint",
+                    correctSlot: 4
                 },
                 {
                     id: "bad_1",
                     type: "bad",
-                    label: "Just write whatever you feel like in a polite paragraph.",
-                    tag: "❌ Distractor",
+                    label: "Just summarize the text in a friendly paragraph without XML tags or JSON.",
+                    tag: "❌ Distractor (Unconstrained)",
                     tagClass: "tag-bad",
                     correctSlot: -1
                 },
                 {
                     id: "bad_2",
                     type: "bad",
-                    label: "Give me the answer without any structure or JSON tags.",
-                    tag: "❌ Distractor",
+                    label: "Package was delayed 3 weeks (Raw unescaped string with no <tag> delimiters).",
+                    tag: "❌ Distractor (No Boundary)",
                     tagClass: "tag-bad",
                     correctSlot: -1
                 }
@@ -737,51 +785,60 @@
         },
         {
             id: 2,
-            title: "Meeting Action Items Assembly",
+            title: "Meeting Action Items & Deadline Extractor",
             badPrompt: `"Get the todos and who has to do what from these notes."`,
-            targetDescription: `Construct a 4-part structured prompt with:
+            targetDescription: `Construct a 5-part framework prompt:
 1. ### ROLE: Technical Scrum Master
-2. ### TASK: Extract actionable tasks & owners
-3. <meeting_notes> XML boundary
-4. JSON Array Schema with missing field null handling`,
-            slotsCount: 4,
+2. ### CONTEXT: Post-Sprint Retrospective for engineering team
+3. ### TASK: Extract discrete action items, owners & deadlines
+4. <meeting_notes> XML boundary isolation
+5. ### CONSTRAINTS: JSON array with null missing-field rule`,
+            slotsCount: 5,
             pieces: [
                 {
                     id: "role_2",
                     type: "role",
-                    label: "### ROLE: Technical Scrum Master & Sprint Coordinator.",
-                    tag: "Role Context",
+                    label: "### ROLE\nTechnical Scrum Master & Agile Delivery Lead.",
+                    tag: "1. Role Block",
                     tagClass: "tag-role",
                     correctSlot: 0
                 },
                 {
+                    id: "context_2",
+                    type: "context",
+                    label: "### CONTEXT\nAutomating Jira sprint backlog ticket creation from sprint retrospectives.",
+                    tag: "2. Context Block",
+                    tagClass: "tag-context",
+                    correctSlot: 1
+                },
+                {
                     id: "task_2",
                     type: "task",
-                    label: "### TASK: Extract discrete action items, assignees, and deadlines from meeting notes.",
-                    tag: "Objective",
+                    label: "### TASK\nParse transcript into actionable technical tasks, assignees, and deadlines.",
+                    tag: "3. Task Block",
                     tagClass: "tag-task",
-                    correctSlot: 1
+                    correctSlot: 2
                 },
                 {
                     id: "input_2",
                     type: "input",
                     label: "### INPUT DATA\n<meeting_notes>\nAlex will refactor database queries by Friday. Sarah will review legal budget.\n</meeting_notes>",
-                    tag: "XML Input Boundary",
+                    tag: "4. XML Boundary",
                     tagClass: "tag-input",
-                    correctSlot: 2
+                    correctSlot: 3
                 },
                 {
                     id: "output_2",
                     type: "output",
-                    label: "### CONSTRAINTS\n- Return JSON array: [{ \"task\": string, \"owner\": string, \"due\": string|null }]\n- If deadline is missing, assign null.",
-                    tag: "JSON Schema",
-                    tagClass: "tag-output",
-                    correctSlot: 3
+                    label: "### CONSTRAINTS & OUTPUT FORMAT\n- Return JSON array: [{ \"task\": string, \"owner\": string, \"due\": string|null }]\n- If deadline is missing, assign null. No hallucinated dates.",
+                    tag: "5. Constraints",
+                    tagClass: "tag-constraint",
+                    correctSlot: 4
                 },
                 {
                     id: "bad_3",
                     type: "bad",
-                    label: "Make up any missing deadlines if not stated.",
+                    label: "Invent deadlines if they are missing from notes.",
                     tag: "❌ Distractor (Hallucination)",
                     tagClass: "tag-bad",
                     correctSlot: -1
@@ -790,52 +847,61 @@
         },
         {
             id: 3,
-            title: "Security Vulnerability Parser",
+            title: "AppSec Code Vulnerability Auditor",
             badPrompt: `"Is this code safe or bad? query = 'SELECT * FROM users' + id"`,
-            targetDescription: `Construct a 4-part structured prompt with:
+            targetDescription: `Construct a 5-part framework prompt:
 1. ### ROLE: Lead Application Security Auditor
-2. ### TASK: Static vulnerability analysis
-3. <code_snippet> XML boundary
-4. Typed JSON schema with CWE taxonomy & parameterized remediation`,
-            slotsCount: 4,
+2. ### CONTEXT: Automated CI/CD security PR gatekeeper
+3. ### TASK: Static vulnerability analysis & CWE identification
+4. <code_snippet language="python"> XML boundary
+5. ### CONSTRAINTS: JSON Schema with parameterized remediation`,
+            slotsCount: 5,
             pieces: [
                 {
                     id: "role_3",
                     type: "role",
-                    label: "### ROLE: Lead Application Security Auditor & Code Reviewer.",
-                    tag: "Role Context",
+                    label: "### ROLE\nLead Application Security Auditor.",
+                    tag: "1. Role Block",
                     tagClass: "tag-role",
                     correctSlot: 0
                 },
                 {
+                    id: "context_3",
+                    type: "context",
+                    label: "### CONTEXT\nAutomated PR security blocker running inside GitHub Actions pipeline.",
+                    tag: "2. Context Block",
+                    tagClass: "tag-context",
+                    correctSlot: 1
+                },
+                {
                     id: "task_3",
                     type: "task",
-                    label: "### TASK: Perform static security audit and identify CWE vulnerability classes.",
-                    tag: "Objective",
+                    label: "### TASK\nPerform static code analysis to detect vulnerabilities and assign CWE classes.",
+                    tag: "3. Task Block",
                     tagClass: "tag-task",
-                    correctSlot: 1
+                    correctSlot: 2
                 },
                 {
                     id: "input_3",
                     type: "input",
                     label: "### INPUT DATA\n<code_snippet language=\"python\">\ncursor.execute(f\"SELECT * FROM users WHERE user_id = {user_id}\")\n</code_snippet>",
-                    tag: "XML Input Boundary",
+                    tag: "4. XML Boundary",
                     tagClass: "tag-input",
-                    correctSlot: 2
+                    correctSlot: 3
                 },
                 {
                     id: "output_3",
                     type: "output",
-                    label: "### OUTPUT CONSTRAINTS\nReturn ONLY JSON matching: {\"is_vulnerable\": boolean, \"cwe_id\": string, \"remediation\": string}",
-                    tag: "JSON Schema",
-                    tagClass: "tag-output",
-                    correctSlot: 3
+                    label: "### CONSTRAINTS & OUTPUT FORMAT\nReturn ONLY JSON matching: {\"is_vulnerable\": boolean, \"cwe_id\": string, \"remediation\": string}\nDo not include conversational preamble.",
+                    tag: "5. Constraints",
+                    tagClass: "tag-constraint",
+                    correctSlot: 4
                 },
                 {
                     id: "bad_4",
                     type: "bad",
-                    label: "Output conversational explanation in casual markdown.",
-                    tag: "❌ Distractor",
+                    label: "Write an essay explaining SQL history in conversational markdown.",
+                    tag: "❌ Distractor (Off-Topic)",
                     tagClass: "tag-bad",
                     correctSlot: -1
                 }
@@ -845,7 +911,7 @@
 
     let currentLevelIndex = 0;
     let score = 0;
-    let slotAssignments = [null, null, null, null];
+    let slotAssignments = [null, null, null, null, null];
     let selectedPieceForClick = null;
 
     function switchLevel(index) {
@@ -860,7 +926,7 @@
 
     function resetCurrentLevel() {
         const lvl = levels[currentLevelIndex];
-        slotAssignments = [null, null, null, null];
+        slotAssignments = [null, null, null, null, null];
         selectedPieceForClick = null;
 
         document.getElementById('banner-bad-text').textContent = lvl.badPrompt;
@@ -896,10 +962,17 @@
         });
 
         // Reset Slots
-        for (let i = 0; i < 4; i++) {
+        const slotLabels = [
+            "SLOT 1: ### ROLE",
+            "SLOT 2: ### CONTEXT",
+            "SLOT 3: ### TASK",
+            "SLOT 4: <xml_boundary>",
+            "SLOT 5: ### CONSTRAINTS"
+        ];
+        for (let i = 0; i < 5; i++) {
             const slotEl = document.getElementById(`slot-${i}`);
             slotEl.className = 'drop-slot';
-            slotEl.innerHTML = `<div class="slot-placeholder"><span>⬇️</span> Drop Slot ${i + 1} Block Here</div>`;
+            slotEl.innerHTML = `<div class="slot-placeholder"><span>⬇️</span> Drop ${slotLabels[i]} Block Here</div>`;
         }
     }
 
@@ -932,7 +1005,6 @@
 
     function selectPieceForSlotting(pieceId) {
         selectedPieceForClick = pieceId;
-        // Find first empty slot
         const emptySlotIdx = slotAssignments.findIndex(s => s === null);
         if (emptySlotIdx !== -1) {
             placePieceInSlot(pieceId, emptySlotIdx);
@@ -951,7 +1023,6 @@
         const piece = lvl.pieces.find(p => p.id === pieceId);
         if (!piece) return;
 
-        // If this piece was in another slot, clear that slot
         const prevSlotIdx = slotAssignments.indexOf(pieceId);
         if (prevSlotIdx !== -1) {
             slotAssignments[prevSlotIdx] = null;
@@ -960,21 +1031,17 @@
             prevSlotEl.innerHTML = `<div class="slot-placeholder"><span>⬇️</span> Drop Slot ${prevSlotIdx + 1} Block Here</div>`;
         }
 
-        // If slot had an existing piece, return it to pool
         const existingPieceId = slotAssignments[slotIndex];
         if (existingPieceId) {
             const existingEl = document.getElementById(`piece-${existingPieceId}`);
             if (existingEl) existingEl.style.display = 'flex';
         }
 
-        // Assign to slot
         slotAssignments[slotIndex] = pieceId;
 
-        // Hide piece from pool
         const pieceEl = document.getElementById(`piece-${pieceId}`);
         if (pieceEl) pieceEl.style.display = 'none';
 
-        // Update slot UI
         const slotEl = document.getElementById(`slot-${slotIndex}`);
         slotEl.className = 'drop-slot filled';
         slotEl.innerHTML = `
@@ -995,11 +1062,9 @@
 
         slotAssignments[slotIndex] = null;
 
-        // Show back in pool
         const pieceEl = document.getElementById(`piece-${pieceId}`);
         if (pieceEl) pieceEl.style.display = 'flex';
 
-        // Reset slot
         const slotEl = document.getElementById(`slot-${slotIndex}`);
         slotEl.className = 'drop-slot';
         slotEl.innerHTML = `<div class="slot-placeholder"><span>⬇️</span> Drop Slot ${slotIndex + 1} Block Here</div>`;
@@ -1010,17 +1075,17 @@
         const feedbackEl = document.getElementById('game-feedback');
         feedbackEl.style.display = 'block';
 
-        // Check if all 4 slots filled
         if (slotAssignments.includes(null)) {
             feedbackEl.className = 'result-banner error';
-            feedbackEl.innerHTML = '<strong>⚠️ Incomplete Prompt!</strong> Please fill all 4 structural slots before testing.';
+            feedbackEl.innerHTML = '<strong>⚠️ Incomplete Framework!</strong> Please fill all 5 structural slots (Role, Context, Task, XML Boundary, Constraint) before testing.';
             return;
         }
 
         let allCorrect = true;
         let errors = [];
+        const slotNames = ["Role", "Context", "Task", "XML Boundary", "Constraints"];
 
-        for (let i = 0; i < 4; i++) {
+        for (let i = 0; i < 5; i++) {
             const pieceId = slotAssignments[i];
             const piece = lvl.pieces.find(p => p.id === pieceId);
             const slotEl = document.getElementById(`slot-${i}`);
@@ -1034,9 +1099,9 @@
                 slotEl.classList.add('wrong-slot');
 
                 if (piece.type === 'bad') {
-                    errors.push(`Slot ${i + 1} contains a distractor block that lacks structural constraints.`);
+                    errors.push(`Slot ${i + 1} (${slotNames[i]}) contains a distractor block that lacks structural constraints or XML boundaries.`);
                 } else {
-                    errors.push(`Slot ${i + 1} is out of sequence (expected a different prompt layer).`);
+                    errors.push(`Slot ${i + 1} (${slotNames[i]}) has the wrong component placed (expected ${slotNames[i]}).`);
                 }
             }
         }
@@ -1048,25 +1113,24 @@
             feedbackEl.className = 'result-banner success';
             feedbackEl.innerHTML = `
                 <div style="font-size: 1.1rem; font-weight: 800; margin-bottom: 0.5rem;">
-                    🎉 Perfect Assembly! +100 Points!
+                    🎉 Perfect Role, Context, Task & Constraint Assembly! (+100 Pts)
                 </div>
                 <p style="margin:0; font-size: 0.9rem;">
-                    Your structured prompt is 100% production-ready. The AI engine ingested the Markdown role, locked attention onto the XML boundaries, and executed strict JSON schema decoding without preamble!
+                    Your refactored prompt adheres 100% to production standards: <strong>Markdown Headers</strong> set the semantic compartments, <strong>XML tags</strong> isolate dynamic data boundaries, and <strong>JSON Schema constraints</strong> guarantee deterministic, parseable outputs.
                 </p>
             `;
 
-            // Trigger celebration confetti
             if (window.confetti) {
                 confetti({
-                    particleCount: 100,
-                    spread: 70,
+                    particleCount: 120,
+                    spread: 80,
                     origin: { y: 0.6 }
                 });
             }
         } else {
             feedbackEl.className = 'result-banner error';
             feedbackEl.innerHTML = `
-                <strong>❌ Sequence Check Failed:</strong><br>
+                <strong>❌ Sequence & Boundary Check Failed:</strong><br>
                 &bull; ${errors.join('<br>&bull; ')}
             `;
         }

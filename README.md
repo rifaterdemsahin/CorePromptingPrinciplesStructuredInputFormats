@@ -69,7 +69,8 @@ This repository features four interconnected interactive web applications with a
    - **Constraint Breakdown**: Details input boundary delimiters (`<data>`), role scope, JSON Schemas, missing-data `null` fallbacks, enum whitelists, and anti-preamble constraints.
 
 4. **🧩 Prompt Refactor Game & Puzzle ([`exercise.html`](exercise.html))**:
-   - **Interactive Drag-and-Drop Puzzle**: Visual LEGO-style block assembly for structural prompt engineering.
+   - **Role, Context, Task & Constraint (RCTC) Framework**: Visual LEGO-style block puzzle to construct production prompts following the 5-layer framework (`### ROLE`, `### CONTEXT`, `### TASK`, `<xml_boundary>`, `### CONSTRAINTS`).
+   - **XML Boundary Isolation**: Hands-on assembly requiring dynamic inputs to be enclosed in explicit XML tags (`<customer_review>`, `<meeting_notes>`, `<code_snippet>`) to prevent injection.
    - **Before & Target Goal Rubrics**: Compares the flawed prompt to the required blueprint.
    - **3 Progressive Levels**: Customer Sentiment Refactor (Level 1), Meeting Action Items Assembly (Level 2), and Security Vulnerability Parser (Level 3).
    - **Real-Time Validation & Celebration**: Validates slot sequencing, filters distractor blocks, scores points, and triggers confetti on completion.
