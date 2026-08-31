@@ -843,9 +843,9 @@
 
         <!-- CENTERED PRIMARY ACTION BAR -->
         <div class="hero-action-bar">
-            <button class="btn-action-primary" onclick="bulkDownloadZip()">
-                <span>📦</span> Bulk Download All Shots (.ZIP Timecoded)
-            </button>
+            <a href="recordings/Video1.1_Production_Takes_Timecoded.zip" download="Video1.1_Production_Takes_Timecoded.zip" class="btn-action-primary" style="text-decoration: none;">
+                <span>📦</span> Bulk Download All 4 Shots (.ZIP &bull; 7.6MB)
+            </a>
             <button class="btn-action-amber" onclick="openAllPagesPopup()">
                 <span>🪟</span> Open 1080p Target Window
             </button>
@@ -1021,9 +1021,9 @@
                 </span>
             </div>
             <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;">
-                <button class="btn-action-primary" onclick="bulkDownloadZip()">
-                    <span>📦</span> Bulk Download All (.ZIP)
-                </button>
+                <a href="recordings/Video1.1_Production_Takes_Timecoded.zip" download="Video1.1_Production_Takes_Timecoded.zip" class="btn-action-primary" style="text-decoration: none;">
+                    <span>📦</span> Bulk Download All 4 Takes (.ZIP &bull; 7.6MB)
+                </a>
                 <button class="btn-secondary" onclick="exportManifestJSON()">
                     <span>📋</span> Export Manifest (.JSON)
                 </button>
@@ -1753,48 +1753,14 @@
         document.getElementById('reviewModal').style.display = 'none';
     }
 
-    // BULK DOWNLOAD WITH TIMECODES (ZIP ARCHIVE)
-    async function bulkDownloadZip() {
-        const btn = event ? event.currentTarget : null;
-        if (btn) btn.textContent = "⏳ Generating ZIP...";
-
-        try {
-            const zip = new JSZip();
-            const zipFolder = zip.folder("Video1.1_Production_Takes_Timecoded");
-
-            // Add index manifest text
-            let manifestText = "============================================================\n";
-            manifestText += "AOU CERTIFIED AI ASSOCIATE — VIDEO 1.1 PRODUCTION TIMECODES\n";
-            manifestText += "============================================================\n\n";
-
-            for (const take of MASTER_PRELOADED_TAKES) {
-                manifestText += `• ${take.shotTitle} [${take.timecode}]: ${take.fileName} (${take.size})\n`;
-                try {
-                    const response = await fetch(take.blobUrl);
-                    if (response.ok) {
-                        const blob = await response.blob();
-                        zipFolder.file(take.fileName, blob);
-                    }
-                } catch (err) {
-                    console.warn(`Could not fetch ${take.fileName} directly:`, err);
-                }
-            }
-
-            manifestText += "\nTotal Master Duration: 1 minute 35 seconds (95 seconds)\n";
-            manifestText += `Exported: ${new Date().toISOString()}\n`;
-            zipFolder.file("TIMECODES_MANIFEST.txt", manifestText);
-
-            const content = await zip.generateAsync({ type: "blob" });
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(content);
-            a.download = "Video1.1_Complete_Takes_Timecoded_Package.zip";
-            a.click();
-        } catch (err) {
-            console.error("Client zip error, downloading pre-built archive:", err);
-            window.location.href = "recordings/Video1.1_Production_Takes_Timecoded.zip";
-        } finally {
-            if (btn) btn.innerHTML = `<span>📦</span> Bulk Download All (.ZIP)`;
-        }
+    // BULK DOWNLOAD WITH TIMECODES (DIRECT 7.6MB ZIP DOWNLOAD)
+    function bulkDownloadZip() {
+        const a = document.createElement('a');
+        a.href = "recordings/Video1.1_Production_Takes_Timecoded.zip";
+        a.download = "Video1.1_Production_Takes_Timecoded.zip";
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
     }
 
     function exportManifestJSON() {
