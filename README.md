@@ -1,5 +1,7 @@
 # Core Prompting Principles & Structured Input Formats
 
+> https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/
+
 > **AOU Certified AI Associate — Module 1.1 Workshop**
 
 This repository establishes the foundation for effective interaction with AI Agents (such as Claude, Gemini, and GPT). In this course module, we cover the fundamental **"3 Cs" of prompting—Context, Clarity, and Constraints**, and demonstrate how structuring inputs using specific formats (Markdown, XML tags, and JSON) significantly improves output predictability and eliminates hallucination.
