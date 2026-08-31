@@ -280,6 +280,7 @@
             justify-content: space-between;
             align-items: center;
             pointer-events: none;
+            z-index: 10;
         }
 
         .rec-badge {
@@ -477,6 +478,26 @@
             color: #0b1120;
         }
 
+        .btn-action-purple {
+            background: rgba(192, 132, 252, 0.15);
+            color: var(--accent-purple);
+            border: 1px solid rgba(192, 132, 252, 0.4);
+            padding: 0.6rem 1.1rem;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 0.88rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            transition: all 0.2s;
+        }
+
+        .btn-action-purple:hover:not(:disabled) {
+            background: var(--accent-purple);
+            color: #0b1120;
+        }
+
         /* Shot Selection Pills */
         .shot-nav-pills {
             display: grid;
@@ -514,12 +535,6 @@
             border-color: var(--accent-blue);
             color: var(--accent-blue);
             box-shadow: 0 0 12px rgba(56, 189, 248, 0.2);
-        }
-
-        .shot-pill-btn.all-mode.active {
-            background: rgba(192, 132, 252, 0.18);
-            border-color: var(--accent-purple);
-            color: var(--accent-purple);
         }
 
         /* Teleprompter Script Card */
@@ -713,7 +728,7 @@
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 12px;
-            max-width: 800px;
+            max-width: 860px;
             width: 100%;
             padding: 1.5rem;
             box-shadow: 0 20px 50px rgba(0,0,0,0.6);
@@ -763,7 +778,7 @@
             </div>
             <h1>Shotlist Recording Studio & Director Suite</h1>
             <p class="subtitle">
-                Record your screen and microphone, follow synchronized teleprompter cues for all 4 shots, manage takes, and export high-definition video takes directly in Google Chrome.
+                Automated screen recorder with visible animated cursor & click waves, live WebRTC screen & microphone capture, synchronized teleprompter cues for all 4 shots, and production take vault.
             </p>
         </div>
 
@@ -790,14 +805,14 @@
                     <span id="resolutionBadge" class="format-badge">1080p 60FPS</span>
                     <span id="recordingStatusBadge" class="rec-badge">
                         <span id="recDot" class="rec-dot"></span>
-                        <span id="recStatusText">STANDBY</span>
+                        <span id="recStatusText">READY (PRELOADED)</span>
                     </span>
                 </div>
             </div>
 
-            <!-- PREVIEW VIEWPORT WITH COUNTDOWN -->
+            <!-- PREVIEW VIEWPORT WITH COUNTDOWN & VIDEO CONTROLS -->
             <div class="preview-container">
-                <video id="previewVideo" class="preview-video" autoplay muted playsinline></video>
+                <video id="previewVideo" class="preview-video" controls playsinline></video>
                 
                 <div class="preview-overlay">
                     <span id="timerDisplay" style="font-family: var(--font-mono); font-size: 1.1rem; font-weight: 800; color: #fff; background: rgba(0,0,0,0.7); padding: 0.2rem 0.6rem; border-radius: 4px; border: 1px solid rgba(255,255,255,0.2);">
@@ -826,11 +841,14 @@
 
             <!-- CONTROLS ROW -->
             <div class="rec-controls">
+                <button id="btnPlayShot" class="btn-action-purple" onclick="playPreRecordedShot()">
+                    <span>▶️</span> Play Shot Video (With Cursor & Clicks)
+                </button>
                 <button id="btnSelectSource" class="btn-secondary" onclick="requestCaptureSources()">
                     <span>🖥️</span> Select Screen & Mic
                 </button>
                 <button id="btnStartRec" class="btn-rec" onclick="startRecordingCountdown()" disabled>
-                    <span>🔴</span> Start Take
+                    <span>🔴</span> Start Live Take
                 </button>
                 <button id="btnPauseRec" class="btn-secondary" onclick="togglePauseRecording()" disabled>
                     <span>⏸️</span> Pause
@@ -859,8 +877,8 @@
             <!-- LAUNCHER POPUP HELPER -->
             <div class="launcher-banner">
                 <div>
-                    <strong style="color: var(--accent-blue); display: block; font-size: 0.9rem;">🚀 Recording Workflow Tip</strong>
-                    <span style="font-size: 0.82rem; color: var(--text-muted);">Launch the target page in a separate 1920x1080 window, then select that window in the screen picker above.</span>
+                    <strong style="color: var(--accent-blue); display: block; font-size: 0.9rem;">✨ Virtual Cursor & Screen Tracking Active</strong>
+                    <span style="font-size: 0.82rem; color: var(--text-muted);">Recorded with animated visible mouse pointers, smooth Bezier curves, and click ripple highlights.</span>
                 </div>
                 <button class="btn-secondary" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;" onclick="openCurrentShotPage()">
                     <span>🔗</span> Open Current Shot Page &rarr;
@@ -932,14 +950,17 @@
     <section class="studio-card">
         <div class="card-header-flex">
             <div class="card-title">
-                <span>📁</span> Session Takes Manager & Production Vault
+                <span>📁</span> Session Takes Manager & Production Vault (Pre-Recorded Master Takes Available)
             </div>
-            <div style="display: flex; gap: 0.6rem; align-items: center;">
+            <div style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;">
                 <button class="btn-secondary" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;" onclick="exportManifestJSON()">
                     <span>📋</span> Export Takes Manifest (.JSON)
                 </button>
+                <button class="btn-secondary" style="font-size: 0.8rem; padding: 0.35rem 0.75rem;" onclick="reloadMasterTakes()">
+                    <span>🔄</span> Reload Pre-Recorded Takes
+                </button>
                 <button class="btn-secondary" style="font-size: 0.8rem; padding: 0.35rem 0.75rem; color: var(--accent-rose);" onclick="clearAllTakes()">
-                    <span>🗑️</span> Clear Takes
+                    <span>🗑️</span> Clear Custom Takes
                 </button>
             </div>
         </div>
@@ -958,11 +979,7 @@
                     </tr>
                 </thead>
                 <tbody id="takesTableBody">
-                    <tr>
-                        <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">
-                            No takes recorded in this session yet. Select screen & mic, then hit <strong>🔴 Start Take</strong> above.
-                        </td>
-                    </tr>
+                    <!-- Pre-loaded & live takes rendered here -->
                 </tbody>
             </table>
         </div>
@@ -976,7 +993,7 @@
             <h3 id="modalTakeTitle" style="color: var(--accent-amber);">Take Review</h3>
             <button class="btn-secondary" onclick="closeReviewModal()">✕ Close</button>
         </div>
-        <video id="modalVideoPlayer" controls style="width: 100%; border-radius: 8px; max-height: 420px; background: #000; margin-bottom: 1rem;"></video>
+        <video id="modalVideoPlayer" controls autoplay style="width: 100%; border-radius: 8px; max-height: 440px; background: #000; margin-bottom: 1rem;"></video>
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.75rem;">
             <div id="modalTakeInfo" style="font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-muted);"></div>
             <a id="modalDownloadBtn" class="btn-action-amber" download>
@@ -995,6 +1012,8 @@
             timeRange: "0:00 – 0:24 (24s)",
             targetPage: "index.html",
             pageLabel: "index.html (Header & Flow Diagram)",
+            videoFile: "recordings/video-1.1-shot1-architecture.webm",
+            fileSize: "2.36 MB",
             sentences: [
                 "Welcome to Module 1.1 of the AOU Certified AI Associate Course.",
                 "Today we're unpacking the foundational shift that turns unpredictable AI outputs into production-ready results — core prompting principles and structured input formats.",
@@ -1015,6 +1034,8 @@
             timeRange: "0:24 – 0:49 (25s)",
             targetPage: "comparison.html",
             pageLabel: "comparison.html (Competitive Analysis)",
+            videoFile: "recordings/video-1.1-shot2-comparison.webm",
+            fileSize: "2.87 MB",
             sentences: [
                 "Let's see this in action.",
                 "Look at the left side of your screen: a standard, unstructured prompt asking for a competitive analysis.",
@@ -1035,6 +1056,8 @@
             timeRange: "0:49 – 1:12 (23s)",
             targetPage: "index.html#workshop",
             pageLabel: "index.html (Hands-On Workshop DO Tab)",
+            videoFile: "recordings/video-1.1-shot3-guided-builder.webm",
+            fileSize: "1.40 MB",
             sentences: [
                 "Now, let's build one together.",
                 "Imagine you need an AI assistant to extract key deliverables and action items from raw meeting notes.",
@@ -1056,6 +1079,8 @@
             timeRange: "1:12 – 1:35 (23s)",
             targetPage: "exercise.html",
             pageLabel: "exercise.html (Refactor Game)",
+            videoFile: "recordings/video-1.1-shot4-exercise.webm",
+            fileSize: "1.48 MB",
             sentences: [
                 "It's your turn to apply this framework.",
                 "In your course workspace, launch Exercise 1.1, the prompt refactor.",
@@ -1073,6 +1098,62 @@
         }
     };
 
+    // Pre-recorded Master Takes (Loaded by default so takes vault is never empty)
+    const MASTER_PRELOADED_TAKES = [
+        {
+            id: 101,
+            takeNumber: 1,
+            shotId: 1,
+            shotTitle: "Shot 1: Architecture & The 4 Core Components",
+            duration: "00:24",
+            durationSeconds: 24,
+            size: "2.36 MB",
+            timestamp: "Production Master Take",
+            blobUrl: "recordings/video-1.1-shot1-architecture.webm",
+            fileName: "video-1.1-shot1-architecture.webm",
+            isFavorite: true
+        },
+        {
+            id: 102,
+            takeNumber: 1,
+            shotId: 2,
+            shotTitle: "Shot 2: Competitive Analysis — Left vs. Right Contrast",
+            duration: "00:25",
+            durationSeconds: 25,
+            size: "2.87 MB",
+            timestamp: "Production Master Take",
+            blobUrl: "recordings/video-1.1-shot2-comparison.webm",
+            fileName: "video-1.1-shot2-comparison.webm",
+            isFavorite: true
+        },
+        {
+            id: 103,
+            takeNumber: 1,
+            shotId: 3,
+            shotTitle: "Shot 3: Guided Builder — Meeting Notes & Null Constraints",
+            duration: "00:23",
+            durationSeconds: 23,
+            size: "1.40 MB",
+            timestamp: "Production Master Take",
+            blobUrl: "recordings/video-1.1-shot3-guided-builder.webm",
+            fileName: "video-1.1-shot3-guided-builder.webm",
+            isFavorite: true
+        },
+        {
+            id: 104,
+            takeNumber: 1,
+            shotId: 4,
+            shotTitle: "Shot 4: Exercise 1.1 — The Interactive Prompt Refactor Game",
+            duration: "00:23",
+            durationSeconds: 23,
+            size: "1.48 MB",
+            timestamp: "Production Master Take",
+            blobUrl: "recordings/video-1.1-shot4-exercise.webm",
+            fileName: "video-1.1-shot4-exercise.webm",
+            isFavorite: true
+        }
+    ];
+
     // State Variables
     let currentShotId = 1;
     let isRecording = false;
@@ -1087,12 +1168,14 @@
     let timerInterval = null;
     let secondsElapsed = 0;
     let currentFontSize = 1.05;
-    let takeCounter = 1;
-    let sessionTakes = [];
+    let takeCounter = 2;
+    let sessionTakes = [...MASTER_PRELOADED_TAKES];
 
     // Initialize UI on page load
     window.addEventListener('DOMContentLoaded', () => {
         selectShot(1);
+        renderTakesTable();
+        playPreRecordedShot();
     });
 
     // Select shot and render UI
@@ -1137,6 +1220,26 @@
 
         updateDirectivesProgress();
         resetTeleprompter();
+
+        // Update pre-recorded video preview if not in active live recording
+        if (!isRecording && !mediaStream) {
+            playPreRecordedShot();
+        }
+    }
+
+    function playPreRecordedShot() {
+        const shot = SHOTS_DATA[currentShotId];
+        const previewVideo = document.getElementById('previewVideo');
+        previewVideo.srcObject = null;
+        previewVideo.src = shot.videoFile;
+        previewVideo.load();
+        previewVideo.play().catch(() => {});
+        document.getElementById('recStatusText').textContent = 'WATCHING TAKE';
+    }
+
+    function reloadMasterTakes() {
+        sessionTakes = [...MASTER_PRELOADED_TAKES];
+        renderTakesTable();
     }
 
     function toggleChecklistItem(item) {
@@ -1203,7 +1306,6 @@
         try {
             const includeMic = document.getElementById('chkIncludeMic').checked;
 
-            // Request Display Media (Screen / Window / Tab)
             const displayStream = await navigator.mediaDevices.getDisplayMedia({
                 video: {
                     displaySurface: 'browser',
@@ -1226,11 +1328,9 @@
                         }
                     });
 
-                    // Mix audio tracks using Web Audio API
                     audioContext = new (window.AudioContext || window.webkitAudioContext)();
                     const audioDest = audioContext.createMediaStreamDestination();
 
-                    // Analyser for VU Meter
                     analyserNode = audioContext.createAnalyser();
                     analyserNode.fftSize = 256;
                     audioDataArray = new Uint8Array(analyserNode.frequencyBinCount);
@@ -1244,7 +1344,6 @@
                         sysSource.connect(audioDest);
                     }
 
-                    // Combined stream: Display Video + Mixed Audio
                     const videoTracks = displayStream.getVideoTracks();
                     const mixedAudioTracks = audioDest.stream.getAudioTracks();
                     combinedStream = new MediaStream([...videoTracks, ...mixedAudioTracks]);
@@ -1257,9 +1356,9 @@
 
             mediaStream = combinedStream;
             const previewVideo = document.getElementById('previewVideo');
+            previewVideo.src = '';
             previewVideo.srcObject = mediaStream;
 
-            // Update Resolution / Track badge
             const vTrack = mediaStream.getVideoTracks()[0];
             if (vTrack) {
                 const settings = vTrack.getSettings();
@@ -1273,7 +1372,7 @@
 
             document.getElementById('btnStartRec').disabled = false;
             document.getElementById('btnSelectSource').textContent = "✓ Source Ready";
-            document.getElementById('recStatusText').textContent = 'READY';
+            document.getElementById('recStatusText').textContent = 'READY FOR LIVE TAKE';
         } catch (err) {
             console.error("Error capturing display media:", err);
             alert("Could not access screen capture. Please allow screen sharing in Google Chrome permissions.");
@@ -1431,13 +1530,11 @@
                 secondsElapsed++;
                 updateTimerDisplay();
 
-                // Highlight active sentence
                 const currentSentIndex = Math.min(totalSentences - 1, Math.floor(secondsElapsed / timePerSentence));
                 document.querySelectorAll('.script-sentence').forEach((el, idx) => {
                     el.classList.toggle('highlight', idx === currentSentIndex);
                 });
 
-                // Auto-scroll teleprompter deck
                 if (document.getElementById('chkAutoScroll').checked) {
                     const deck = document.getElementById('teleprompterDeck');
                     const targetSentence = document.getElementById(`sentence-${currentSentIndex}`);
@@ -1499,7 +1596,7 @@
             tbody.innerHTML = `
                 <tr>
                     <td colspan="7" style="text-align: center; color: var(--text-muted); padding: 2rem;">
-                        No takes recorded in this session yet. Select screen & mic, then hit <strong>🔴 Start Take</strong> above.
+                        No takes recorded in this session yet. Select screen & mic, then hit <strong>🔴 Start Live Take</strong> above.
                     </td>
                 </tr>
             `;
@@ -1551,7 +1648,7 @@
     }
 
     function clearAllTakes() {
-        if (confirm("Are you sure you want to clear all takes from the session vault?")) {
+        if (confirm("Are you sure you want to clear custom recorded takes? (Pre-recorded master takes can be reloaded anytime)")) {
             sessionTakes = [];
             renderTakesTable();
         }

@@ -1,0 +1,45 @@
+{
+  "project": "Core Prompting Principles & Structured Input Formats",
+  "module": "Video 1.1 Production",
+  "generatedAt": "2026-08-31T19:21:26.137Z",
+  "resolution": "1920x1080 (1080p)",
+  "framerate": "60fps",
+  "shots": [
+    {
+      "shotId": 1,
+      "title": "Shot 1: Architecture & The 4 Core Components",
+      "targetPage": "index.html",
+      "duration": "24s",
+      "file": "video-1.1-shot1-architecture.webm",
+      "relativePath": "recordings/video-1.1-shot1-architecture.webm",
+      "sizeBytes": 2475519
+    },
+    {
+      "shotId": 2,
+      "title": "Shot 2: Competitive Analysis — Left vs. Right Contrast",
+      "targetPage": "comparison.html",
+      "duration": "25s",
+      "file": "video-1.1-shot2-comparison.webm",
+      "relativePath": "recordings/video-1.1-shot2-comparison.webm",
+      "sizeBytes": 3013012
+    },
+    {
+      "shotId": 3,
+      "title": "Shot 3: Guided Builder — Meeting Notes & Null Constraints",
+      "targetPage": "index.html#workshop",
+      "duration": "23s",
+      "file": "video-1.1-shot3-guided-builder.webm",
+      "relativePath": "recordings/video-1.1-shot3-guided-builder.webm",
+      "sizeBytes": 1464997
+    },
+    {
+      "shotId": 4,
+      "title": "Shot 4: Exercise 1.1 — The Interactive Prompt Refactor Game",
+      "targetPage": "exercise.html",
+      "duration": "23s",
+      "file": "video-1.1-shot4-exercise.webm",
+      "relativePath": "recordings/video-1.1-shot4-exercise.webm",
+      "sizeBytes": 1552262
+    }
+  ]
+}

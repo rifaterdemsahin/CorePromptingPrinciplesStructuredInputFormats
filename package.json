@@ -1,0 +1,25 @@
+{
+  "name": "corepromptingprinciplesstructuredinputformats",
+  "version": "1.0.0",
+  "description": "> **Live Application**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/) > > **AOU Certified AI Associate — Module 1.1 Workshop & Interactive Reference**",
+  "main": "index.js",
+  "scripts": {
+    "start": "python3 record_shotlist.py --serve",
+    "record": "node record_shots.js",
+    "test": "node record_shots.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rifaterdemsahin/CorePromptingPrinciplesStructuredInputFormats.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/rifaterdemsahin/CorePromptingPrinciplesStructuredInputFormats/issues"
+  },
+  "homepage": "https://github.com/rifaterdemsahin/CorePromptingPrinciplesStructuredInputFormats#readme",
+  "dependencies": {
+    "playwright": "^1.62.1"
+  }
+}
