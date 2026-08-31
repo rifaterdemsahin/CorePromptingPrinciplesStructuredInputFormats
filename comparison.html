@@ -381,6 +381,35 @@
             background: var(--accent-blue);
             color: #0b1120;
         }
+    
+        /* 🎥 1080p OBS Screen Capture Optimizations */
+        @media screen and (min-width: 1080px) {
+            body {
+                font-size: 16px;
+                letter-spacing: -0.01em;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                text-rendering: optimizeLegibility;
+            }
+            .container {
+                max-width: 1280px !important;
+                padding-left: 2rem !important;
+                padding-right: 2rem !important;
+            }
+        }
+
+        /* Video Code Legibility */
+        pre, code, textarea, .code-box, .banner-code {
+            font-size: 0.94rem !important;
+            line-height: 1.6 !important;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace !important;
+        }
+
+        /* High Visibility Focus Ring for OBS Mouse Tracking */
+        button:hover, .puzzle-piece:hover, .scenario-pill:hover, .nav-tab:hover {
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+        }
+
     </style>
 </head>
 <body>

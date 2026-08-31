@@ -359,6 +359,35 @@
             opacity: 0.9;
             transform: translateY(-1px);
         }
+    
+        /* 🎥 1080p OBS Screen Capture Optimizations */
+        @media screen and (min-width: 1080px) {
+            body {
+                font-size: 16px;
+                letter-spacing: -0.01em;
+                -webkit-font-smoothing: antialiased;
+                -moz-osx-font-smoothing: grayscale;
+                text-rendering: optimizeLegibility;
+            }
+            .container {
+                max-width: 1280px !important;
+                padding-left: 2rem !important;
+                padding-right: 2rem !important;
+            }
+        }
+
+        /* Video Code Legibility */
+        pre, code, textarea, .code-box, .banner-code {
+            font-size: 0.94rem !important;
+            line-height: 1.6 !important;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace !important;
+        }
+
+        /* High Visibility Focus Ring for OBS Mouse Tracking */
+        button:hover, .puzzle-piece:hover, .scenario-pill:hover, .nav-tab:hover {
+            box-shadow: 0 0 12px rgba(56, 189, 248, 0.25);
+        }
+
     </style>
 </head>
 <body>
@@ -598,6 +627,31 @@
                         <span>Hold view on the success banner as the closing sentence is spoken.</span>
                     </li>
                 </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- OBS STUDIO 1080P SETUP RECOMMENDATIONS -->
+    <section style="background: rgba(56, 189, 248, 0.06); border: 1px solid rgba(56, 189, 248, 0.3); border-radius: 12px; padding: 1.5rem; margin-top: 2rem;">
+        <h3 style="color: var(--accent-blue); font-size: 1.15rem; font-weight: 800; margin-bottom: 0.75rem; display: flex; align-items: center; gap: 0.5rem;">
+            <span>🎥</span> OBS Studio 1080p Capture Settings Checklist
+        </h3>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; font-size: 0.9rem;">
+            <div style="background: var(--card-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                <strong style="color: var(--accent-amber); display: block; margin-bottom: 0.25rem;">🖥️ Canvas Resolution</strong>
+                <span>Base (Canvas): <code>1920x1080</code><br>Output (Scaled): <code>1920x1080</code> (No downscale blur)</span>
+            </div>
+            <div style="background: var(--card-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                <strong style="color: var(--accent-green); display: block; margin-bottom: 0.25rem;">🎞️ Framerate & Bitrate</strong>
+                <span>Common FPS: <code>60 FPS</code><br>Video Bitrate: <code>6,000 - 8,000 Kbps (CBR / NVENC/Apple ProRes)</code></span>
+            </div>
+            <div style="background: var(--card-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                <strong style="color: var(--accent-purple); display: block; margin-bottom: 0.25rem;">🌐 Google Chrome Zoom</strong>
+                <span>Display at <code>100%</code> or <code>110%</code> in Fullscreen Mode (Press <code>F11</code> or <code>Cmd+Ctrl+F</code>).</span>
+            </div>
+            <div style="background: var(--card-bg); padding: 1rem; border-radius: 8px; border: 1px solid var(--border-color);">
+                <strong style="color: var(--accent-blue); display: block; margin-bottom: 0.25rem;">🖱️ Mouse Cursor Capture</strong>
+                <span>Enable <em>"Capture Cursor"</em> in OBS Window Capture properties to show interactive step pointers.</span>
             </div>
         </div>
     </section>
