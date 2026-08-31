@@ -49,7 +49,7 @@ Return ONLY a valid JSON object matching this schema:
 
 ## 🌐 Multi-Page Interactive Suite
 
-This repository features four interconnected interactive web applications with a shared top navigation bar:
+This repository features five interconnected interactive web applications with a shared top navigation bar:
 
 1. **🏛️ Module 1.1 Workshop & Context Guide ([`index.html`](index.html))**:
    - **LLM Context Architecture**: Visual pipeline for prompt ingestion, attention mechanisms, and structured parsing.
@@ -60,7 +60,7 @@ This repository features four interconnected interactive web applications with a
 2. **⚖️ Good vs Bad Prompts: Side-by-Side Showcase ([`comparison.html`](comparison.html))**:
    - **Unstructured vs Structured Split View**: Direct side-by-side contrast of chaotic prompts vs production-grade structured prompts.
    - **Real Model Outputs**: Displays the flawed conversational output on the left versus deterministic typed JSON output on the right.
-   - **5 Interactive Scenarios**: Customer Feedback Triage, Meeting Action Items, Security Code Vulnerability, Candidate Resume Screening, and Financial Earnings Parsing.
+   - **5 Interactive Scenarios**: Competitive Analysis, Meeting Action Items, Security Code Vulnerability, Candidate Resume Screening, and Financial Earnings Parsing.
    - **Failure & Success Root-Cause Analysis**: Identifies exact failure reasons and success factors.
 
 3. **🔒 Input & Output Constraints Showcase ([`constraints.html`](constraints.html))**:
@@ -75,6 +75,11 @@ This repository features four interconnected interactive web applications with a
    - **3 Progressive Levels**: Customer Sentiment Refactor (Level 1), Meeting Action Items Assembly (Level 2), and Security Vulnerability Parser (Level 3).
    - **Real-Time Validation & Celebration**: Validates slot sequencing, filters distractor blocks, scores points, and triggers confetti on completion.
 
+5. **🎬 Video 1.1 Production Shot List ([`shotlist.html`](shotlist.html))**:
+   - **Production Timing & Directives**: 4 capture scenes with exact timing breakdowns and synchronized spoken voiceover script.
+   - **Screen Action Directives**: Step-by-step cursor, click, scroll, and type directives for each shot.
+   - **Continuous Teleprompter View**: High-contrast reading mode for streamlined video recording.
+
 ---
 
 ## 🚀 Getting Started & Verification
@@ -85,6 +90,7 @@ open -a "Google Chrome" index.html
 open -a "Google Chrome" comparison.html
 open -a "Google Chrome" constraints.html
 open -a "Google Chrome" exercise.html
+open -a "Google Chrome" shotlist.html
 ```
 
 ### Live GitHub Pages Deployments
@@ -92,6 +98,7 @@ open -a "Google Chrome" exercise.html
 - **Good vs Bad Comparison**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/comparison.html](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/comparison.html)
 - **Input & Output Constraints**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/constraints.html](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/constraints.html)
 - **Prompt Refactor Game**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/exercise.html](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/exercise.html)
+- **Video 1.1 Shot List**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/shotlist.html](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/shotlist.html)
 
 
 

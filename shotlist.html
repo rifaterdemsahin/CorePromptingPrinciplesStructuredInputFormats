@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Video 1.1 Production Shot List & Recording Guide | Core Prompting Principles</title>
+    <!-- Highlight.js for Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+    <style>
+        :root {
+            --bg-color: #0b1120;
+            --surface-bg: #131d33;
+            --card-bg: #1e293b;
+            --card-hover: #24344d;
+            --accent-blue: #38bdf8;
+            --accent-green: #4ade80;
+            --accent-purple: #c084fc;
+            --accent-amber: #fbbf24;
+            --accent-rose: #f87171;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --code-bg: #090e1a;
+            --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 4rem;
+        }
+
+        /* Top Navigation Bar */
+        .top-navbar {
+            background-color: rgba(19, 29, 51, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 0.75rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .nav-brand span.logo-badge {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: #0b1120;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 800;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            list-style: none;
+        }
+
+        .nav-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            text-decoration: none;
+            padding: 0.45rem 0.9rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .nav-link-btn:hover {
+            color: var(--text-main);
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        .nav-link-btn.active {
+            color: var(--accent-amber);
+            background: rgba(251, 191, 36, 0.15);
+            border-color: rgba(251, 191, 36, 0.3);
+        }
+
+        .container {
+            max-width: 1240px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem 0;
+        }
+
+        /* Hero */
+        .hero {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f8fafc 0%, #fbbf24 40%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.3rem;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            max-width: 850px;
+        }
+
+        /* Teleprompter Toggle Banner */
+        .recording-meta-strip {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1rem;
+            background: var(--surface-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.25rem;
+            margin-bottom: 2rem;
+        }
+
+        @media (max-width: 850px) {
+            .recording-meta-strip { grid-template-columns: repeat(2, 1fr); }
+        }
+
+        .meta-item {
+            text-align: center;
+        }
+
+        .meta-label {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.2rem;
+        }
+
+        .meta-val {
+            font-size: 1.25rem;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        /* Shot Cards List */
+        .shot-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.75rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+            position: relative;
+            overflow: hidden;
+            border-left: 6px solid var(--accent-blue);
+        }
+
+        .shot-card.shot-1 { border-left-color: var(--accent-blue); }
+        .shot-card.shot-2 { border-left-color: var(--accent-rose); }
+        .shot-card.shot-3 { border-left-color: var(--accent-amber); }
+        .shot-card.shot-4 { border-left-color: var(--accent-green); }
+
+        .shot-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.25rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(255,255,255,0.08);
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .shot-title {
+            font-size: 1.35rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .shot-time-badge {
+            background: rgba(255,255,255,0.08);
+            border: 1px solid var(--border-color);
+            padding: 0.3rem 0.8rem;
+            border-radius: 9999px;
+            font-family: var(--font-mono);
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--accent-amber);
+        }
+
+        .page-badge-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            background: rgba(56, 189, 248, 0.15);
+            border: 1px solid var(--accent-blue);
+            color: var(--accent-blue);
+            text-decoration: none;
+            padding: 0.3rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+
+        .page-badge-link:hover {
+            background: var(--accent-blue);
+            color: #0b1120;
+            transform: translateY(-1px);
+        }
+
+        .grid-2col {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+
+        @media (max-width: 900px) {
+            .grid-2col { grid-template-columns: 1fr; }
+        }
+
+        /* Script Dialogue Box */
+        .script-box {
+            background: #090e1a;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+            font-size: 1rem;
+            line-height: 1.7;
+            color: #f1f5f9;
+            position: relative;
+        }
+
+        .script-box::before {
+            content: "🎙️ SPOKEN SCRIPT";
+            display: block;
+            font-size: 0.72rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            color: var(--accent-purple);
+            margin-bottom: 0.6rem;
+            text-transform: uppercase;
+        }
+
+        /* Action Checklist Box */
+        .actions-box {
+            background: rgba(19, 29, 51, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .actions-box h4 {
+            font-size: 0.85rem;
+            font-weight: 800;
+            color: var(--accent-green);
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .action-steps {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+        }
+
+        .action-step-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.6rem;
+            font-size: 0.92rem;
+            color: #cbd5e1;
+        }
+
+        .step-num {
+            background: rgba(255,255,255,0.08);
+            color: var(--accent-blue);
+            font-family: var(--font-mono);
+            font-size: 0.75rem;
+            font-weight: 700;
+            padding: 0.15rem 0.45rem;
+            border-radius: 4px;
+            flex-shrink: 0;
+            margin-top: 0.15rem;
+        }
+
+        /* Full teleprompter modal */
+        .teleprompter-view {
+            display: none;
+            background: #000;
+            color: #fff;
+            padding: 3rem;
+            border-radius: 12px;
+            font-size: 1.6rem;
+            line-height: 2;
+            margin-bottom: 2rem;
+            border: 2px solid var(--accent-amber);
+        }
+
+        .btn-teleprompter {
+            background: linear-gradient(135deg, var(--accent-amber), #f59e0b);
+            color: #0b1120;
+            border: none;
+            padding: 0.6rem 1.2rem;
+            border-radius: 6px;
+            font-weight: 800;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+        }
+
+        .btn-teleprompter:hover {
+            opacity: 0.9;
+            transform: translateY(-1px);
+        }
+    </style>
+</head>
+<body>
+
+<!-- TOP SHARED NAVBAR -->
+<nav class="top-navbar">
+    <div class="navbar-container">
+        <a href="index.html" class="nav-brand">
+            <span class="logo-badge">PROMPT ARCH</span>
+            <span>Core Prompting Principles</span>
+        </a>
+        <ul class="nav-links">
+            <li><a href="index.html" class="nav-link-btn">🏛️ Workbench & Guide</a></li>
+            <li><a href="comparison.html" class="nav-link-btn">⚖️ Good vs Bad Prompts</a></li>
+            <li><a href="constraints.html" class="nav-link-btn">🔒 Input & Output Constraints</a></li>
+            <li><a href="exercise.html" class="nav-link-btn">🧩 Refactor Game</a></li>
+            <li><a href="shotlist.html" class="nav-link-btn active">🎬 Shot List</a></li>
+            <li><a href="https://github.com/rifaterdemsahin/CorePromptingPrinciplesStructuredInputFormats" target="_blank" class="nav-link-btn">🐙 GitHub Repo</a></li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <header class="hero">
+        <div>
+            <div style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.25rem 0.75rem; background: rgba(251, 191, 36, 0.15); border: 1px solid rgba(251, 191, 36, 0.4); border-radius: 9999px; color: var(--accent-amber); font-size: 0.8rem; font-weight: 700; margin-bottom: 0.5rem;">
+                <span>🎬</span> Video Production Blueprint &bull; Module 1.1
+            </div>
+            <h1>Video 1.1 Production Shot List</h1>
+            <p class="subtitle">
+                Complete recording timetable, on-screen cursor actions, page navigation checkpoints, and teleprompter sync for shooting Course Video 1.1.
+            </p>
+        </div>
+
+        <button class="btn-teleprompter" onclick="toggleTeleprompter()">
+            <span>📜</span> Toggle Full Teleprompter Mode
+        </button>
+    </header>
+
+    <!-- Teleprompter Big Screen Mode -->
+    <div id="teleprompter-box" class="teleprompter-view">
+        <h2 style="color: var(--accent-amber); margin-bottom: 1rem; font-size: 1.8rem;">🎙️ Continuous Recording Teleprompter</h2>
+        <p>
+            Welcome to Module 1.1 of the AOU Certified AI Associate Course. Today we're unpacking the foundational shift that turns unpredictable AI outputs into production-ready results, core prompting principles and structured input formats.
+        </p>
+        <p style="margin-top: 1rem;">
+            When working with large language models, clarity isn't just about good grammar, it's about system architecture. Effective prompts contain four key components: a clear role, a rich context, an explicit task, and strict constraints. When we wrap these components inside structured input formats like Markdown or JSON, we eliminate ambiguity and make outputs deterministic.
+        </p>
+        <p style="margin-top: 1rem;">
+            Let's see this in action. Look at the left side of your screen: a standard, unstructured prompt asking for a competitive analysis. It's vague, lacks boundaries, and yields a messy essay. Now, watch what happens on the right when we reframe the exact same request using Markdown delimiters and a target JSON schema. By defining our system context, providing input parameters inside explicit tags, and requesting a strict output format, the AI skips the fluff and generates precise, machine-readable data ready for immediate integration.
+        </p>
+        <p style="margin-top: 1rem;">
+            Now, let's build one together. Imagine you need an AI assistant to extract key deliverables and action items from raw meeting notes. First, define the system role and context using Markdown headers. Second, place the raw meeting transcript inside clear XML or Markdown block quotes so the AI knows where the data starts and ends. Third, specify the exact schema for the response. Notice how setting constraints — like if a deadline is unknown, output null — prevents the model from guessing or hallucinating dates.
+        </p>
+        <p style="margin-top: 1rem;">
+            It's your turn to apply this framework. In your course workspace, launch Exercise 1.1, the prompt refactor. You'll find real-world enterprise prompts that are currently generating inconsistent results. Your task: Restructure them using the role, context, task, constraint framework, and format the inputs using Markdown headers and XML boundaries. Test your prompt directly in the interactive sandbox to verify your output structure. Master this pattern, and you've unlocked the core engine of professional AI productivity. See you in video 1.2.
+        </p>
+    </div>
+
+    <!-- Recording Metadata Strip -->
+    <div class="recording-meta-strip">
+        <div class="meta-item">
+            <div class="meta-label">Total Duration</div>
+            <div class="meta-val" style="color: var(--accent-amber);">~95 Seconds (1:35)</div>
+        </div>
+        <div class="meta-item">
+            <div class="meta-label">Total Shots</div>
+            <div class="meta-val" style="color: var(--accent-blue);">4 Capture Scenes</div>
+        </div>
+        <div class="meta-item">
+            <div class="meta-label">Pages Demonstrated</div>
+            <div class="meta-val" style="color: var(--accent-purple);">3 Live Pages</div>
+        </div>
+        <div class="meta-item">
+            <div class="meta-label">Output Target</div>
+            <div class="meta-val" style="color: var(--accent-green);">1080p / 4K Chrome</div>
+        </div>
+    </div>
+
+    <!-- SHOT 1 -->
+    <section class="shot-card shot-1">
+        <div class="shot-header">
+            <div class="shot-title">
+                <span>🏛️</span> Shot 1: Architecture & The 4 Core Components
+            </div>
+            <div style="display: flex; gap: 0.75rem; align-items: center;">
+                <span class="shot-time-badge">⏱️ 0:00 – 0:24 (24s)</span>
+                <a href="index.html" target="_blank" class="page-badge-link">🔗 Open index.html &rarr;</a>
+            </div>
+        </div>
+
+        <div class="grid-2col">
+            <div class="script-box">
+                "Welcome to Module 1.1 of the AOU Certified AI Associate Course. Today we're unpacking the foundational shift that turns unpredictable AI outputs into production-ready results — core prompting principles and structured input formats. When working with large language models, clarity isn't just about good grammar, it's about system architecture. Effective prompts contain four key components: a clear role, a rich context, an explicit task, and strict constraints. When we wrap these components inside structured input formats like Markdown or JSON, we eliminate ambiguity and make outputs deterministic."
+            </div>
+
+            <div class="actions-box">
+                <h4><span>🎬</span> Screen Action Directives</h4>
+                <ul class="action-steps">
+                    <li class="action-step-item">
+                        <span class="step-num">1</span>
+                        <span>Start viewport focused on header badge: <em>"AOU AI Certified Associate • Module 1.1 Workshop"</em>.</span>
+                    </li>
+                    <li class="action-step-item">
+                        <span class="step-num">2</span>
+                        <span>Smoothly scroll down to the <strong>Architecture Flow Diagram</strong>.</span>
+                    </li>
+                    <li class="action-step-item">
+                        <span class="step-num">3</span>
+                        <span>Guide mouse pointer across the 4 nodes: <strong>System Prompt (`ROLE`)</strong> &rarr; <strong>XML Enclosure</strong> &rarr; <strong>LLM Attention</strong> &rarr; <strong>Structured Output</strong>.</span>
+                    </li>
+                    <li class="action-step-item">
+                        <span class="step-num">4</span>
+                        <span>Hover briefly over the 3 core concept cards (Markdown Layer, JSON Schema Layer, XML Delimiters).</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- SHOT 2 -->
+    <section class="shot-card shot-2">
+        <div class="shot-header">
+            <div class="shot-title">
+                <span>⚖️</span> Shot 2: Competitive Analysis — Left vs. Right Contrast
+            </div>
+            <div style="display: flex; gap: 0.75rem; align-items: center;">
+                <span class="shot-time-badge">⏱️ 0:24 – 0:49 (25s)</span>
+                <a href="comparison.html" target="_blank" class="page-badge-link">🔗 Open comparison.html &rarr;</a>
+            </div>
+        </div>
+
+        <div class="grid-2col">
+            <div class="script-box">
+                "Let's see this in action. Look at the left side of your screen: a standard, unstructured prompt asking for a competitive analysis. It's vague, lacks boundaries, and yields a messy essay. Now, watch what happens on the right when we reframe the exact same request using Markdown delimiters and a target JSON schema. By defining our system context, providing input parameters inside explicit tags, and requesting a strict output format, the AI skips the fluff and generates precise, machine-readable data ready for immediate integration."
+            </div>
+
+            <div class="actions-box">
+                <h4><span>🎬</span> Screen Action Directives</h4>
+                <ul class="action-steps">
+                    <li class="action-step-item">
+                        <span class="step-num">1</span>
+                        <span>Open <code>comparison.html</code> with <strong>Scenario 1: Competitive Analysis</strong> selected.</span>
+                    </li>
+                    <li class="action-step-item">
+                        <span class="step-num">2</span>
+                        <span>Highlight the <strong>Left Column (Red Border)</strong>. Point cursor to the raw prompt and scroll through the unstructured, conversational essay output.</span>
+                    </li>
+                    <li class="action-step-item">
+                        <span class="step-num">3</span>
+                        <span>Pan smoothly across to the <strong>Right Column (Green Border)</strong>. Highlight `### ROLE`, `### CONTEXT`, `### TASK`, and `<competitor_profiles>`.</span>
+                    </li>
+                    <li class="action-step-item">
+                        <span class="step-num">4</span>
+                        <span>Highlight the green JSON output block showing clean key-value arrays (`differentiators`, `competitor_gaps`).</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- SHOT 3 -->
+    <section class="shot-card shot-3">
+        <div class="shot-header">
+            <div class="shot-title">
+                <span>🛠️</span> Shot 3: Guided Builder — Meeting Notes & Null Constraints
+            </div>
+            <div style="display: flex; gap: 0.75rem; align-items: center;">
+                <span class="shot-time-badge">⏱️ 0:49 – 1:12 (23s)</span>
+                <a href="index.html" target="_blank" class="page-badge-link">🔗 Open index.html (Workshop DO) &rarr;</a>
+            </div>
+        </div>
+
+        <div class="grid-2col">
+            <div class="script-box">
+                "Now, let's build one together. Imagine you need an AI assistant to extract key deliverables and action items from raw meeting notes. First, define the system role and context using Markdown headers. Second, place the raw meeting transcript inside clear XML boundary tags so the AI knows where the data starts and ends. Third, specify the exact schema for the response. Notice how setting constraints — like if a deadline is unknown, output null — prevents the model from guessing or hallucinating dates."
+            </div>
+
+            <div class="actions-box">
+                <h4><span>🎬</span> Screen Action Directives</h4>
+                <ul class="action-steps">
+                    <li class="action-step-item">
+                        <span class="step-num">1</span>
+                        <span>On <code>index.html</code>, click the <strong>🎯 Hands-On Workshop (DO & APPLY)</strong> tab.</span>
+                    </li>
+                    <li class="action-step-item">
+                        <span class="step-num">2</span>
+                        <span>Focus on the form fields on the left: Role (`### ROLE`), Context (`### CONTEXT`), and Input Data (`<meeting_notes>`).</span>
+                    </li>
+                    <li class="action-step-item">
+                        <span class="step-num">3</span>
+                        <span>Point to the real-time assembled preview on the right and highlight the rule: <em>"- If any deadline is unknown, output null. Do not hallucinate dates."</em></span>
+                    </li>
+                    <li class="action-step-item">
+                        <span class="step-num">4</span>
+                        <span>Click the <strong>Copy</strong> button on the assembled prompt preview.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- SHOT 4 -->
+    <section class="shot-card shot-4">
+        <div class="shot-header">
+            <div class="shot-title">
+                <span>🧩</span> Shot 4: Exercise 1.1 — The Interactive Prompt Refactor Game
+            </div>
+            <div style="display: flex; gap: 0.75rem; align-items: center;">
+                <span class="shot-time-badge">⏱️ 1:12 – 1:35 (23s)</span>
+                <a href="exercise.html" target="_blank" class="page-badge-link">🔗 Open exercise.html &rarr;</a>
+            </div>
+        </div>
+
+        <div class="grid-2col">
+            <div class="script-box">
+                "It's your turn to apply this framework. In your course workspace, launch Exercise 1.1, the prompt refactor. You'll find real-world enterprise prompts that are currently generating inconsistent results. Your task: Restructure them using the role, context, task, constraint framework, and format the inputs using Markdown headers and XML boundaries. Test your prompt directly in the interactive sandbox to verify your output structure. Master this pattern, and you've unlocked the core engine of professional AI productivity. See you in video 1.2."
+            </div>
+
+            <div class="actions-box">
+                <h4><span>🎬</span> Screen Action Directives</h4>
+                <ul class="action-steps">
+                    <li class="action-step-item">
+                        <span class="step-num">1</span>
+                        <span>Navigate to <code>exercise.html</code> via the top navbar link (<strong>🧩 Refactor Game</strong>).</span>
+                    </li>
+                    <li class="action-step-item">
+                        <span class="step-num">2</span>
+                        <span>Drag and drop the 5 building blocks into their respective slots: <strong>`ROLE`</strong> &rarr; <strong>`CONTEXT`</strong> &rarr; <strong>`TASK`</strong> &rarr; <strong>`<customer_review>`</strong> &rarr; <strong>`CONSTRAINTS`</strong>.</span>
+                    </li>
+                    <li class="action-step-item">
+                        <span class="step-num">3</span>
+                        <span>Click <strong>🚀 Check & Test Prompt</strong>. Watch all 5 slots turn green, score update to `100 pts`, and <strong>confetti explosion trigger</strong>.</span>
+                    </li>
+                    <li class="action-step-item">
+                        <span class="step-num">4</span>
+                        <span>Hold view on the success banner as the closing sentence is spoken.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    function toggleTeleprompter() {
+        const box = document.getElementById('teleprompter-box');
+        if (box.style.display === 'block') {
+            box.style.display = 'none';
+        } else {
+            box.style.display = 'block';
+            box.scrollIntoView({ behavior: 'smooth' });
+        }
+    }
+</script>
+
+</body>
+</html>
