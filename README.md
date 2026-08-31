@@ -82,6 +82,31 @@ The platform separates **Student-Facing Training Modules** from **Instructor/Pro
    - **Scene-by-Scene Timetable**: 4 recording shots with synchronized voiceover script and screen cursor directives.
    - **Teleprompter Mode**: Oversized, high-contrast presenter mode for recording.
 
+7. **🎙️ Video 1.1 Shotlist Recording Studio ([`recording-studio.html`](recording-studio.html))**:
+   - **In-Browser Screen & Audio Video Recorder**: WebRTC `MediaRecorder` suite supporting 1080p/4K 60FPS recording.
+   - **Live Audio VU Meter**: Real-time microphone levels with dB visualizer.
+   - **Synchronized Karaoke Teleprompter**: Auto-scrolling voiceover script with sentence highlighter sync'd to shot durations.
+   - **Take Manager & Production Vault**: Track takes, mark favorite/best take (⭐), review instant replays, and download `.webm` / export `takes-manifest.json`.
+
+---
+
+## 🛠️ CLI Automation & Production Helper
+
+A Python automation assistant [`record_shotlist.py`](record_shotlist.py) is included for recording orchestration:
+```bash
+# Start local studio server and open in Google Chrome
+python3 record_shotlist.py --serve
+
+# Open a specific shot page (1-4) in Google Chrome
+python3 record_shotlist.py --shot 1
+
+# Print continuous voiceover teleprompter script to terminal
+python3 record_shotlist.py --teleprompter
+
+# Check and validate all project files
+python3 record_shotlist.py --check
+```
+
 ---
 
 ## 🚀 Getting Started & Verification
@@ -94,6 +119,7 @@ open -a "Google Chrome" constraints.html
 open -a "Google Chrome" exercise.html
 open -a "Google Chrome" recording-guide.html
 open -a "Google Chrome" shotlist.html
+open -a "Google Chrome" recording-studio.html
 ```
 
 ### Live GitHub Pages Deployments
@@ -103,6 +129,8 @@ open -a "Google Chrome" shotlist.html
 - **Prompt Refactor Game**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/exercise.html](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/exercise.html)
 - **Recording Guide (Admin)**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/recording-guide.html](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/recording-guide.html)
 - **Video 1.1 Shot List (Admin)**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/shotlist.html](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/shotlist.html)
+- **Recording Studio (Admin)**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/recording-studio.html](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/recording-studio.html)
+
 
 
 
