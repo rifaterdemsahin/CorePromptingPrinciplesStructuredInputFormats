@@ -953,16 +953,19 @@ Return ONLY a valid JSON object matching this schema:
 
             <div class="grid-2col">
                 <div>
-                    <label for="doRole">1. Role / System Context (Markdown Persona)</label>
-                    <input type="text" id="doRole" value="Senior Project Manager" oninput="updateDoPreview()">
+                    <label for="doRole">1. Role / System Context (`### ROLE`)</label>
+                    <input type="text" id="doRole" value="Senior Technical Project Manager" oninput="updateDoPreview()">
 
-                    <label for="doTask">2. Primary Task (Markdown Objective)</label>
-                    <input type="text" id="doTask" value="Extract action items and assignees from raw meeting notes." oninput="updateDoPreview()">
+                    <label for="doContext">2. Operational Context (`### CONTEXT`)</label>
+                    <input type="text" id="doContext" value="Sprint backlog coordination for engineering leadership team." oninput="updateDoPreview()">
 
-                    <label for="doData">3. Context / Input Data (XML Enclosure)</label>
+                    <label for="doTask">3. Primary Task (`### TASK`)</label>
+                    <input type="text" id="doTask" value="Extract discrete action items and assignees from raw meeting notes." oninput="updateDoPreview()">
+
+                    <label for="doData">4. Input Data (&lt;meeting_notes&gt; XML Boundary)</label>
                     <textarea id="doData" rows="3" oninput="updateDoPreview()">John will present slides by Tuesday. Sarah needs to approve budget by Friday. Unknown deadline for legal review.</textarea>
 
-                    <label for="doConstraints">4. Output Constraints (JSON Schema Rule)</label>
+                    <label for="doConstraints">5. Constraints & Schema (`### CONSTRAINTS`)</label>
                     <input type="text" id="doConstraints" value="Return JSON array: [{'task': string, 'owner': string, 'due': string|null}]" oninput="updateDoPreview()">
                 </div>
 
@@ -1164,6 +1167,7 @@ cursor.execute(query)
     // Real-Time Builder (DO Section)
     function updateDoPreview() {
         const role = document.getElementById('doRole').value;
+        const context = document.getElementById('doContext') ? document.getElementById('doContext').value : 'Sprint backlog coordination for engineering leadership team.';
         const task = document.getElementById('doTask').value;
         const data = document.getElementById('doData').value;
         const constraints = document.getElementById('doConstraints').value;
@@ -1171,17 +1175,20 @@ cursor.execute(query)
         const generatedPrompt = `### ROLE
 ${role}
 
+### CONTEXT
+${context}
+
 ### TASK
 ${task}
 
 ### INPUT DATA
-<raw_notes>
+<meeting_notes>
 ${data}
-</raw_notes>
+</meeting_notes>
 
 ### CONSTRAINTS & OUTPUT FORMAT
 - ${constraints}
-- If information is missing, output null.`;
+- If any deadline is unknown, output null. Do not hallucinate dates.`;
 
         const doOutput = document.getElementById('doOutput');
         doOutput.textContent = generatedPrompt;

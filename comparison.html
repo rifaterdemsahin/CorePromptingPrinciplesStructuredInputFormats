@@ -412,7 +412,7 @@
 
     <!-- Scenario Switcher -->
     <div class="scenario-nav">
-        <button class="scenario-pill active" onclick="loadScenario(0)">🛒 Scenario 1: Customer Feedback Triage</button>
+        <button class="scenario-pill active" onclick="loadScenario(0)">📊 Scenario 1: Competitive Analysis (Video Demo)</button>
         <button class="scenario-pill" onclick="loadScenario(1)">📋 Scenario 2: Meeting Action Items</button>
         <button class="scenario-pill" onclick="loadScenario(2)">🛡️ Scenario 3: Security Code Vulnerability</button>
         <button class="scenario-pill" onclick="loadScenario(3)">📄 Scenario 4: Candidate Resume Screening</button>
@@ -514,63 +514,73 @@
 <script>
     const scenarios = [
         {
-            title: "Customer Feedback Triage",
-            badPrompt: `Look at these customer reviews and tell me which ones are bad and why they are angry and output it as a table or list.
+            title: "Competitive Analysis (Script Showcase)",
+            badPrompt: `Do a competitive analysis on our new cloud monitoring tool versus Datadog and Dynatrace and tell me our strengths and weaknesses and who is better.`,
+            badOutput: `Sure thing! Here is a competitive analysis of your cloud monitoring tool compared to Datadog and Dynatrace:
 
-Review:
-I loved the sleek design! But my package was delayed 2 weeks and support was completely useless and rude. 1 star.`,
-            badOutput: `Sure thing! Here is what I found from the review you gave me:
+Datadog is a very established monitoring platform with hundreds of integrations and strong infrastructure metrics. However, they can get very expensive as you scale up custom metrics.
 
-- The customer is very angry because their shipment took an extra two weeks to arrive.
-- They also complained that customer service was unresponsive and rude.
-- On the bright side, they did say the design was sleek!
-- Sentiment: Bad (1/5 stars).
+Dynatrace is great for enterprise APM and has Davis AI for root-cause analysis, but it can be heavy to configure and overkill for smaller teams.
 
-Hope this helps you triage your customer feedback! Let me know if you need more analysis.`,
+Your tool seems to have great ease of use and faster setup! You should focus on pricing transparency.
+
+Overall, Datadog is probably better for general infra, while Dynatrace wins in enterprise full-stack. Let me know if you want me to write a full report or create slides!`,
             badFlaws: [
-                "Unparseable conversational fluff ('Sure thing! Here is what I found...', 'Hope this helps!').",
-                "Mixed qualitative format that crashes automated JSON pipelines with SyntaxError.",
-                "No schema rules: model arbitrarily chose bullet points instead of machine-readable fields."
+                "Unstructured qualitative essay with conversational preamble ('Sure thing! Here is what I found...').",
+                "Lacks standardized feature scorecards or quantitative comparisons.",
+                "Cannot be programmatically ingested into product strategy dashboards or CRM systems."
             ],
             goodPrompt: `### ROLE
-Senior Customer Experience Intelligence Lead.
+Senior Product Strategist & Enterprise Market Intelligence Lead.
+
+### CONTEXT
+Executive competitive benchmarking for Q3 product roadmap prioritization.
 
 ### TASK
-Extract sentiment, root causes, and urgency from customer feedback.
+Conduct structured competitive gap analysis between target monitoring platform and legacy competitors.
 
 ### INPUT DATA
-<customer_review>
-I loved the sleek design! But my package was delayed 2 weeks and support was completely useless and rude. 1 star.
-</customer_review>
+<competitor_profiles>
+- Target Tool: CloudMetrics (Lightweight, real-time eBPF agent, fixed pricing)
+- Competitor A: Datadog (Deep integrations, expensive custom metrics)
+- Competitor B: Dynatrace (Heavy enterprise APM, complex configuration)
+</competitor_profiles>
 
 ### CONSTRAINTS & OUTPUT FORMAT
-Return ONLY valid JSON matching this schema:
+Return ONLY a valid JSON object matching this schema:
 {
-  "overall_sentiment": "POSITIVE" | "NEGATIVE" | "MIXED",
-  "rating": number,
-  "praise_points": string[],
-  "pain_points": string[],
-  "urgency": "LOW" | "MEDIUM" | "HIGH",
-  "requires_agent_followup": boolean
+  "target_platform": "CloudMetrics",
+  "differentiators": string[],
+  "competitor_gaps": [
+    { "competitor": string, "key_advantage": string, "vulnerability": string }
+  ],
+  "recommended_go_to_market_angle": string
 }
 Do not include conversational preamble.`,
             goodOutput: `{
-  "overall_sentiment": "MIXED",
-  "rating": 1,
-  "praise_points": [
-    "Sleek product design"
+  "target_platform": "CloudMetrics",
+  "differentiators": [
+    "Kernel-level eBPF low-overhead telemetry",
+    "Predictable transparent flat-rate pricing"
   ],
-  "pain_points": [
-    "Package delayed by 2 weeks",
-    "Customer support was unhelpful and rude"
+  "competitor_gaps": [
+    {
+      "competitor": "Datadog",
+      "key_advantage": "Massive integration ecosystem",
+      "vulnerability": "High unpredictable custom metric billing"
+    },
+    {
+      "competitor": "Dynatrace",
+      "key_advantage": "Mature enterprise root-cause AI",
+      "vulnerability": "Complex heavyweight deployment requirements"
+    }
   ],
-  "urgency": "HIGH",
-  "requires_agent_followup": true
+  "recommended_go_to_market_angle": "Position as the modern, high-performance, cost-predictable eBPF alternative for cloud-native engineering teams."
 }`,
             goodStrengths: [
-                "100% deterministic JSON output ready for direct database insertion.",
-                "Explicit XML boundary (<customer_review>) isolates dynamic feedback text.",
-                "Typed enum constraints ('MIXED', 'HIGH') prevent unpredictable model vocabulary."
+                "Zero conversational fluff: 100% deterministic JSON output ready for automated dashboards.",
+                "Explicit XML boundary (<competitor_profiles>) isolates competitor facts from system prompt instructions.",
+                "Typed JSON Schema enforces uniform comparison structure across all analyzed competitors."
             ]
         },
         {
