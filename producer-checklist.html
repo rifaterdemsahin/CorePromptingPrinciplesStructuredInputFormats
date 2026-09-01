@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Producer Sign-Off Checklist | Core Prompting Principles</title>
+    <style>
+        :root {
+            --bg-color: #0b1120;
+            --surface-bg: #131d33;
+            --card-bg: #1e293b;
+            --card-hover: #24344d;
+            --accent-blue: #38bdf8;
+            --accent-green: #4ade80;
+            --accent-purple: #c084fc;
+            --accent-amber: #fbbf24;
+            --accent-rose: #f87171;
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: #334155;
+            --code-bg: #090e1a;
+            --font-mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html {
+            box-sizing: border-box;
+            scroll-behavior: smooth;
+            scroll-padding-top: 80px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding-bottom: 4rem;
+            min-height: 100vh;
+            overflow-x: clip;
+            overflow-y: auto;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            text-rendering: optimizeLegibility;
+        }
+
+        :target, :focus-visible, button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, select:focus-visible, [tabindex="0"]:focus-visible {
+            outline: 2px solid var(--accent-blue) !important;
+            outline-offset: 3px !important;
+            scroll-margin: 80px 20px;
+        }
+
+        /* Top Navigation Bar */
+        .top-navbar {
+            background-color: rgba(19, 29, 51, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .navbar-container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0.75rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            text-decoration: none;
+            color: var(--text-main);
+            font-weight: 700;
+            font-size: 1.05rem;
+        }
+
+        .nav-brand span.logo-badge {
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-purple));
+            color: #0b1120;
+            padding: 0.2rem 0.5rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 800;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            list-style: none;
+        }
+
+        .nav-link-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            text-decoration: none;
+            padding: 0.45rem 0.85rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-muted);
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid transparent;
+        }
+
+        .nav-link-btn:hover {
+            color: var(--text-main);
+            background: rgba(255,255,255,0.05);
+            border-color: rgba(255,255,255,0.1);
+        }
+
+        .nav-link-btn.active {
+            color: var(--accent-blue);
+            background: rgba(56, 189, 248, 0.12);
+            border-color: rgba(56, 189, 248, 0.3);
+        }
+
+        /* Admin Dropdown Menu */
+        .admin-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .admin-btn {
+            background: rgba(192, 132, 252, 0.12);
+            border: 1px solid rgba(192, 132, 252, 0.35);
+            color: var(--accent-purple);
+            cursor: pointer;
+        }
+
+        .admin-btn:hover {
+            background: rgba(192, 132, 252, 0.2);
+            color: #fff;
+            border-color: var(--accent-purple);
+        }
+
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: calc(100% + 0.5rem);
+            background: #131d33;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            min-width: 210px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            z-index: 200;
+            padding: 0.5rem 0;
+        }
+
+        .admin-dropdown:hover .dropdown-menu,
+        .admin-dropdown:focus-within .dropdown-menu {
+            display: block;
+        }
+
+        .dropdown-item {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.6rem 1rem;
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.88rem;
+            font-weight: 600;
+            transition: all 0.15s;
+        }
+
+        .dropdown-item:hover {
+            background: rgba(255,255,255,0.06);
+            color: var(--text-main);
+        }
+
+        .dropdown-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 0.4rem 0;
+        }
+
+        .container {
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem 2rem 0;
+        }
+
+        .hero {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border-color);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.75rem;
+        }
+
+        h1 {
+            font-size: 2.3rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, #f8fafc 0%, #38bdf8 50%, #c084fc 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.3rem;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+            max-width: 850px;
+            margin: 0 auto;
+        }
+
+        /* Module Info Banner */
+        .module-banner {
+            background: linear-gradient(135deg, rgba(56, 189, 248, 0.12), rgba(192, 132, 252, 0.12));
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 12px;
+            padding: 1.75rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+            margin-bottom: 2.5rem;
+        }
+
+        .module-banner dl {
+            display: grid;
+            grid-template-columns: auto auto;
+            gap: 0.3rem 1rem;
+            font-size: 0.9rem;
+        }
+
+        .module-banner dt {
+            color: var(--text-muted);
+            font-weight: 600;
+        }
+
+        .module-banner dd {
+            color: var(--text-main);
+            font-weight: 700;
+        }
+
+        .btn-launch {
+            background: linear-gradient(135deg, var(--accent-blue), #0284c7);
+            color: #0b1120;
+            font-weight: 800;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-launch:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.35);
+        }
+
+        /* Section Headings */
+        .section-heading {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 1rem;
+            margin-bottom: 1.25rem;
+        }
+
+        .section-heading h2 {
+            font-size: 1.5rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+        }
+
+        .section-heading p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+        }
+
+        .progress-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 9999px;
+            padding: 0.4rem 0.9rem;
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--accent-green);
+        }
+
+        section.block {
+            margin-bottom: 3rem;
+        }
+
+        /* Checklist Grid */
+        .check-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .check-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        }
+
+        .check-card h3 {
+            font-size: 1.05rem;
+            font-weight: 800;
+            margin-bottom: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .check-card .scene-tag {
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: var(--accent-blue);
+            background: rgba(56, 189, 248, 0.12);
+            border: 1px solid rgba(56, 189, 248, 0.3);
+            border-radius: 9999px;
+            padding: 0.15rem 0.6rem;
+            margin-left: auto;
+            white-space: nowrap;
+        }
+
+        .check-list {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.7rem;
+        }
+
+        .check-list li {
+            display: flex;
+            align-items: flex-start;
+            gap: 0.65rem;
+            font-size: 0.92rem;
+            color: #cbd5e1;
+        }
+
+        .check-list input[type="checkbox"] {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 1.1rem;
+            height: 1.1rem;
+            min-width: 1.1rem;
+            margin-top: 0.15rem;
+            border: 2px solid var(--border-color);
+            border-radius: 4px;
+            background: var(--code-bg);
+            cursor: pointer;
+            position: relative;
+            transition: all 0.15s;
+        }
+
+        .check-list input[type="checkbox"]:hover {
+            border-color: var(--accent-blue);
+        }
+
+        .check-list input[type="checkbox"]:checked {
+            background: var(--accent-green);
+            border-color: var(--accent-green);
+        }
+
+        .check-list input[type="checkbox"]:checked::after {
+            content: "✓";
+            position: absolute;
+            top: -3px;
+            left: 1px;
+            font-size: 0.85rem;
+            font-weight: 900;
+            color: #0b1120;
+        }
+
+        .check-list label {
+            cursor: pointer;
+        }
+
+        .check-list input[type="checkbox"]:checked + label {
+            color: var(--text-muted);
+            text-decoration: line-through;
+            text-decoration-color: var(--accent-green);
+        }
+
+        /* Producer Sign-Off Panel */
+        .signoff-panel {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.75rem;
+        }
+
+        .signoff-panel .check-grid {
+            margin-bottom: 1.75rem;
+        }
+
+        .signoff-fields {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 1rem;
+            border-top: 1px solid var(--border-color);
+            padding-top: 1.5rem;
+        }
+
+        .signoff-fields label {
+            display: block;
+            font-size: 0.8rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            margin-bottom: 0.4rem;
+            text-transform: uppercase;
+            letter-spacing: 0.03em;
+        }
+
+        .signoff-fields input, .signoff-fields select {
+            width: 100%;
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 0.6rem 0.75rem;
+            color: var(--text-main);
+            font-size: 0.9rem;
+            font-family: inherit;
+        }
+
+        .signoff-fields input:focus, .signoff-fields select:focus {
+            border-color: var(--accent-blue);
+        }
+
+        .status-banner {
+            margin-top: 1.5rem;
+            padding: 1rem 1.25rem;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            background: rgba(251, 191, 36, 0.12);
+            border: 1px solid rgba(251, 191, 36, 0.35);
+            color: var(--accent-amber);
+        }
+
+        .status-banner.approved {
+            background: rgba(74, 222, 128, 0.12);
+            border-color: rgba(74, 222, 128, 0.35);
+            color: var(--accent-green);
+        }
+    </style>
+</head>
+<body>
+
+<!-- TOP SHARED NAVBAR WITH MAIN TRAINING & ADMIN SUB-PAGES -->
+<nav class="top-navbar" role="navigation" aria-label="Main Application Navigation">
+    <div class="navbar-container">
+        <a href="index.html" class="nav-brand" data-testid="nav-brand">
+            <span class="logo-badge">PROMPT ARCH</span>
+            <span>Core Prompting Principles</span>
+        </a>
+        <ul class="nav-links">
+            <!-- Training / Course Pages -->
+            <li><a href="index.html" class="nav-link-btn" data-testid="nav-link-workbench">🏛️ Workbench & Guide</a></li>
+            <li><a href="comparison.html" class="nav-link-btn" data-testid="nav-link-comparison">⚖️ Good vs Bad Prompts</a></li>
+            <li><a href="constraints.html" class="nav-link-btn" data-testid="nav-link-constraints">🔒 Constraints</a></li>
+            <li><a href="exercise.html" class="nav-link-btn" data-testid="nav-link-exercise">🧩 Refactor Game</a></li>
+
+            <!-- Admin & Production Sub-Menu -->
+            <li class="admin-dropdown">
+                <button class="nav-link-btn admin-btn active" data-testid="admin-menu-button" aria-haspopup="true" aria-expanded="false" aria-label="Admin and Production Menu">
+                    <span>⚙️ Admin & Production</span>
+                    <span style="font-size: 0.7rem;">▼</span>
+                </button>
+                <div class="dropdown-menu" role="menu">
+                    <a href="recording-guide.html" class="dropdown-item" data-testid="dropdown-recording-guide" role="menuitem">📹 Recording Guide</a>
+                    <a href="shotlist.html" class="dropdown-item" data-testid="dropdown-shotlist" role="menuitem">🎬 Video 1.1 Shot List</a>
+                    <a href="recording-studio.html" class="dropdown-item" data-testid="dropdown-recording-studio" role="menuitem">🎙️ Recording Studio</a>
+                    <a href="automation-guide.html" class="dropdown-item" data-testid="dropdown-automation-guide" role="menuitem">🤖 Recording Automation & Docker</a>
+                    <a href="producer-checklist.html" class="dropdown-item" data-testid="dropdown-producer-checklist" role="menuitem" style="color: var(--accent-amber);">✅ Producer Checklist</a>
+                    <div class="dropdown-divider"></div>
+                    <a href="https://github.com/rifaterdemsahin/CorePromptingPrinciplesStructuredInputFormats" target="_blank" rel="noopener" class="dropdown-item" data-testid="dropdown-github-repo" role="menuitem">🐙 GitHub Repo ↗</a>
+                </div>
+            </li>
+        </ul>
+    </div>
+</nav>
+
+<div class="container">
+    <header class="hero">
+        <div>
+            <div style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.25rem 0.75rem; background: rgba(251, 191, 36, 0.15); border: 1px solid rgba(251, 191, 36, 0.4); border-radius: 9999px; color: var(--accent-amber); font-size: 0.8rem; font-weight: 700; margin-bottom: 0.5rem;">
+                <span>✅</span> Quality Assurance &bull; Producer Review
+            </div>
+            <h1>Producer Sign-Off Checklist</h1>
+            <p class="subtitle">
+                Module, video learning objectives, and hands-on key results for Video 1.1 — reviewed and checked off by the Producer before the recording is approved for publication.
+            </p>
+        </div>
+    </header>
+
+    <!-- Module Overview -->
+    <div class="module-banner" data-testid="module-overview">
+        <div>
+            <h3 style="color: var(--text-main); font-size: 1.25rem; font-weight: 800; margin-bottom: 0.3rem;">
+                🏛️ Module 1.1 — Core Prompting Principles & Structured Input Formats
+            </h3>
+            <p style="color: var(--text-muted); font-size: 0.95rem; margin: 0; max-width: 640px;">
+                AOU Certified AI Associate — Markdown & JSON in LLM Contexts. Covers the 3 Cs of prompting (Context, Clarity, Constraints) and structured input/output formatting with Markdown, XML delimiters, and JSON Schemas.
+            </p>
+        </div>
+        <dl>
+            <dt>Runtime</dt><dd>0:00 – 1:35 (4 shots)</dd>
+            <dt>Source Pages</dt><dd>index.html, comparison.html, exercise.html</dd>
+            <dt>Shot List</dt><dd><a href="shotlist.html" style="color: var(--accent-blue);">shotlist.html →</a></dd>
+        </dl>
+    </div>
+
+    <!-- Video Learning Objectives -->
+    <section class="block" id="learning-objectives">
+        <div class="section-heading">
+            <h2><span>🎯</span> Video Learning Objectives</h2>
+            <p>What the learner must be able to explain or recognize by the end of Video 1.1</p>
+        </div>
+        <div class="check-grid">
+            <div class="check-card">
+                <h3>🏛️ LLM Context Architecture <span class="scene-tag">Shot 1 &bull; 0:00–0:24</span></h3>
+                <ul class="check-list">
+                    <li><input type="checkbox" id="obj1"><label for="obj1">Explain the 3 Cs of prompting: Context, Clarity, Constraints.</label></li>
+                    <li><input type="checkbox" id="obj2"><label for="obj2">Describe the prompt ingestion & attention pipeline shown on <code>index.html</code>.</label></li>
+                    <li><input type="checkbox" id="obj3"><label for="obj3">Differentiate Markdown, JSON, and XML delimiter roles in LLM inputs/outputs.</label></li>
+                </ul>
+            </div>
+            <div class="check-card">
+                <h3>⚖️ Structured vs Unstructured <span class="scene-tag">Shot 2 &bull; 0:24–0:49</span></h3>
+                <ul class="check-list">
+                    <li><input type="checkbox" id="obj4"><label for="obj4">Identify why unstructured prompts produce inconsistent, hallucinated output.</label></li>
+                    <li><input type="checkbox" id="obj5"><label for="obj5">Recognize deterministic JSON output vs flawed conversational text.</label></li>
+                    <li><input type="checkbox" id="obj6"><label for="obj6">Walk through at least one of the 5 side-by-side comparison scenarios.</label></li>
+                </ul>
+            </div>
+            <div class="check-card">
+                <h3>🧠 Guided Prompt Assembly <span class="scene-tag">Shot 3 &bull; 0:49–1:12</span></h3>
+                <ul class="check-list">
+                    <li><input type="checkbox" id="obj7"><label for="obj7">Apply the RCTC framework (Role, Context, Task, Constraints) live in the workbench.</label></li>
+                    <li><input type="checkbox" id="obj8"><label for="obj8">Explain why untrusted data belongs inside XML boundary tags.</label></li>
+                </ul>
+            </div>
+            <div class="check-card">
+                <h3>🧩 Refactor & Certify <span class="scene-tag">Shot 4 &bull; 1:12–1:35</span></h3>
+                <ul class="check-list">
+                    <li><input type="checkbox" id="obj9"><label for="obj9">Describe the 3 progressive levels of the Prompt Refactor Game.</label></li>
+                    <li><input type="checkbox" id="obj10"><label for="obj10">Summarize what "certification-ready" prompt structure looks like.</label></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Hands-On Key Results -->
+    <section class="block" id="key-results">
+        <div class="section-heading">
+            <h2><span>🧪</span> Hands-On Key Results (DO & APPLY)</h2>
+            <p>Concrete outcomes the learner must produce, not just watch, before the module counts as complete</p>
+        </div>
+        <div class="check-grid">
+            <div class="check-card">
+                <h3>🛠️ Prompt Sandbox Build</h3>
+                <ul class="check-list">
+                    <li><input type="checkbox" id="kr1"><label for="kr1">Assembles a complete prompt using <code>### ROLE</code>, <code>### CONTEXT</code>, <code>### TASK</code>, <code>### CONSTRAINTS</code>.</label></li>
+                    <li><input type="checkbox" id="kr2"><label for="kr2">Runs the Interactive Prompt Sandbox and reviews the simulated response & token latency.</label></li>
+                </ul>
+            </div>
+            <div class="check-card">
+                <h3>🔒 Constraint Application</h3>
+                <ul class="check-list">
+                    <li><input type="checkbox" id="kr3"><label for="kr3">Toggles constrained vs. unconstrained output across at least 2 of the 4 production domains on <code>constraints.html</code>.</label></li>
+                    <li><input type="checkbox" id="kr4"><label for="kr4">Produces a valid JSON object matching a given output schema.</label></li>
+                </ul>
+            </div>
+            <div class="check-card">
+                <h3>🧩 Refactor Game Completion</h3>
+                <ul class="check-list">
+                    <li><input type="checkbox" id="kr5"><label for="kr5">Isolates dynamic input correctly inside an XML boundary tag (e.g. <code>&lt;customer_review&gt;</code>).</label></li>
+                    <li><input type="checkbox" id="kr6"><label for="kr6">Clears all 3 levels of the Prompt Refactor Game with real-time validation passing.</label></li>
+                    <li><input type="checkbox" id="kr7"><label for="kr7">Reaches the confetti completion state on <code>exercise.html</code>.</label></li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Producer Sign-Off -->
+    <section class="block" id="producer-signoff">
+        <div class="section-heading">
+            <h2><span>✅</span> Producer Sign-Off</h2>
+            <span class="progress-pill" id="progress-pill" data-testid="signoff-progress">0 / 6 checked</span>
+        </div>
+        <div class="signoff-panel">
+            <div class="check-grid">
+                <div class="check-card" style="grid-column: 1 / -1;">
+                    <h3>📋 Pre-Publish Verification</h3>
+                    <ul class="check-list" id="signoff-list">
+                        <li><input type="checkbox" class="signoff-check" id="qa1"><label for="qa1">All 4 shots recorded at 1080p / 60FPS with synced audio (peaks -12dB to -6dB).</label></li>
+                        <li><input type="checkbox" class="signoff-check" id="qa2"><label for="qa2">Every item above in <strong>Video Learning Objectives</strong> is visibly demonstrated on-screen.</label></li>
+                        <li><input type="checkbox" class="signoff-check" id="qa3"><label for="qa3">Every item above in <strong>Hands-On Key Results</strong> is demonstrated in the Guided Builder / Exercise scenes.</label></li>
+                        <li><input type="checkbox" class="signoff-check" id="qa4"><label for="qa4">No dead air over 0.5s; no erratic or unintentional cursor movement.</label></li>
+                        <li><input type="checkbox" class="signoff-check" id="qa5"><label for="qa5">Chapter markers align with shot list timecodes (0:00, 0:24, 0:49, 1:12).</label></li>
+                        <li><input type="checkbox" class="signoff-check" id="qa6"><label for="qa6">Final MP4 exported (H.264 / AAC) and matches the reviewed cut.</label></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="signoff-fields">
+                <div>
+                    <label for="producer-name">Producer Name</label>
+                    <input type="text" id="producer-name" placeholder="Full name" data-testid="input-producer-name">
+                </div>
+                <div>
+                    <label for="signoff-date">Review Date</label>
+                    <input type="date" id="signoff-date" data-testid="input-signoff-date">
+                </div>
+                <div>
+                    <label for="signoff-status">Status</label>
+                    <select id="signoff-status" data-testid="select-signoff-status">
+                        <option value="pending">Pending Review</option>
+                        <option value="changes">Changes Requested</option>
+                        <option value="approved">Approved for Publish</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="status-banner" id="status-banner" data-testid="status-banner">
+                <span>⏳</span> <span id="status-text">Awaiting Producer review — check off every item above before approving.</span>
+            </div>
+        </div>
+    </section>
+</div>
+
+<script>
+    const signoffChecks = Array.from(document.querySelectorAll('.signoff-check'));
+    const progressPill = document.getElementById('progress-pill');
+    const statusBanner = document.getElementById('status-banner');
+    const statusText = document.getElementById('status-text');
+    const statusSelect = document.getElementById('signoff-status');
+
+    function refreshProgress() {
+        const checked = signoffChecks.filter(c => c.checked).length;
+        progressPill.textContent = `${checked} / ${signoffChecks.length} checked`;
+
+        const allChecked = checked === signoffChecks.length;
+        if (statusSelect.value === 'approved' && !allChecked) {
+            statusSelect.value = 'pending';
+        }
+        updateStatusBanner();
+    }
+
+    function updateStatusBanner() {
+        const status = statusSelect.value;
+        statusBanner.classList.toggle('approved', status === 'approved');
+        if (status === 'approved') {
+            statusText.textContent = 'Approved for publish — all pre-publish items verified by the Producer.';
+        } else if (status === 'changes') {
+            statusText.textContent = 'Changes requested — resolve the flagged items and re-submit for review.';
+        } else {
+            statusText.textContent = 'Awaiting Producer review — check off every item above before approving.';
+        }
+    }
+
+    signoffChecks.forEach(cb => cb.addEventListener('change', refreshProgress));
+    statusSelect.addEventListener('change', updateStatusBanner);
+</script>
+
+</body>
+</html>

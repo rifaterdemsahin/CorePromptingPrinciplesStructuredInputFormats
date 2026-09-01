@@ -92,6 +92,12 @@ The platform separates **Student-Facing Training Modules** from **Instructor/Pro
    - **Playwright 1080p Engine**: Automated virtual cursor tracking, Bezier motion paths, and click wave physics.
    - **Docker & Container Architecture**: Zero-dependency containerized execution via `Dockerfile` and `docker-compose.yml`.
 
+9. **✅ Producer Sign-Off Checklist ([`producer-checklist.html`](producer-checklist.html))**:
+   - **Module Overview**: Module 1.1 scope, runtime, and source pages at a glance.
+   - **Video Learning Objectives**: Checklist of what the learner must be able to explain, mapped to each of the 4 shots.
+   - **Hands-On Key Results (DO & APPLY)**: Checklist of concrete outcomes the learner must produce, not just watch.
+   - **Producer Pre-Publish Verification**: Interactive checklist with live progress, plus name/date/status sign-off fields the Producer completes before approving publication.
+
 ---
 
 ## 🛠️ CLI Automation & Production Helper
@@ -129,6 +135,7 @@ open -a "Google Chrome" recording-guide.html
 open -a "Google Chrome" shotlist.html
 open -a "Google Chrome" recording-studio.html
 open -a "Google Chrome" automation-guide.html
+open -a "Google Chrome" producer-checklist.html
 ```
 
 ### Live GitHub Pages Deployments
@@ -140,6 +147,7 @@ open -a "Google Chrome" automation-guide.html
 - **Video 1.1 Shot List (Admin)**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/shotlist.html](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/shotlist.html)
 - **Recording Studio (Admin)**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/recording-studio.html](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/recording-studio.html)
 - **Recording Automation Guide (Admin)**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/automation-guide.html](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/automation-guide.html)
+- **Producer Sign-Off Checklist (Admin)**: [https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/producer-checklist.html](https://rifaterdemsahin.github.io/CorePromptingPrinciplesStructuredInputFormats/producer-checklist.html)
 
 
 
